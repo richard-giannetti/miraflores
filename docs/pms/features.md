@@ -46,6 +46,15 @@ system is worth it over a spreadsheet.
    delete it after the retention period, log who accessed or changed it.
 5. **No tourist tax** in Andalucía as of 2026, but Málaga is pushing for one. Keep the pricing model able to
    add a per-night, per-person tax later.
+6. **VAT on stays from 1 December 2026.** Sources report that Real Decreto-ley 29/2026 puts tourist
+   rentals of 30 nights or less at **10% VAT**. Until now they were exempt unless hotel services were provided.
+   Airbnb's commission invoices change too. This makes invoicing a real need straight away; confirm the
+   details with the gestor and the BOE.
+7. **VeriFactu (invoicing software rules, RD 1007/2023).** Every invoice issued with software must be
+   recorded tamper-proof: chained records, a QR code, and optionally sent to the tax agency in real time.
+   The villas are owned by a company (Miraflores Costa Tropical SL). Under the law as published, companies
+   must comply from **1 January 2027**. A postponement to 2028 has been announced but wasn't in the BOE
+   as of October 2026. See [module 9](#9-invoicing-facturación--mvp).
 
 ## Feature modules
 
@@ -85,10 +94,22 @@ Each module is tagged with the phase it belongs to (see [Phases](#phases)).
 ### 4. Online check-in and guest registration · MVP
 
 This replaces the old WordPress `/checking` form, and the Airbnb messages that currently cover it.
+It's the part of Hotelgest the family likes most ("recepción autónoma"), so it's the guest-facing
+model to follow: no app to download, one link per reservation, on the phone.
 
-- Each reservation gets a private **check-in link**, sent before arrival (EN/ES).
+- Each reservation gets a private **check-in link**, sent before arrival (EN/ES). It can go by email,
+  by WhatsApp, as a QR code, or pasted into the Airbnb chat.
+- **ID scan:** the guest photographs their DNI, NIE or passport and the form fills itself in from the
+  machine-readable zone. The guest confirms the data. The image is used for reading and then discarded,
+  not stored (see legal point 1).
 - The guest fills in every traveller's registration data (SES.Hospedajes fields), arrival time,
   accepts the house rules, and signs on screen.
+- **Invoice details:** a guest who needs a full invoice (a company, or a tax ID) enters the details here
+  and receives the invoice by email (see module 9).
+- **Payments** (once direct bookings exist): balance, extras and a damage-deposit pre-authorisation
+  that is released automatically.
+- **Door code shown only when everything's ready:** paid, checked in online, villa cleaned and inspected,
+  and arrival time reached. Smart-lock integration can come later.
 - The PMS checks completeness and shows a status per booking: *not started / partial / complete / sent*.
 - **Submission to SES.Hospedajes:**
   - First version: the PMS produces the file or form data so it can be uploaded in seconds.
@@ -132,10 +153,36 @@ This replaces the old WordPress `/checking` form, and the Airbnb messages that c
   extras (late checkout, private chef, airport transfer).
 - Expenses per villa: cleaning, laundry, utilities, repairs, supplies, commissions.
 - Monthly and yearly results per villa; export for the accountant (gestor).
-- Invoices for direct bookings. Spain's new invoicing-software rules (VeriFactu) and the right VAT
-  treatment must be checked with the gestor before the PMS issues invoices itself.
+- Airbnb's commission invoices recorded as expenses, with their VAT treatment (see legal point 6).
 
-### 9. Rates and direct booking · Phase C
+### 9. Invoicing (facturación) · MVP
+
+The father's top concern, and with 10% VAT from December 2026 and VeriFactu from 2027, it belongs in
+the first version rather than later.
+
+- **An invoice per stay**, generated from the reservation: nights, cleaning fee, extras, VAT at the
+  correct rate, totals. This covers Airbnb stays as well as direct ones, if the gestor confirms the
+  company has to invoice the guest for Airbnb bookings.
+- **Simplified invoices** by default. A **full invoice** when the guest gives a company name and tax
+  ID, either at online check-in or when added by the family.
+- **Corrective invoices** (rectificativas) and credit notes linked to the original, never edits or
+  deletions. **Proformas** and deposit invoices for direct bookings. Separate numbering series per type,
+  and per property if the gestor wants that.
+- **VeriFactu compliance:** each invoice recorded, chained and QR-coded at the moment it's issued;
+  optional real-time submission to the tax agency.
+- **Payments matched to invoices:** Airbnb payouts, card and Bizum, bank transfers, and what's still owed.
+- **Exports for the gestor:** an invoice register (CSV/Excel) and a ZIP of PDFs per quarter, VAT summaries
+  that feed Modelo 303, yearly totals per client for Modelo 347. Optionally an export for their software
+  (A3, Sage, Holded — Hotelgest supports these).
+- Invoices in Spanish, with an English version for foreign guests.
+
+**Build vs integrate:** whoever produces invoicing software must certify it meets VeriFactu
+(a *declaración responsable*). Building our own signing and record chain is a real legal and technical
+burden for one family company. The safer route: the PMS prepares the invoice data and sends it to a
+certified VeriFactu invoicing service or API (several exist, some aimed at developers), which signs,
+numbers and reports it. The PMS stores the resulting PDF and QR. The provider gets chosen with the gestor.
+
+### 10. Rates and direct booking · Phase C
 
 - Seasonal rates, weekend rates, minimum stay, extra-guest fee, cleaning fee, discounts and promo codes.
 - Availability and price API for the website (`apps/web`), with a "Book direct" flow.
@@ -143,14 +190,14 @@ This replaces the old WordPress `/checking` form, and the Airbnb messages that c
 - Cancellation policies and automatic refunds.
 - Tourist tax line, ready if Andalucía introduces one.
 
-### 10. Today screen and reports · MVP (today) / Phase B (reports)
+### 11. Today screen and reports · MVP (today) / Phase B (reports)
 
 - **Today:** arrivals and departures, who has checked in online, cleaning status, open issues,
   messages to send. This is the parents' home screen.
 - Occupancy, average nightly rate, revenue per available night, revenue by channel (Airbnb vs direct),
   booking lead time, nationality mix (from registrations).
 
-### 11. Hotel-ready · Phase D
+### 12. Hotel-ready · Phase D
 
 Not built now, but the data model leaves room for it:
 - Room types vs physical rooms, rate plans, room assignment.
@@ -167,10 +214,14 @@ Not built now, but the data model leaves room for it:
 
 | Phase | Goal | Modules |
 | --- | --- | --- |
-| **MVP** | Replace spreadsheets and the WordPress check-in form | 1, 2, 3, 4, cleaning part of 5, message templates, Today screen |
+| **MVP** | Replace spreadsheets and the WordPress check-in form; invoice correctly | 1, 2, 3, 4, cleaning part of 5, message templates, 9 invoicing, Today screen |
 | **B** | Run the team and see the numbers | maintenance, 6 staff + time clock, 7 automation, 8 money, reports |
-| **C** | Direct bookings on the website | 9, website integration, Stripe |
-| **D** | Add the hotel | 11 |
+| **C** | Direct bookings on the website | 10, website integration, Stripe |
+| **D** | Add the hotel | 12 |
+
+Invoicing is the one MVP part with a deadline: 10% VAT applies from 1 December 2026, and VeriFactu
+from 1 January 2027 unless the postponement is published. If the PMS isn't ready by then, invoices
+come from a certified tool in the meantime; the gestor may already have one.
 
 ## Build vs buy — honest note
 
@@ -185,6 +236,20 @@ build our own anyway:
 If the MVP drags on, a paid tool for check-in and SES.Hospedajes (Chekin, for example) can cover the
 legal part in the meantime.
 
+**Hotelgest**, which the family likes, is the closest benchmark. It's a Spanish PMS for hotels *and*
+vacation rentals, from €55/month (excl. VAT) for up to 5 units. It already includes:
+- Online check-in with ID scan and signature, and automatic SES.Hospedajes submission.
+- VeriFactu invoicing with exports to accounting software.
+- Housekeeping, a booking engine and a channel manager (Airbnb, Booking).
+
+Two fair options:
+- **Use Hotelgest now** for check-in and invoicing, and build only what it lacks (staff time clock,
+  our own website's booking flow).
+- **Build our own**, using Hotelgest as the model for the guest experience.
+
+This choice is worth making with the family before building the MVP. The price difference is small;
+the deciding factors are the hotel plans and how much control they want.
+
 ## Questions for the parents
 
 1. How is guest registration done today? Manually on SES.Hospedajes, or through a service?
@@ -195,6 +260,9 @@ legal part in the meantime.
 5. Extras they sell, or want to sell: private chef, transfers, late checkout, pool heating…
 6. Who else should have access (siblings, a manager)?
 7. Anything they hate about Airbnb's host tools that this should fix?
+8. Invoicing today: who issues invoices, with what tool, and does the gestor want a particular export
+   or software? Has the gestor said how the 10% VAT from December applies to Airbnb stays?
+9. Has the father tried Hotelgest (demo or trial)? What does he like beyond online check-in?
 
 ## Sources
 
@@ -213,6 +281,14 @@ legal part in the meantime.
   [esdiario](https://www.esdiario.com/andalucia/251222/175396/malaga-cierra-ano-politico-pidiendo-via-libre-implantar-tasa-turistica.html)
 - Airbnb API vs iCal: [Jetstream](https://jetstreamtech.io/blog/airbnb-calendar-sync-hotels),
   [Hostex](https://hostex.io/blog/how-to-get-the-airbnb-api/)
+- Hotelgest: [home](https://www.hotelgest.com/), [online check-in](https://www.hotelgest.com/recepcion-autonoma),
+  [accounting and invoicing](https://www.hotelgest.com/contabilidad), [SES.Hospedajes](https://www.hotelgest.com/ses-hospedajes),
+  [plans](https://www.hotelgest.com/planes)
+- VeriFactu dates: [Infoautónomos](https://www.infoautonomos.com/blog/verifactu-cuando-es-obligatorio-a-quien-afecta/),
+  [Webpsilon (postponement)](https://www.webpsilon.com/blog/verifactu-que-es-cuando-entra-en-vigor-y-a-quien-afecta/),
+  [B2Brouter](https://www.b2brouter.net/es/sistema-verifactu/)
+- 10% VAT on tourist rentals: [net2rent](https://net2rent.com/subida-iva-pisos-turisticos/),
+  [winahost](https://winahost.com/blog/iva-pisos-turisticos), [CasitaTax (commissions)](https://casitatax.com/es/guides/iva-airbnb-booking/)
 - Off-the-shelf PMS comparisons: [eviivo](https://eviivo.com/trade-secrets/best-vacation-rental-property-management-software/),
   [Stayfi](https://stayfi.com/vrm-insider/2026/06/24/lodgify-vs-smoobu/)
 

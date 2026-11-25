@@ -58,6 +58,8 @@ The PMS web app is hosted on **Cloudflare Workers**, next to the website.
 
 - **Email** (check-in links, confirmations): a transactional email service on its free tier
   (Resend, or Brevo for EU hosting), sent from `@miraflorescostatropical.com`.
+- **Invoicing:** a certified VeriFactu invoicing API signs and numbers invoices; the PMS keeps the data,
+  PDF and QR. We don't certify our own signing.
 - **Payments** (phase C): Stripe.
 - **Airbnb:** iCal import and export only (see the feature draft for why).
 - **SES.Hospedajes:** start with assisted manual submission; then build the web-service client.
