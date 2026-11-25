@@ -70,6 +70,11 @@ The PMS web app is hosted on **Cloudflare Workers**, next to the website.
   Astro islands to match the website, or SvelteKit or React for a more app-like back-office.
 - Database schema and policies live in the repo as Supabase migrations (`supabase/migrations`),
   reviewed in PRs like any code.
+- **Offline:** the app must keep working without internet (see the feature draft). Wave 1 caches data
+  for reading offline. Full offline editing (Wave 4) adds a sync engine that keeps a local SQLite copy on
+  each device in step with Supabase; PowerSync is the main candidate, with its own free plan. The
+  schema keeps this possible: unique IDs created on the device (UUIDs), `updated_at` on every table, and
+  soft deletes.
 - Two places to manage: Cloudflare (hosting, DNS, backups in R2) and Supabase (data). Both under the
   family's own accounts.
 - Guest ID data leaves Airbnb and enters a system we're responsible for. That's GDPR work: a privacy

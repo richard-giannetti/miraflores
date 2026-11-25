@@ -217,6 +217,13 @@ Not built now, but the data model leaves room for it:
 - Roles and permissions (owner / manager / staff), and a record of who changed what.
 - Works on a phone; installed on the home screen; Spanish and English.
 - Nightly backups kept outside the main provider (see ADR 0002).
+- **Works when the internet is down** (requested by the father). Built in two steps:
+  - **Wave 1, read-only offline:** the app keeps a copy of the calendar, today's arrivals and departures,
+    guest contacts, door codes and cleaning tasks on the device, so they stay visible without a connection.
+  - **Wave 4, full offline editing:** a local database on each device syncs with the server when the
+    connection returns (for example PowerSync, which works with Supabase). Two devices editing the same
+    dates while offline can't be prevented. The app flags the clash at sync time so someone can resolve it.
+  - Non-software fix worth doing anyway: a 4G backup router at each villa.
 
 ## Waves
 
@@ -229,7 +236,7 @@ Order agreed with the father (2026-11-25):
 | **1** | **The calendar and day-to-day running** | 1 properties and rooms, 2 calendar and reservations (entered in the PMS), 3 guests, cleaning part of 5, Today screen (11) |
 | **2** | **The rest of internal management** | 9 invoicing first, 4 online check-in and SES.Hospedajes, maintenance (5), 6 staff and time clock, 7 messages, 8 money, reports (11) |
 | **3** | **Connect to the outside** | Airbnb sync (2), 10 rates and direct booking on the website with Stripe, Booking.com later |
-| **4** | **Hotel extras** | 12 front desk, guest bill during the stay, groups |
+| **4** | **Hotel extras and full offline** | 12 front desk, guest bill during the stay, groups; editing without internet |
 
 - **Invoicing has a deadline:** 10% VAT applies from 1 December 2026, and VeriFactu from 1 January 2027
   unless the postponement is published. Until the PMS issues invoices, they come from a certified tool;
