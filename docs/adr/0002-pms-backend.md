@@ -52,7 +52,7 @@ The PMS web app is hosted on **Cloudflare Workers**, next to the website.
 - **1 GB file storage:** photos are compressed in the browser before upload. If that's still not enough,
   they move to R2.
 - **When to pay:** once the system is the real record of operations, Supabase Pro (about $25/month)
-  removes the pause and adds daily backups. Expected around go-live of the MVP, not before.
+  removes the pause and adds daily backups. Expected when Wave 1 goes live, not before.
 
 ### Other pieces
 
@@ -66,7 +66,7 @@ The PMS web app is hosted on **Cloudflare Workers**, next to the website.
 
 ## Consequences
 
-- `apps/pms` becomes a TypeScript web app. The front-end framework gets picked when the MVP starts:
+- `apps/pms` becomes a TypeScript web app. The front-end framework gets picked when Wave 1 starts:
   Astro islands to match the website, or SvelteKit or React for a more app-like back-office.
 - Database schema and policies live in the repo as Supabase migrations (`supabase/migrations`),
   reviewed in PRs like any code.
