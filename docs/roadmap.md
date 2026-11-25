@@ -14,9 +14,11 @@
 - [x] Interim `/checking/` page: guests are told details are collected via Airbnb messages
 - [x] Airbnb reviews + rating card (Villa Los Olivos; also shown on La Playa, labelled as the sister villa's)
 - [ ] Villa La Playa's own Airbnb reviews
-- [ ] Deploy to Cloudflare (Workers static assets, see `wrangler.jsonc`)
-- [ ] Google Search Console + analytics
-- [ ] Switch DNS from WordPress hosting to the new host
+- [x] Deploy to Cloudflare (Workers static assets, see `wrangler.jsonc`)
+- [x] Google Search Console: domain verified (DNS TXT), sitemap submitted — 2026-11-25
+- [ ] Request indexing of the main pages once Google sees the new site (after ~27 Nov)
+- [ ] Analytics (on hold)
+- [x] Switch DNS from WordPress hosting to Cloudflare — 2026-11-25 (see domain-switch.md)
 
 ## Step 2 — Property management system
 
