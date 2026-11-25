@@ -1,8 +1,12 @@
 # Domain switch: miraflorescostatropical.com → Cloudflare
 
-The domain is registered with **acens** (Telefónica's hosting, `servicio-online.net` nameservers),
-which also hosts the WordPress site and the `info@` mailbox. Only the website moves to Cloudflare.
-The domain stays registered at acens, and email stays on acens' mail servers.
+**Done on 2026-11-25.** The website is served by the `miraflores` Worker; DNS is on Cloudflare
+(`curt` / `raina.ns.cloudflare.com`).
+
+The domain is registered through **Hostalia** (panel.hostalia.com, registrar acens), which also hosts
+the old WordPress site and the `info@` mailbox. The domain is *included* in the Hostalia
+"Hosting Standard" plan: cancelling that plan would lose the domain and the email, so don't.
+Only the website moved; email stays on Hostalia's mail servers.
 
 ## DNS before the switch (checked 2026-11-25)
 
@@ -26,16 +30,16 @@ No DNSSEC, no CAA, no DKIM record found. Registration expires 2027-11-10.
 2. **Check the imported records** against the table above. Add any that are missing, and set every
    mail record (`mx`, `smtp`, `imap`, `pop3`, `webmail`) and `ftp` to **DNS only** (grey cloud).
    Mail breaks if they're proxied.
-3. **acens control panel** → the domain → DNS / nameservers → replace the three `servicio-online.net`
-   nameservers with the two Cloudflare gives you. Activation usually takes minutes to a few hours.
-4. Once Cloudflare says the domain is **Active**: delete the `@` and `www` A records, then
+3. **Hostalia panel** → Dominios y SSL → the domain → Servidores DNS → Cambiar DNS → replace the three
+   `servicio-online.net` nameservers with the two Cloudflare gives you. The .com registry updated in ~2 minutes.
+4. Delete the `@` and `www` A records, then
    **Workers & Pages → miraflores → Settings → Domains & Routes → Add → Custom domain**:
    add `miraflorescostatropical.com`, then `www.miraflorescostatropical.com`.
 5. **Rules → Redirect Rules → Create** (template "Redirect from WWW to root"): `www.` → apex, 301,
-   keep the path and query string.
+   keep the path and query string (pattern `https://www.miraflorescostatropical.com/*` →
+   `https://miraflorescostatropical.com/${1}`). Also turn on **SSL/TLS → Edge Certificates → Always Use HTTPS**.
 6. Check (see below), then do Google Search Console and the Business Profiles.
-7. Keep the acens hosting plan (it also carries email) — only cancel the WordPress part after a month,
-   and make sure cancelling doesn't remove the mailbox or the domain.
+7. Keep the Hostalia plan: it carries the domain and the email. Its WordPress files can simply be left alone.
 
 ## Checks after the switch
 
