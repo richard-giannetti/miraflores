@@ -1,0 +1,90 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Reviews from "../components/Reviews.astro";
+import { getVillas, getFamilyPhoto } from "../data/villas";
+import { site } from "../data/site";
+import { pick, t, paths, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const villas = getVillas(lang);
+const family = getFamilyPhoto(lang);
+const ui = t(lang);
+const c = pick({
+  title: { en: "Contact & Book Your Costa Tropical Villa", es: "Contacto y reservas de nuestras villas" },
+  description: {
+    en: "Book Villa Los Olivos (Motril) or Villa La Playa (Calahonda) on Airbnb, or email our family directly to plan your stay on the Costa Tropical.",
+    es: "Reserva Villa Los Olivos (Motril) o Villa La Playa (Calahonda) en Airbnb, o escribe a nuestra familia para planificar tu estancia en la Costa Tropical.",
+  },
+  crumb: { en: "Contact", es: "Contacto" },
+  eyebrow: { en: "Contact us", es: "Contáctanos" },
+  heroTitle: { en: "Get in touch", es: "Hablemos" },
+  heroSub: { en: "Book your stay on Airbnb, or drop us a line and let's start planning your getaway.", es: "Reserva tu estancia en Airbnb o escríbenos y empecemos a planificar tu escapada." },
+  suites: { en: "suites", es: "suites" },
+  write: { en: "Write to us", es: "Escríbenos" },
+  emailSocial: { en: "Email & social", es: "Email y redes" },
+  writeText: { en: "For questions, groups, events or a private chef, email us and we'll get back to you quickly.", es: "Para dudas, grupos, eventos o chef privado, escríbenos y te responderemos enseguida." },
+  follow: { en: "Follow us on Instagram", es: "Síguenos en Instagram" },
+  aboutEyebrow: { en: "About us", es: "Quiénes somos" },
+  aboutTitle: { en: "Our family", es: "Nuestra familia" },
+  about1: {
+    en: "As a family-run retreat, welcoming you is not just a tradition, it's our passion, built on generations of heartfelt hospitality.",
+    es: "Como alojamiento familiar, recibirte no es solo una tradición: es nuestra pasión, construida sobre generaciones de hospitalidad.",
+  },
+  about2: {
+    en: "Choose a peaceful, authentic retreat in the hills of Motril, or the ultimate beachfront escape in Calahonda. We can't wait to share our corner of the Costa Tropical with you.",
+    es: "Elige un refugio tranquilo y auténtico en las colinas de Motril o la escapada perfecta junto al mar en Calahonda. Estamos deseando compartir contigo nuestro rincón de la Costa Tropical.",
+  },
+}, lang);
+---
+<Base lang={lang} title={c.title} description={c.description} alternates={paths.contact} breadcrumbs={[{ name: c.crumb, href: paths.contact[lang] }]}>
+  <Hero image={villas[1].hero} eyebrow={c.eyebrow} title={c.heroTitle} subtitle={c.heroSub} compact />
+
+  <section class="section">
+    <div class="container grid cols-3">
+      {villas.map((v) => (
+        <article class="card">
+          <Image src={v.cover.src} alt={v.cover.alt} widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />
+          <div class="body">
+            <span class="eyebrow">{v.locality}</span>
+            <h2 class="h3">{v.name}</h2>
+            <p>{v.facts.suites} {c.suites} · {v.facts.guests}</p>
+            <div class="actions">
+              <a class="btn" href={v.booking.airbnb} rel="noopener">{ui.bookAirbnb}</a>
+            </div>
+          </div>
+        </article>
+      ))}
+      <article class="card">
+        <div class="body">
+          <span class="eyebrow">{c.write}</span>
+          <h2 class="h3">{c.emailSocial}</h2>
+          <p>{c.writeText}</p>
+          <p><a class="email" href={`mailto:${site.email}`}>{site.email}</a></p>
+          <p><a href={site.instagram} rel="noopener">{c.follow}</a></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container split">
+      <Image src={family.src} alt={family.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+      <div>
+        <span class="eyebrow">{c.aboutEyebrow}</span>
+        <h2>{c.aboutTitle}</h2>
+        <p>{c.about1}</p>
+        <p>{c.about2}</p>
+      </div>
+    </div>
+  </section>
+
+  <Reviews lang={lang} title={ui.reviews.contactTitle} />
+</Base>
+
+<style>
+  .h3 { font-size: 1.6rem; font-weight: 600; }
+  .email { font-weight: 600; word-break: break-all; }
+</style>

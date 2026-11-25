@@ -1,0 +1,8 @@
+---
+import BlogCategory from "../../../../views/BlogCategory.astro";
+import { categories } from "../../../../i18n";
+
+export const getStaticPaths = () =>
+  Object.entries(categories).map(([key, c]) => ({ params: { category: c.slug.es }, props: { key } }));
+---
+<BlogCategory lang="es" category={Astro.props.key} />

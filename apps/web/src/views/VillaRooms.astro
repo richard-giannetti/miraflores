@@ -1,0 +1,64 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import VillaNav from "../components/VillaNav.astro";
+import BookCta from "../components/BookCta.astro";
+import { getVilla } from "../data/villas";
+import { pick, t, villaPath, villaAlternates, type Lang } from "../i18n";
+
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const villa = getVilla(lang, slug);
+const ui = t(lang);
+const c = pick({
+  title: { en: "Rooms at", es: "Habitaciones de" },
+  suitesIn: { en: "Suites in", es: "suites en" },
+  descA: { en: "en-suite suites at", es: "suites con baño en" },
+  descB: {
+    en: "king-size beds, air conditioning and Wi-Fi in every room.",
+    es: "camas king size, aire acondicionado y Wi-Fi en todas las habitaciones.",
+  },
+  hero: { en: "The rooms", es: "Las habitaciones" },
+  discover: { en: "Discover our rooms", es: "Descubre nuestras habitaciones" },
+  suites: { en: "suites", es: "suites" },
+}, lang);
+---
+<Base
+  lang={lang}
+  title={`${c.title} ${villa.name} — ${villa.facts.suites} ${c.suitesIn} ${villa.locality}`}
+  description={`${villa.facts.suites} ${c.descA} ${villa.name}, ${villa.locality}: ${c.descB} ${villa.facts.guests}.`}
+  image={villa.rooms.image.src}
+  alternates={villaAlternates(slug, "rooms")}
+  breadcrumbs={[{ name: villa.name, href: villaPath(lang, slug) }, { name: ui.villaNav.rooms, href: villaPath(lang, slug, "rooms") }]}
+>
+  <Hero image={villa.rooms.image} eyebrow={villa.name} title={c.hero} compact />
+  <VillaNav villa={villa} lang={lang} />
+
+  <section class="section">
+    <div class="narrow center">
+      <h2>{c.discover}</h2>
+      <p class="lead">{villa.rooms.intro}</p>
+      <p class="facts">{villa.facts.suites} {c.suites} · {villa.facts.guests}</p>
+    </div>
+    <div class="container grid cols-3 types">
+      {villa.rooms.types.map((r) => (
+        <article class="card">
+          <div class="body">
+            <h3>{r.name}</h3>
+            {r.note && <p class="note">{r.note}</p>}
+            <ul class="ticks one">{r.features.map((f) => <li>{f}</li>)}</ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <BookCta villa={villa} lang={lang} />
+</Base>
+
+<style>
+  .facts { font-weight: 600; }
+  .types { margin-top: 40px; }
+  .one { grid-template-columns: 1fr; }
+  .note { color: var(--olive); font-style: italic; }
+</style>

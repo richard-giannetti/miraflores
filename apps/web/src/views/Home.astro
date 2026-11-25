@@ -1,0 +1,141 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Reviews from "../components/Reviews.astro";
+import { getVillas, getFamilyPhoto } from "../data/villas";
+import { site, getAirports } from "../data/site";
+import { pick, paths, villaPath, postPath, type Lang } from "../i18n";
+import { getPosts, postSlug } from "../i18n/blog";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const villas = getVillas(lang);
+const family = getFamilyPhoto(lang);
+const posts = (await getPosts(lang)).slice(0, 3);
+const c = pick({
+  title: { en: "Luxury Holiday Villas on the Costa Tropical, Spain | Miraflores", es: "Villas de lujo en la Costa Tropical, Granada | Miraflores" },
+  description: {
+    en: "Two family-run luxury villas on Spain's Costa Tropical: Villa Los Olivos with infinity pool above Motril, and beachfront Villa La Playa in Calahonda.",
+    es: "Dos villas de lujo familiares en la Costa Tropical: Villa Los Olivos, con piscina infinita sobre Motril, y Villa La Playa, en primera línea en Calahonda.",
+  },
+  eyebrow: { en: "Costa Tropical · Andalucía", es: "Costa Tropical · Andalucía" },
+  heroTitle: { en: "Your luxury holidays in the heart of Andalucía", es: "Tus vacaciones de lujo en el corazón de Andalucía" },
+  heroSub: {
+    en: "Two family-run villas between Málaga and Granada, with sea views, private pools and full services.",
+    es: "Dos villas familiares entre Málaga y Granada, con vistas al mar, piscina privada y todos los servicios.",
+  },
+  villasEyebrow: { en: "Our villas", es: "Nuestras villas" },
+  villasTitle: { en: "Two homes, one family", es: "Dos casas, una familia" },
+  villasLead: {
+    en: "Unwind in the hills above Motril or step straight onto the beach in Calahonda. Both villas are run by our family, with the same care and attention to detail.",
+    es: "Desconecta en las colinas de Motril o sal directamente a la playa en Calahonda. Nuestra familia gestiona las dos villas con el mismo cariño y atención al detalle.",
+  },
+  suites: { en: "suites", es: "suites" },
+  discover: { en: "Discover", es: "Descubre" },
+  aboutEyebrow: { en: "About us", es: "Quiénes somos" },
+  aboutTitle: { en: "From our family to yours", es: "De nuestra familia a la tuya" },
+  about1: {
+    en: "Welcoming guests is not just a tradition for us, it's our passion. Our commitment to an exceptional stay comes from generations of heartfelt hospitality.",
+    es: "Recibir a nuestros huéspedes no es solo una tradición, es nuestra pasión. Nuestro compromiso con una estancia excepcional viene de generaciones de hospitalidad.",
+  },
+  about2: {
+    en: "We invite you to share our slice of paradise, where every corner reflects warmth, care and the spirit of coastal living on the Costa Tropical.",
+    es: "Te invitamos a compartir nuestro pequeño paraíso, donde cada rincón refleja calidez, cuidado y el espíritu de la vida junto al mar en la Costa Tropical.",
+  },
+  gettingHere: { en: "Getting here", es: "Cómo llegar" },
+  blogEyebrow: { en: "From the blog", es: "Del blog" },
+  blogTitle: { en: "Discover the Costa Tropical", es: "Descubre la Costa Tropical" },
+  blogLead: { en: "Insider tips, day trips and hidden gems around our villas.", es: "Consejos, excursiones y rincones escondidos cerca de nuestras villas." },
+  readBlog: { en: "Read the blog", es: "Leer el blog" },
+  planTitle: { en: "Plan your stay", es: "Planifica tu estancia" },
+  planLead: { en: "Questions about dates, groups or private chefs? Write to us at", es: "¿Dudas sobre fechas, grupos o chef privado? Escríbenos a" },
+  contact: { en: "Contact us", es: "Contáctanos" },
+}, lang);
+---
+<Base lang={lang} title={c.title} description={c.description} image={villas[0].hero.src} alternates={paths.home}>
+  <Hero image={villas[0].hero} eyebrow={c.eyebrow} title={c.heroTitle} subtitle={c.heroSub}>
+    <div class="actions">
+      {villas.map((v) => <a class="btn light" href={villaPath(lang, v.slug)}>{v.name}</a>)}
+    </div>
+  </Hero>
+
+  <section class="section">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">{c.villasEyebrow}</span>
+        <h2>{c.villasTitle}</h2>
+        <p class="lead">{c.villasLead}</p>
+      </div>
+      <div class="grid cols-2 villas">
+        {villas.map((v) => (
+          <a class="card villa" href={villaPath(lang, v.slug)}>
+            <Image src={v.cover.src} alt={v.cover.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 580px" />
+            <div class="body">
+              <span class="eyebrow">{v.locality}</span>
+              <h3>{v.name}</h3>
+              <p>{v.summary}</p>
+              <p class="facts">{v.facts.suites} {c.suites} · {v.facts.guests}</p>
+              <span class="more">{c.discover} {v.name} →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container split">
+      <Image src={family.src} alt={family.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+      <div>
+        <span class="eyebrow">{c.aboutEyebrow}</span>
+        <h2>{c.aboutTitle}</h2>
+        <p>{c.about1}</p>
+        <p>{c.about2}</p>
+        <h3>{c.gettingHere}</h3>
+        <ul class="ticks">
+          {getAirports(lang).map((a) => <li>{a.name}: {a.distance}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <Reviews lang={lang} />
+
+  <section class="section alt">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">{c.blogEyebrow}</span>
+        <h2>{c.blogTitle}</h2>
+        <p class="lead">{c.blogLead}</p>
+      </div>
+      <div class="grid cols-3 posts">
+        {posts.map((p) => (
+          <a class="card" href={postPath(lang, postSlug(p))}>
+            {p.data.cover && <Image src={p.data.cover} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />}
+            <div class="body"><h3>{p.data.title}</h3></div>
+          </a>
+        ))}
+      </div>
+      <div class="actions" style="justify-content:center"><a class="btn ghost" href={paths.blog[lang]}>{c.readBlog}</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="narrow center">
+      <h2>{c.planTitle}</h2>
+      <p class="lead">{c.planLead} <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <div class="actions"><a class="btn" href={paths.contact[lang]}>{c.contact}</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .villas, .posts { margin-top: 44px; }
+  .villa { color: inherit; text-decoration: none; }
+  .villa img { aspect-ratio: 3 / 2; }
+  .facts { font-weight: 600; color: var(--ink); }
+  .more { color: var(--olive); font-weight: 600; }
+  .posts a { color: inherit; text-decoration: none; }
+  .posts h3 { font-size: 1.35rem; margin: 0; }
+</style>

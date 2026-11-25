@@ -1,16 +1,4 @@
 ---
-import Base from "../layouts/Base.astro";
-import { villas } from "../data/villas";
+import NotFound from "../views/NotFound.astro";
 ---
-<Base title="Page not found" description="This page doesn't exist." noindex>
-  <section class="section">
-    <div class="narrow center">
-      <h1>Page not found</h1>
-      <p class="lead">The page you're looking for has moved or doesn't exist.</p>
-      <div class="actions">
-        <a class="btn" href="/">Home</a>
-        {villas.map((v) => <a class="btn ghost" href={`/${v.slug}/`}>{v.name}</a>)}
-      </div>
-    </div>
-  </section>
-</Base>
+<NotFound lang="en" />

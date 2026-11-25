@@ -1,19 +1,22 @@
 ---
 import { reviews } from "../data/reviews";
+import { t, type Lang } from "../i18n";
 
-interface Props { title?: string }
-const { title = "What our guests say" } = Astro.props;
+interface Props { lang: Lang; title?: string }
+const { lang } = Astro.props;
+const ui = t(lang);
+const title = Astro.props.title ?? ui.reviews.title;
 ---
 <section class="section">
   <div class="container">
     <div class="center">
-      <span class="eyebrow">Google reviews</span>
+      <span class="eyebrow">{ui.reviews.eyebrow}</span>
       <h2>{title}</h2>
     </div>
     <div class="grid cols-3 list">
       {reviews.map((r) => (
         <figure lang={r.lang}>
-          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <div class="stars" aria-label={ui.reviews.stars}>★★★★★</div>
           <blockquote>{r.text}</blockquote>
           <figcaption>{r.author}</figcaption>
         </figure>

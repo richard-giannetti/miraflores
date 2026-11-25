@@ -8,7 +8,7 @@
 - [x] Rebuild pages: group home, each villa (home, rooms, amenities, gallery, things to do, contact), blog
 - [x] SEO: clean URLs, 301 redirects from every old URL, `LodgingBusiness`
       structured data, sitemap, Open Graph images, per-page titles/descriptions
-- [ ] Spanish version
+- [x] Spanish version (`/es/`, translated URLs, hreflang, language switcher, blog translated)
 - [x] "Book on Airbnb" buttons per villa
 - [ ] Contact form (today: email link)
 - [ ] Deploy to Cloudflare (Workers static assets, see `wrangler.jsonc`)

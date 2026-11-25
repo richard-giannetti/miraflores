@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import VillaNav from "../components/VillaNav.astro";
+import BookCta from "../components/BookCta.astro";
+import { getVilla, getAmenityDetails } from "../data/villas";
+import { pick, t, villaPath, villaAlternates, type Lang } from "../i18n";
+
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const villa = getVilla(lang, slug);
+const feature = villa.highlights[2].image;
+const ui = t(lang);
+const c = pick({
+  titleA: { en: "Amenities", es: "Servicios de" },
+  views: { en: "& Sea Views", es: "" },
+  descA: { en: "Amenities at", es: "Servicios en" },
+  hero: { en: "Amenities", es: "Servicios" },
+  handpicked: { en: "Handpicked by our family", es: "Elegido por nuestra familia" },
+  pool: { en: "Poolside bliss with views", es: "Relax con vistas" },
+}, lang);
+const title = lang === "en"
+  ? `${villa.name} ${c.titleA} — ${villa.poolAmenities[0]} ${c.views}`
+  : `${c.titleA} ${villa.name} — ${villa.poolAmenities[0]}`;
+---
+<Base
+  lang={lang}
+  title={title}
+  description={`${c.descA} ${villa.name}, ${villa.locality}: ${villa.keyAmenities.slice(0, 6).join(", ").toLowerCase()}.`}
+  image={feature.src}
+  alternates={villaAlternates(slug, "amenities")}
+  breadcrumbs={[{ name: villa.name, href: villaPath(lang, slug) }, { name: ui.villaNav.amenities, href: villaPath(lang, slug, "amenities") }]}
+>
+  <Hero image={feature} eyebrow={villa.name} title={c.hero} compact />
+  <VillaNav villa={villa} lang={lang} />
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <h2>{c.handpicked}</h2>
+        <p class="lead">{villa.amenitiesIntro}</p>
+        <ul class="ticks">{villa.keyAmenities.map((a) => <li>{a}</li>)}</ul>
+      </div>
+      <Image src={villa.cover.src} alt={villa.cover.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <h2 class="center">{c.pool}</h2>
+      <p class="lead center" style="margin-inline:auto">{villa.poolBlurb}</p>
+      <div class="grid cols-3 details">
+        {getAmenityDetails(lang).map((d) => (
+          <article class="card"><div class="body"><h3>{d.title}</h3><p>{d.text}</p></div></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <BookCta villa={villa} lang={lang} />
+</Base>
+
+<style>
+  .details { margin-top: 40px; }
+  .details h3 { font-size: 1.4rem; }
+</style>

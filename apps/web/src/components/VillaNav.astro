@@ -1,20 +1,19 @@
 ---
 import type { Villa } from "../data/villas";
+import { t, villaPath, type Lang, type VillaPage } from "../i18n";
 
-interface Props { villa: Villa }
-const { villa } = Astro.props;
-const base = `/${villa.slug}/`;
-const links = [
-  { href: base, label: "Overview" },
-  { href: `${base}rooms/`, label: "Rooms" },
-  { href: `${base}amenities/`, label: "Amenities" },
-  { href: `${base}gallery/`, label: "Gallery" },
-];
+interface Props { villa: Villa; lang: Lang }
+const { villa, lang } = Astro.props;
+const ui = t(lang);
+const pages: VillaPage[] = ["overview", "rooms", "amenities", "gallery"];
 ---
-<nav class="villa-nav" aria-label={`${villa.name} pages`}>
+<nav class="villa-nav" aria-label={villa.name}>
   <div class="container">
-    {links.map((l) => <a href={l.href} aria-current={Astro.url.pathname === l.href ? "page" : undefined}>{l.label}</a>)}
-    <a class="book" href={villa.booking.airbnb} rel="noopener">Book on Airbnb</a>
+    {pages.map((p) => {
+      const href = villaPath(lang, villa.slug, p);
+      return <a href={href} aria-current={Astro.url.pathname === href ? "page" : undefined}>{ui.villaNav[p]}</a>;
+    })}
+    <a class="book" href={villa.booking.airbnb} rel="noopener">{ui.bookAirbnb}</a>
   </div>
 </nav>
 

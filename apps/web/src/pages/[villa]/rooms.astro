@@ -1,48 +1,7 @@
 ---
-import Base from "../../layouts/Base.astro";
-import Hero from "../../components/Hero.astro";
-import VillaNav from "../../components/VillaNav.astro";
-import BookCta from "../../components/BookCta.astro";
-import { villas, type Villa } from "../../data/villas";
+import VillaRooms from "../../views/VillaRooms.astro";
+import { villaSlugs } from "../../data/villas";
 
-export const getStaticPaths = () => villas.map((v) => ({ params: { villa: v.slug }, props: { villa: v } }));
-
-const { villa } = Astro.props as { villa: Villa };
+export const getStaticPaths = () => villaSlugs.map((villa) => ({ params: { villa } }));
 ---
-<Base
-  title={`Rooms at ${villa.name} — ${villa.facts.suites} Suites in ${villa.locality}`}
-  description={`${villa.facts.suites} en-suite suites at ${villa.name}, ${villa.locality}: king-size beds, air conditioning and Wi-Fi in every room. ${villa.facts.guests}.`}
-  image={villa.rooms.image.src}
-  breadcrumbs={[{ name: villa.name, href: `/${villa.slug}/` }, { name: "Rooms", href: `/${villa.slug}/rooms/` }]}
->
-  <Hero image={villa.rooms.image} eyebrow={villa.name} title="The rooms" compact />
-  <VillaNav villa={villa} />
-
-  <section class="section">
-    <div class="narrow center">
-      <h2>Discover our rooms</h2>
-      <p class="lead">{villa.rooms.intro}</p>
-      <p class="facts">{villa.facts.suites} suites · {villa.facts.guests}</p>
-    </div>
-    <div class="container grid cols-3 types">
-      {villa.rooms.types.map((t) => (
-        <article class="card">
-          <div class="body">
-            <h3>{t.name}</h3>
-            {t.note && <p class="note">{t.note}</p>}
-            <ul class="ticks one">{t.features.map((f) => <li>{f}</li>)}</ul>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <BookCta villa={villa} />
-</Base>
-
-<style>
-  .facts { font-weight: 600; }
-  .types { margin-top: 40px; }
-  .one { grid-template-columns: 1fr; }
-  .note { color: var(--olive); font-style: italic; }
-</style>
+<VillaRooms lang="en" slug={Astro.params.villa} />

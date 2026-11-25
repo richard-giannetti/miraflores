@@ -1,0 +1,7 @@
+---
+import VillaGallery from "../../../views/VillaGallery.astro";
+import { villaSlugs } from "../../../data/villas";
+
+export const getStaticPaths = () => villaSlugs.map((villa) => ({ params: { villa } }));
+---
+<VillaGallery lang="es" slug={Astro.params.villa} />

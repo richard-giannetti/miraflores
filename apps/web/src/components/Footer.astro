@@ -1,33 +1,38 @@
 ---
 import { Image } from "astro:assets";
 import { site } from "../data/site";
-import { villas, emblem } from "../data/villas";
+import { getVillas, emblem } from "../data/villas";
+import { t, paths, villaPath, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
 ---
 <footer class="site-footer">
   <div class="container cols">
     <div>
       <Image src={emblem} alt="" width={90} />
-      <p>Family-run luxury holiday villas on Spain's Costa Tropical, between Málaga and Granada.</p>
+      <p>{ui.footer.about}</p>
     </div>
-    {villas.map((v) => (
+    {getVillas(lang).map((v) => (
       <div>
         <h2>{v.name}</h2>
         <ul>
-          <li><a href={`/${v.slug}/`}>Overview</a></li>
-          <li><a href={`/${v.slug}/rooms/`}>Rooms</a></li>
-          <li><a href={`/${v.slug}/amenities/`}>Amenities</a></li>
-          <li><a href={`/${v.slug}/gallery/`}>Gallery</a></li>
-          <li><a href={v.booking.airbnb} rel="noopener">Book on Airbnb</a></li>
+          <li><a href={villaPath(lang, v.slug)}>{ui.villaNav.overview}</a></li>
+          <li><a href={villaPath(lang, v.slug, "rooms")}>{ui.villaNav.rooms}</a></li>
+          <li><a href={villaPath(lang, v.slug, "amenities")}>{ui.villaNav.amenities}</a></li>
+          <li><a href={villaPath(lang, v.slug, "gallery")}>{ui.villaNav.gallery}</a></li>
+          <li><a href={v.booking.airbnb} rel="noopener">{ui.bookAirbnb}</a></li>
         </ul>
       </div>
     ))}
     <div>
-      <h2>Get in touch</h2>
+      <h2>{ui.footer.getInTouch}</h2>
       <ul>
         <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
         <li><a href={site.instagram} rel="noopener">Instagram</a></li>
-        <li><a href="/things-to-do-costa-tropical/">Things to do</a></li>
-        <li><a href="/blog/">Blog</a></li>
+        <li><a href={paths.thingsToDo[lang]}>{ui.nav.thingsToDo}</a></li>
+        <li><a href={paths.blog[lang]}>{ui.nav.blog}</a></li>
       </ul>
     </div>
   </div>
