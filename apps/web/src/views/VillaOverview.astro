@@ -103,7 +103,7 @@ const c = pick({
     </div>
   </section>
 
-  {slug === "villa-los-olivos" && <Reviews lang={lang} title={`${ui.reviews.villaTitle} ${villa.name}`} />}
+  <Reviews lang={lang} villaSlug={slug} title={slug === "villa-los-olivos" ? `${ui.reviews.villaTitle} ${villa.name}` : undefined} />
 
   <section class="section">
     <div class="container split">

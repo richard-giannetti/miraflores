@@ -87,11 +87,8 @@ export const ui = {
     lead: { en: "Book directly on Airbnb, or write to us and we'll help you plan your getaway.", es: "Reserva directamente en Airbnb o escríbenos y te ayudamos a planificar tu escapada." },
   },
   reviews: {
-    eyebrow: { en: "Google reviews", es: "Opiniones en Google" },
-    title: { en: "What our guests say", es: "Lo que dicen nuestros huéspedes" },
     villaTitle: { en: "What guests say about", es: "Lo que dicen los huéspedes de" },
     contactTitle: { en: "Don't take our word for it", es: "No lo decimos solo nosotros" },
-    stars: { en: "5 out of 5 stars", es: "5 de 5 estrellas" },
   },
   footer: {
     about: { en: "Family-run luxury holiday villas on Spain's Costa Tropical, between Málaga and Granada.", es: "Villas vacacionales de lujo gestionadas por nuestra familia en la Costa Tropical, entre Málaga y Granada." },

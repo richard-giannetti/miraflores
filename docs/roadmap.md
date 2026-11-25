@@ -12,7 +12,8 @@
 - [x] "Book on Airbnb" buttons per villa
 - [x] Contact form (Web3Forms; shows once `contactFormKey` is set in `apps/web/src/data/site.ts`)
 - [x] Interim `/checking/` page: guests are told details are collected via Airbnb messages
-- [ ] Real Airbnb reviews per villa (pasted from the host dashboard) + rating badge
+- [x] Airbnb reviews + rating card (Villa Los Olivos; also shown on La Playa, labelled as the sister villa's)
+- [ ] Villa La Playa's own Airbnb reviews
 - [ ] Deploy to Cloudflare (Workers static assets, see `wrangler.jsonc`)
 - [ ] Google Search Console + analytics
 - [ ] Switch DNS from WordPress hosting to the new host
