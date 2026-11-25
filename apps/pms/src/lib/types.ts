@@ -42,6 +42,35 @@ export interface Guest {
   notes: string;
 }
 
+export interface GuestFull extends Guest {
+  language: string | null;
+  nationality: string | null;
+  updated_at: string;
+}
+
+export type TaskStatus = "todo" | "in_progress" | "done" | "skipped";
+
+export interface Task {
+  id: string;
+  unit_id: string;
+  reservation_id: string | null;
+  kind: "cleaning" | "inspection" | "maintenance" | "other";
+  title: string;
+  due_date: string;
+  status: TaskStatus;
+  assigned_to: string | null;
+  checked: string[];
+  notes: string;
+  completed_at: string | null;
+}
+
+export interface ChecklistItem {
+  id: string;
+  property_id: string;
+  label: string;
+  sort: number;
+}
+
 export interface Reservation {
   id: string;
   unit_id: string;
