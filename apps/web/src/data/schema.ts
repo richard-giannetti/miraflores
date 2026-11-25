@@ -26,8 +26,10 @@ export async function villaSchema(villa: Villa, lang: Lang) {
       addressRegion: "Granada",
       addressCountry: "ES",
     },
+    geo: { "@type": "GeoCoordinates", latitude: villa.maps.lat, longitude: villa.maps.lng },
+    hasMap: villa.maps.url,
     numberOfRooms: villa.facts.suites,
     amenityFeature: villa.keyAmenities.map((name) => ({ "@type": "LocationFeatureSpecification", name, value: true })),
-    sameAs: [villa.booking.airbnb],
+    sameAs: [villa.booking.airbnb, villa.maps.url],
   };
 }
