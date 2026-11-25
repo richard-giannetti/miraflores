@@ -46,5 +46,5 @@ into one page avoids duplicate content and concentrates ranking signals.
    `pnpm --filter @miraflores/web build`, then `npx wrangler deploy`, which uses `wrangler.jsonc`
    at the repo root. Check the site on its `*.workers.dev` URL.
 2. Update Airbnb scheduled messages that link to `/checking` (the page now explains the interim process).
-3. Point the domain at the new host; keep WordPress hosting for a few weeks as a fallback.
+3. Point the domain at the new host (steps in [domain-switch.md](domain-switch.md)); keep WordPress hosting for a few weeks as a fallback.
 4. In Google Search Console: submit the new sitemap, and spot-check old URLs redirect with 301.
