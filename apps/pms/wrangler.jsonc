@@ -1,0 +1,10 @@
+// The PMS back-office, served at pms.miraflorescostatropical.com as a single-page app.
+// Data lives in Supabase (see docs/adr/0002-pms-backend.md); this Worker only serves the files.
+{
+  "name": "miraflores-pms",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
