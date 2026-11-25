@@ -54,28 +54,36 @@ system is worth it over a spreadsheet.
    recorded tamper-proof: chained records, a QR code, and optionally sent to the tax agency in real time.
    The villas are owned by a company (Miraflores Costa Tropical SL). Under the law as published, companies
    must comply from **1 January 2027**. A postponement to 2028 has been announced but wasn't in the BOE
-   as of October 2026. See [module 9](#9-invoicing-facturación--mvp).
+   as of October 2026. See [module 9](#9-invoicing-facturación--wave-2).
 
 ## Feature modules
 
-Each module is tagged with the phase it belongs to (see [Phases](#phases)).
+Each module is tagged with the wave it belongs to (see [Waves](#waves)).
 
-### 1. Properties and rooms · MVP
+### 1. Properties and rooms · Wave 1
 
 - Properties (Villa Los Olivos, Villa La Playa; later, the hotel), each with its units.
-  A villa is one bookable unit made of suites; a hotel has room types and rooms. Same model for both.
+  Modelled like a hotel from day one: property → room types → rooms. A villa is one bookable unit
+  made of suites, and could later be let room by room. The calendar works at room level.
 - Per unit: capacity, beds, suites/bathrooms, amenities, photos, house rules, Wi-Fi, door codes,
   registration numbers, Airbnb listing link and iCal URLs.
 - Unit status: clean / dirty / inspected / out of order.
 
-### 2. Calendar and reservations · MVP
+### 2. Calendar and reservations · Wave 1 (Airbnb sync: Wave 3)
 
-- One calendar across both villas (and later, every room), by month and by timeline.
-- Reservations from every source in one place: **Airbnb** (synced), **direct** (website, later),
-  **phone / email / repeat guests** (entered by hand), and later Booking.com.
+**The calendar is the centre of the app.** Everything else (cleaning, check-in, invoices, staff,
+money) hangs off a reservation on it, so it's built first.
+
+- One planning view across both villas and, later, every room: a timeline (rooms down the side,
+  days across), plus month and week views.
+- Create a reservation by selecting dates on a row; move it by dragging, and extend it by dragging an edge.
+  Colours show status (option, confirmed, checked in, checked out, cancelled) and source.
+- Reservations from every source in one place. In Wave 1 all of them are entered in the PMS: phone,
+  email, repeat guests, and **Airbnb bookings typed in by hand**. Wave 3 adds automatic Airbnb sync,
+  the website's direct bookings and, later, Booking.com.
 - **Blocks:** owner stays, maintenance, "hold for friends".
 - **No double bookings**, enforced by the database itself rather than by careful clicking.
-- **Airbnb sync via iCal**, both directions. The PMS imports each listing's Airbnb calendar every few
+- **Airbnb sync via iCal** (Wave 3), both directions. The PMS imports each listing's Airbnb calendar every few
   minutes and publishes its own calendar for Airbnb to import back. Airbnb refreshes imported calendars
   roughly every 3 hours, so a direct booking can't instantly block Airbnb. This is acceptable at
   two villas. Airbnb's real API is only for approved software partners, and new access is very limited.
@@ -84,14 +92,14 @@ Each module is tagged with the phase it belongs to (see [Phases](#phases)).
 - Reservation details: guests (adults/children), arrival/departure times, status, source, price breakdown,
   notes, linked tasks and messages.
 
-### 3. Guests · MVP
+### 3. Guests · Wave 1
 
 - Guest profiles shared across bookings: contact details, language, nationality, notes, preferences
   ("allergic to feathers", "returning family, likes the pool heated").
 - Repeat-guest detection, and history of their stays.
 - Marketing consent tracked separately; contact details are not reused for mailings without it.
 
-### 4. Online check-in and guest registration · MVP
+### 4. Online check-in and guest registration · Wave 2
 
 This replaces the old WordPress `/checking` form, and the Airbnb messages that currently cover it.
 It's the part of Hotelgest the family likes most ("recepción autónoma"), so it's the guest-facing
@@ -119,7 +127,7 @@ model to follow: no app to download, one link per reservation, on the phone.
 - After check-in, the same link becomes the **guest page**: address and map, door code (shown on
   arrival day only), Wi-Fi, house manual, local tips from the website's Things to do and blog, and contact.
 
-### 5. Housekeeping and maintenance · MVP (cleaning) / Phase B (maintenance)
+### 5. Housekeeping and maintenance · Wave 1 (cleaning) / Wave 2 (maintenance)
 
 - **Automatic cleaning tasks** created from departures: checkout → clean → inspect, with the time
   window until the next arrival and the next group's size (so the right number of beds get made).
@@ -130,7 +138,7 @@ model to follow: no app to download, one link per reservation, on the phone.
   assigned and tracked. A broken item can block a room.
 - **Recurring jobs:** pool, garden, AC service, boiler, extinguishers, pest control. Each has its own interval.
 
-### 6. Staff · Phase B
+### 6. Staff · Wave 2
 
 - Staff directory: role, phone, languages, contract type (employee / freelancer / cleaning company).
 - Schedules and shifts, built around the cleaning tasks; availability and holidays.
@@ -138,7 +146,7 @@ model to follow: no app to download, one link per reservation, on the phone.
   export for the gestor's payroll. The PMS doesn't do payroll itself.
 - Hours per person per month; cost of cleaning per stay.
 
-### 7. Guest messages · MVP (templates) / Phase B (automation)
+### 7. Guest messages · Wave 2
 
 - Message templates in EN/ES with placeholders (name, dates, door code, check-in link).
 - Scheduled messages for direct-booking guests by email (later WhatsApp): confirmation, check-in link,
@@ -147,7 +155,7 @@ model to follow: no app to download, one link per reservation, on the phone.
   because writing into Airbnb's inbox needs the partner API. The PMS gives the text and the check-in link
   to paste in.
 
-### 8. Money · Phase B
+### 8. Money · Wave 2
 
 - Income per reservation: Airbnb payout (imported from Airbnb's earnings CSV), direct payments,
   extras (late checkout, private chef, airport transfer).
@@ -155,10 +163,10 @@ model to follow: no app to download, one link per reservation, on the phone.
 - Monthly and yearly results per villa; export for the accountant (gestor).
 - Airbnb's commission invoices recorded as expenses, with their VAT treatment (see legal point 6).
 
-### 9. Invoicing (facturación) · MVP
+### 9. Invoicing (facturación) · Wave 2
 
-The father's top concern, and with 10% VAT from December 2026 and VeriFactu from 2027, it belongs in
-the first version rather than later.
+The father's top concern. 10% VAT applies from December 2026 and VeriFactu from 2027, so it comes
+right after the calendar, at the start of Wave 2.
 
 - **An invoice per stay**, generated from the reservation: nights, cleaning fee, extras, VAT at the
   correct rate, totals. This covers Airbnb stays as well as direct ones, if the gestor confirms the
@@ -182,7 +190,7 @@ burden for one family company. The safer route: the PMS prepares the invoice dat
 certified VeriFactu invoicing service or API (several exist, some aimed at developers), which signs,
 numbers and reports it. The PMS stores the resulting PDF and QR. The provider gets chosen with the gestor.
 
-### 10. Rates and direct booking · Phase C
+### 10. Rates and direct booking · Wave 3
 
 - Seasonal rates, weekend rates, minimum stay, extra-guest fee, cleaning fee, discounts and promo codes.
 - Availability and price API for the website (`apps/web`), with a "Book direct" flow.
@@ -190,14 +198,14 @@ numbers and reports it. The PMS stores the resulting PDF and QR. The provider ge
 - Cancellation policies and automatic refunds.
 - Tourist tax line, ready if Andalucía introduces one.
 
-### 11. Today screen and reports · MVP (today) / Phase B (reports)
+### 11. Today screen and reports · Wave 1 (today) / Wave 2 (reports)
 
 - **Today:** arrivals and departures, who has checked in online, cleaning status, open issues,
   messages to send. This is the parents' home screen.
 - Occupancy, average nightly rate, revenue per available night, revenue by channel (Airbnb vs direct),
   booking lead time, nationality mix (from registrations).
 
-### 12. Hotel-ready · Phase D
+### 12. Hotel extras · Wave 4
 
 Not built now, but the data model leaves room for it:
 - Room types vs physical rooms, rate plans, room assignment.
@@ -210,18 +218,24 @@ Not built now, but the data model leaves room for it:
 - Works on a phone; installed on the home screen; Spanish and English.
 - Nightly backups kept outside the main provider (see ADR 0002).
 
-## Phases
+## Waves
 
-| Phase | Goal | Modules |
+Order agreed with the father (2026-11-25):
+- **Start with internal management**, with the calendar at the centre.
+- **Connections to the platforms** (Airbnb sync, Booking, website bookings) come afterwards.
+
+| Wave | Goal | Modules |
 | --- | --- | --- |
-| **MVP** | Replace spreadsheets and the WordPress check-in form; invoice correctly | 1, 2, 3, 4, cleaning part of 5, message templates, 9 invoicing, Today screen |
-| **B** | Run the team and see the numbers | maintenance, 6 staff + time clock, 7 automation, 8 money, reports |
-| **C** | Direct bookings on the website | 10, website integration, Stripe |
-| **D** | Add the hotel | 12 |
+| **1** | **The calendar and day-to-day running** | 1 properties and rooms, 2 calendar and reservations (entered in the PMS), 3 guests, cleaning part of 5, Today screen (11) |
+| **2** | **The rest of internal management** | 9 invoicing first, 4 online check-in and SES.Hospedajes, maintenance (5), 6 staff and time clock, 7 messages, 8 money, reports (11) |
+| **3** | **Connect to the outside** | Airbnb sync (2), 10 rates and direct booking on the website with Stripe, Booking.com later |
+| **4** | **Hotel extras** | 12 front desk, guest bill during the stay, groups |
 
-Invoicing is the one MVP part with a deadline: 10% VAT applies from 1 December 2026, and VeriFactu
-from 1 January 2027 unless the postponement is published. If the PMS isn't ready by then, invoices
-come from a certified tool in the meantime; the gestor may already have one.
+- **Invoicing has a deadline:** 10% VAT applies from 1 December 2026, and VeriFactu from 1 January 2027
+  unless the postponement is published. Until the PMS issues invoices, they come from a certified tool;
+  the gestor may already have one.
+- **Airbnb bookings until Wave 3:** they're typed into the PMS calendar by hand. That's a few minutes per
+  booking at two villas, and the price of getting the internal side right first.
 
 ## Build vs buy — honest note
 
@@ -233,7 +247,7 @@ build our own anyway:
 - **The hotel later**, which most vacation-rental tools don't handle well.
 - **Data and costs** that stay in our hands.
 
-If the MVP drags on, a paid tool for check-in and SES.Hospedajes (Chekin, for example) can cover the
+If Wave 2 drags on, a paid tool for check-in and SES.Hospedajes (Chekin, for example) can cover the
 legal part in the meantime.
 
 **Decision: we build our own.** The family doesn't want to use an off-the-shelf PMS.
