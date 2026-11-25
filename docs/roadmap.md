@@ -11,7 +11,6 @@
 - [ ] Spanish version
 - [x] "Book on Airbnb" buttons per villa
 - [ ] Contact form (today: email link)
-- [ ] Replace the `/checking` guest check-in form (ID documents) — likely part of the PMS
 - [ ] Deploy to Cloudflare Pages
 - [ ] Google Search Console + analytics
 - [ ] Switch DNS from WordPress hosting to the new host
@@ -21,6 +20,8 @@
 - [ ] Pick stack (ADR)
 - [ ] Unified calendar for both villas, synced with Airbnb via iCal
 - [ ] Bookings and guest records
+- [ ] Online guest check-in (replaces the old `/checking` form): ID/passport details for the
+      Spanish guest registration requirement, stored securely, not on the public website
 - [ ] Cleaning / turnover schedule
 - [ ] Income and expense overview
 

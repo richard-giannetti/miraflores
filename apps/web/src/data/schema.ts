@@ -27,6 +27,6 @@ export async function villaSchema(villa: Villa) {
     },
     numberOfRooms: villa.facts.suites,
     amenityFeature: villa.keyAmenities.map((name) => ({ "@type": "LocationFeatureSpecification", name, value: true })),
-    sameAs: [villa.booking.airbnb, ...(villa.booking.vrbo ? [villa.booking.vrbo] : [])],
+    sameAs: [villa.booking.airbnb],
   };
 }

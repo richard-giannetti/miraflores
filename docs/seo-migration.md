@@ -24,7 +24,7 @@ Titles and descriptions from Yoast are in `migration/export/seo.json`.
 | `/blog/<slug>` | `/blog/<slug>/` (unchanged) |
 | `/blog/category/<cat>` | `/blog/category/<cat>/` (unchanged) |
 | `/blog/tag/<tag>` | `/blog/` |
-| `/checking` | **not rebuilt yet** — guest check-in form collecting ID/passport numbers (see below) |
+| `/checking` | not on the public site — moves to the management system (step 2) |
 
 The two "things to do" and two "contact" pages were near-identical copies; merging each pair
 into one page avoids duplicate content and concentrates ranking signals.
@@ -40,6 +40,6 @@ into one page avoids duplicate content and concentrates ranking signals.
 
 1. Deploy `apps/web` to Cloudflare Pages (build command `pnpm --filter @miraflores/web build`,
    output `apps/web/dist`) and check it on the `*.pages.dev` URL.
-2. Decide what happens to `/checking` (guest documents). It must not be a plain static form.
+2. Make sure guests are no longer sent to `/checking` (it moves to the management system).
 3. Point the domain at the new host; keep WordPress hosting for a few weeks as a fallback.
 4. In Google Search Console: submit the new sitemap, and spot-check old URLs redirect with 301.

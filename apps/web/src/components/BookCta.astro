@@ -11,7 +11,6 @@ const { villa } = Astro.props;
     <p class="lead">Book directly on Airbnb, or write to us and we'll help you plan your getaway.</p>
     <div class="actions">
       <a class="btn" href={villa.booking.airbnb} rel="noopener">Book on Airbnb</a>
-      {villa.booking.vrbo && <a class="btn ghost" href={villa.booking.vrbo} rel="noopener">Book on Vrbo</a>}
       <a class="btn ghost" href="/contact/">Contact us</a>
     </div>
   </div>

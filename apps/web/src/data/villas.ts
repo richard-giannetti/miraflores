@@ -30,7 +30,7 @@ export interface Villa {
   poolBlurb: string;
   poolAmenities: string[];
   gallery: { title: string; photos: Photo[] }[];
-  booking: { airbnb: string; vrbo?: string };
+  booking: { airbnb: string };
   sister: string;
 }
 
@@ -111,7 +111,7 @@ export const villas: Villa[] = [
         { src: a(`los-olivos/gallery-${n}`), alt: "Villa Los Olivos" }
       )) },
     ],
-    booking: { airbnb: "https://airbnb.com/h/losolivosmiraflores", vrbo: "https://www.vrbo.com/es-es/p11449241" },
+    booking: { airbnb: "https://airbnb.com/h/losolivosmiraflores" },
     sister: "villa-la-playa-calahonda",
   },
   {
