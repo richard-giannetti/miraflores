@@ -24,3 +24,13 @@
 /blog/discover-the-charm-of-nerja-a-perfect-day-trip-from-villa-los-olivos  /blog/discover-the-charm-of-nerja-a-perfect-day-trip-from-villa-los-olivos/  301
 /blog/unveiling-the-secret-charms-of-la-rijana-beach-your-ultimate-hideaway-on-the-costa-tropical  /blog/unveiling-the-secret-charms-of-la-rijana-beach-your-ultimate-hideaway-on-the-costa-tropical/  301
 /blog/tag/*                                   /blog/                                301
+
+# Old Yoast / WordPress sitemaps Google already knows about
+/sitemap_index.xml                            /sitemap-index.xml                    301
+/sitemap.xml                                  /sitemap-index.xml                    301
+/wp-sitemap.xml                               /sitemap-index.xml                    301
+/page-sitemap.xml                             /sitemap-index.xml                    301
+/post-sitemap.xml                             /sitemap-index.xml                    301
+/category-sitemap.xml                         /sitemap-index.xml                    301
+/post_tag-sitemap.xml                         /sitemap-index.xml                    301
+/author-sitemap.xml                           /sitemap-index.xml                    301
