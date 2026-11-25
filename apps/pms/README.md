@@ -19,6 +19,12 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   (moved, cancelled, reconfirmed). Shows who's leaving and the next arrival (warns on same-day turnovers).
   Assign to a team member, tick the villa's checklist, add notes, mark done (who and when is recorded).
 - **Guests**: search, profile with contact details, nationality, language, notes and every stay.
+- **Invoices** (Wave 2, owners and managers): draft from a reservation in one click, edit customer and lines
+  (enter prices with or without VAT), issue. Issuing numbers the invoice in its series with no gaps
+  (`F2026-0001`, `S…` simplified, `R…` corrective), dates it today, freezes the company details and locks it;
+  corrections go through a corrective invoice. Printable bilingual (ES/EN) invoice, save as PDF from the browser.
+  Company details (NIF, address, default VAT) under "Company details" (owners).
+  **Not yet VeriFactu-signed**: from 2027 a certified service must sign them (see docs/pms/features.md, module 9).
 
 ## Develop
 

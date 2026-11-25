@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { supabase, OVERLAP } from "../lib/supabase";
 import { daysBetween } from "../lib/dates";
 import { t, type Lang } from "../lib/i18n";
+import { newInvoice } from "./Invoices";
 import { sources, statuses, type Property, type ReservationKind, type ReservationSource, type ReservationStatus, type Unit } from "../lib/types";
 
 // What the form edits: a reservation plus its guest's main details.
@@ -113,6 +114,23 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
     const res = await supabase.from("reservations").update({ deleted_at: new Date().toISOString() }).eq("id", draft.id);
     if (res.error) return fail(`${t(lang, "saveFailed")} ${res.error.message}`);
     onSaved();
+  }
+
+  // A draft invoice for this stay: the guest as customer, one line for the stay at the booking's amount.
+  async function invoice() {
+    if (!draft.id) return;
+    setBusy(true);
+    const unit = units.find((u) => u.id === f.unit_id);
+    const fmt = (d: string) => d.split("-").reverse().join("/");
+    await newInvoice({
+      reservationId: draft.id,
+      customer: [f.first_name, f.last_name].filter(Boolean).join(" "),
+      email: f.email,
+      description: `${t("es", "stayLine")} ${unit?.name ?? ""}, ${fmt(f.check_in)} – ${fmt(f.check_out)} (${nights} ${t("es", "nights")})`,
+      gross: f.total_amount,
+      operationDate: f.check_out,
+    });
+    ref.current?.close();
   }
 
   function fail(msg: string) {
@@ -231,6 +249,11 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
             </button>
           )}
           <span className="spacer" />
+          {canEdit && draft.id && !isBlock && (
+            <button type="button" onClick={invoice} disabled={busy}>
+              {t(lang, "createInvoice")}
+            </button>
+          )}
           <button type="button" onClick={() => ref.current?.close()}>
             {t(lang, "cancel")}
           </button>

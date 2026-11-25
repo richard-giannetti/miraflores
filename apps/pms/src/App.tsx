@@ -9,13 +9,16 @@ import { Calendar } from "./components/Calendar";
 import { Today } from "./components/Today";
 import { Tasks } from "./components/Tasks";
 import { Guests } from "./components/Guests";
+import { Invoices } from "./components/Invoices";
 import { useVillas } from "./lib/villas";
 
-type Tab = "today" | "calendar" | "cleaning" | "guests";
-const tabs: Tab[] = ["today", "calendar", "cleaning", "guests"];
-const tabFromHash = (): Tab => {
-  const h = location.hash.slice(1) as Tab;
-  return tabs.includes(h) ? h : "today";
+type Tab = "today" | "calendar" | "cleaning" | "guests" | "invoices";
+const tabs: Tab[] = ["today", "calendar", "cleaning", "guests", "invoices"];
+const managerTabs: Tab[] = ["guests", "invoices"];
+// "#invoices/<id>" opens one invoice.
+const route = (): { tab: Tab; id: string | null } => {
+  const [h, id] = location.hash.slice(1).split("/") as [Tab, string | undefined];
+  return { tab: tabs.includes(h) ? h : "today", id: id ?? null };
 };
 
 export function App() {
@@ -81,12 +84,12 @@ export function App() {
 
 function Workspace({ lang, profile, header }: { lang: Lang; profile: Profile; header: ReactNode }) {
   const villas = useVillas();
-  const [tab, setTab] = useState<Tab>(tabFromHash);
+  const [{ tab, id }, setRoute] = useState(route);
   const isManager = profile.role === "owner" || profile.role === "manager";
-  const visible = tabs.filter((x) => x !== "guests" || isManager);
+  const visible = tabs.filter((x) => isManager || !managerTabs.includes(x));
 
   useEffect(() => {
-    const onHash = () => setTab(tabFromHash());
+    const onHash = () => setRoute(route());
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
@@ -105,6 +108,7 @@ function Workspace({ lang, profile, header }: { lang: Lang; profile: Profile; he
       {tab === "calendar" && <Calendar lang={lang} role={profile.role} villas={villas} />}
       {tab === "cleaning" && <Tasks lang={lang} profile={profile} villas={villas} />}
       {tab === "guests" && isManager && <Guests lang={lang} />}
+      {tab === "invoices" && isManager && <Invoices lang={lang} profile={profile} openId={id} />}
     </>
   );
 }
