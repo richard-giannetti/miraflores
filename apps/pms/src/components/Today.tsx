@@ -8,6 +8,7 @@ import type { Profile, Reservation, ReservationStatus } from "../lib/types";
 import { ReservationDialog, type Draft } from "./ReservationDialog";
 import { toDraft } from "./Calendar";
 import { TaskCard, useTasks } from "./Tasks";
+import { Avatar, Icon, type IconName } from "./Icon";
 
 interface Props {
   lang: Lang;
@@ -50,6 +51,7 @@ export function Today({ lang, profile, villas }: Props) {
 
   const tasks = useTasks({ from: addDays(day, -30), to: day });
 
+  const dueTasks = tasks.list.filter((x) => x.due_date === day || x.status === "todo" || x.status === "in_progress");
   const bookings = reservations.filter((r) => r.kind === "booking");
   const arrivals = bookings.filter((r) => r.check_in === day);
   const departures = bookings.filter((r) => r.check_out === day);
@@ -67,7 +69,13 @@ export function Today({ lang, profile, villas }: Props) {
     return (
       <li key={r.id} className="item">
         <button className="item-main" onClick={() => setDraft(toDraft(r))}>
-          <span className="dot" style={{ background: villas.propertyOf(r.unit_id)?.color }} />
+          {r.kind === "block" ? (
+            <span className="avatar muted-avatar">
+              <Icon name="lock" size={16} />
+            </span>
+          ) : (
+            <Avatar name={guestName(r)} color={villas.propertyOf(r.unit_id)?.color} />
+          )}
           <span>
             <strong>{r.kind === "block" ? r.title || t(lang, "block") : guestName(r)}</strong>
             <small>
@@ -78,45 +86,73 @@ export function Today({ lang, profile, villas }: Props) {
           </span>
         </button>
         {r.guest?.phone && (
-          <a className="tel" href={`tel:${r.guest.phone}`}>
-            {r.guest.phone}
+          <a className="icon-btn" href={`tel:${r.guest.phone}`} aria-label={r.guest.phone} title={r.guest.phone}>
+            <Icon name="phone" size={18} />
           </a>
         )}
         {isManager && action && r.status !== action.status && (
-          <button onClick={() => setStatus(r, action.status)}>{action.label}</button>
+          <button className="small-btn" onClick={() => setStatus(r, action.status)}>
+            {action.label}
+          </button>
         )}
-        {r.status === action?.status && <span className="pill ok">{t(lang, `status_${r.status}`)}</span>}
+        {r.status === action?.status && (
+          <span className="pill ok">
+            <Icon name="check" size={14} /> {t(lang, `status_${r.status}`)}
+          </span>
+        )}
       </li>
     );
   }
 
-  const section = (title: string, list: Reservation[], action?: { label: string; status: ReservationStatus }) => (
+  const section = (icon: IconName, title: string, list: Reservation[], action?: { label: string; status: ReservationStatus }) => (
     <section className="panel">
       <h2>
+        <span className="h-icon"><Icon name={icon} size={18} /></span>
         {title} <span className="count">{list.length}</span>
       </h2>
       {list.length ? <ul className="list">{list.map((r) => row(r, action))}</ul> : <p className="muted">{t(lang, "nothing")}</p>}
     </section>
   );
 
-  const dueTasks = tasks.list.filter((x) => x.due_date === day || x.status === "todo" || x.status === "in_progress");
-
   return (
     <main className="page">
-      <div className="toolbar">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">{day === today() ? t(lang, "today") : format(day, loc, { weekday: "long" })}</p>
+          <h1 className="title">{format(day, loc, { weekday: day === today() ? "long" : undefined, day: "numeric", month: "long" })}</h1>
+        </div>
         <div className="nav">
-          <button onClick={() => setDay(addDays(day, -1))} aria-label={t(lang, "previous")}>‹</button>
-          <button onClick={() => setDay(today())}>{t(lang, "today")}</button>
-          <button onClick={() => setDay(addDays(day, 1))} aria-label={t(lang, "next")}>›</button>
-          <span className="range">{format(day, loc, { weekday: "long", day: "numeric", month: "long" })}</span>
+          <button className="icon-btn" onClick={() => setDay(addDays(day, -1))} aria-label={t(lang, "previous")}>
+            <Icon name="left" />
+          </button>
+          {day !== today() && <button onClick={() => setDay(today())}>{t(lang, "today")}</button>}
+          <button className="icon-btn" onClick={() => setDay(addDays(day, 1))} aria-label={t(lang, "next")}>
+            <Icon name="right" />
+          </button>
         </div>
       </div>
 
+      <div className="stats">
+        {[
+          { icon: "arrive" as const, label: t(lang, "arrivals"), n: arrivals.length },
+          { icon: "leave" as const, label: t(lang, "departures"), n: departures.length },
+          { icon: "bed" as const, label: t(lang, "inHouse"), n: inHouse.length },
+          { icon: "cleaning" as const, label: t(lang, "cleaningToday"), n: dueTasks.filter((x) => x.status !== "done").length },
+        ].map((x) => (
+          <div key={x.label} className="stat">
+            <span className="h-icon"><Icon name={x.icon} size={18} /></span>
+            <strong>{x.n}</strong>
+            <span>{x.label}</span>
+          </div>
+        ))}
+      </div>
+
       <div className="columns">
-        {section(t(lang, "arrivals"), arrivals, { label: t(lang, "markCheckedIn"), status: "checked_in" })}
-        {section(t(lang, "departures"), departures, { label: t(lang, "markCheckedOut"), status: "checked_out" })}
+        {section("arrive", t(lang, "arrivals"), arrivals, { label: t(lang, "markCheckedIn"), status: "checked_in" })}
+        {section("leave", t(lang, "departures"), departures, { label: t(lang, "markCheckedOut"), status: "checked_out" })}
         <section className="panel">
           <h2>
+            <span className="h-icon"><Icon name="cleaning" size={18} /></span>
             {t(lang, "cleaningToday")} <span className="count">{dueTasks.length}</span>
           </h2>
           {dueTasks.length ? (
@@ -129,8 +165,8 @@ export function Today({ lang, profile, villas }: Props) {
             <p className="muted">{t(lang, "nothing")}</p>
           )}
         </section>
-        {section(t(lang, "inHouse"), inHouse)}
-        {blocks.length > 0 && section(t(lang, "blocksToday"), blocks)}
+        {section("bed", t(lang, "inHouse"), inHouse)}
+        {blocks.length > 0 && section("lock", t(lang, "blocksToday"), blocks)}
       </div>
 
       {draft && (

@@ -6,8 +6,9 @@ import { load, save } from "../lib/cache";
 import { RESERVATION_FIELDS, type Villas } from "../lib/villas";
 import type { Reservation, Role } from "../lib/types";
 import { ReservationDialog, type Draft } from "./ReservationDialog";
+import { Icon } from "./Icon";
 
-const DAY_W = 48; // px per day column
+const MIN_DAY_W = 44; // narrowest day column; wider when the screen allows
 
 interface Props {
   lang: Lang;
@@ -34,6 +35,20 @@ export function Calendar({ lang, role, villas }: Props) {
   const [drag, setDrag] = useState<Drag | null>(null);
   const dragRef = useRef<Drag | null>(null);
   dragRef.current = drag;
+
+  // Day columns stretch to fill the screen, never narrower than MIN_DAY_W (the grid scrolls instead).
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const cornerRef = useRef<HTMLDivElement>(null);
+  const [DAY_W, setDayW] = useState(48);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const fit = () => setDayW(Math.max(MIN_DAY_W, Math.floor((el.clientWidth - (cornerRef.current?.offsetWidth ?? 200)) / span)));
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [span]);
 
   // Reservations overlapping the visible range, plus a margin so neighbouring pages are cached too.
   const from = addDays(start, -31);
@@ -162,9 +177,12 @@ export function Calendar({ lang, role, villas }: Props) {
       }
     }
     // Hotel-style: a stay starts mid-day on arrival and ends mid-day on departure.
-    const left = (daysBetween(start, checkIn) + 0.5) * DAY_W;
-    const width = daysBetween(checkIn, checkOut) * DAY_W;
-    return { unitId, left, width, nights: daysBetween(checkIn, checkOut) };
+    const rawLeft = (daysBetween(start, checkIn) + 0.5) * DAY_W;
+    const rawRight = rawLeft + daysBetween(checkIn, checkOut) * DAY_W;
+    // Stays running past either edge are clipped there, so the name stays readable.
+    const left = Math.max(0, rawLeft);
+    const right = Math.min(span * DAY_W, rawRight);
+    return { unitId, left, width: right - left, nights: daysBetween(checkIn, checkOut), cutLeft: rawLeft < 0, cutRight: rawRight > span * DAY_W };
   }
 
   const loc = locale[lang];
@@ -177,19 +195,25 @@ export function Calendar({ lang, role, villas }: Props) {
     <main className="calendar" onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={() => setDrag(null)}>
       <div className="toolbar">
         <div className="nav">
-          <button onClick={() => setStart(addDays(start, -7))} aria-label={t(lang, "previous")}>‹</button>
+          <button className="icon-btn" onClick={() => setStart(addDays(start, -7))} aria-label={t(lang, "previous")}>
+            <Icon name="left" />
+          </button>
           <button onClick={() => setStart(startOfWeek(today()))}>{t(lang, "today")}</button>
-          <button onClick={() => setStart(addDays(start, 7))} aria-label={t(lang, "next")}>›</button>
+          <button className="icon-btn" onClick={() => setStart(addDays(start, 7))} aria-label={t(lang, "next")}>
+            <Icon name="right" />
+          </button>
           <span className="range">
             {format(start, loc, { day: "numeric", month: "short" })} – {format(addDays(end, -1), loc, { day: "numeric", month: "short", year: "numeric" })}
           </span>
         </div>
         <div className="nav">
-          <button className={span === 14 ? "on" : ""} onClick={() => setSpan(14)}>{t(lang, "twoWeeks")}</button>
-          <button className={span === 31 ? "on" : ""} onClick={() => setSpan(31)}>{t(lang, "month")}</button>
+          <div className="segmented">
+            <button className={span === 14 ? "on" : ""} onClick={() => setSpan(14)}>{t(lang, "twoWeeks")}</button>
+            <button className={span === 31 ? "on" : ""} onClick={() => setSpan(31)}>{t(lang, "month")}</button>
+          </div>
           {canEdit ? (
             <button className="primary" onClick={() => units[0] && setDraft({ unit_id: units[0].id, check_in: todayDay, check_out: addDays(todayDay, 1) })}>
-              + {t(lang, "newReservation")}
+              <Icon name="plus" size={18} /> {t(lang, "newReservation")}
             </button>
           ) : (
             <span className="badge">{t(lang, "readOnly")}</span>
@@ -204,10 +228,10 @@ export function Calendar({ lang, role, villas }: Props) {
         </p>
       )}
 
-      <div className="grid-wrap">
-        <div className="grid" style={{ width: 180 + span * DAY_W }}>
+      <div className="grid-wrap" ref={wrapRef}>
+        <div className="grid">
           <div className="head">
-            <div className="corner" />
+            <div className="corner" ref={cornerRef} />
             {days.map((d) => (
               <div key={d} className={`day${isWeekend(d) ? " weekend" : ""}${d === todayDay ? " is-today" : ""}`} style={{ width: DAY_W }}>
                 <span>{format(d, loc, { weekday: "short" })}</span>
@@ -224,7 +248,7 @@ export function Calendar({ lang, role, villas }: Props) {
                 const sel = drag?.mode === "select" && drag.unitId === u.id ? drag : null;
                 return (
                   <div key={u.id} className="row">
-                    <div className="unit" style={{ borderLeftColor: p.color }}>
+                    <div className="unit" style={{ ["--villa" as string]: p.color }}>
                       <strong>{u.name}</strong>
                       <span>
                         {p.locality} · {u.capacity} {t(lang, "guests")}
@@ -242,11 +266,11 @@ export function Calendar({ lang, role, villas }: Props) {
                       )}
                       {reservations.map((r) => {
                         const b = barFor(r);
-                        if (b.unitId !== u.id || b.left + b.width < 0 || b.left > span * DAY_W) return null;
+                        if (b.unitId !== u.id || b.width <= 0) return null;
                         return (
                           <div
                             key={r.id}
-                            className={`bar ${r.kind} status-${r.status} source-${r.source}${drag && drag.mode !== "select" && drag.res.id === r.id ? " dragging" : ""}`}
+                            className={`bar ${r.kind} status-${r.status} source-${r.source}${b.cutLeft ? " cut-left" : ""}${b.cutRight ? " cut-right" : ""}${drag && drag.mode !== "select" && drag.res.id === r.id ? " dragging" : ""}`}
                             style={{ left: b.left, width: b.width, ["--villa" as string]: p.color }}
                             onPointerDown={(e) => onBarPointerDown(e, r)}
                             title={`${label(r)} · ${b.nights} ${t(lang, "nights")}`}
@@ -265,6 +289,13 @@ export function Calendar({ lang, role, villas }: Props) {
         </div>
       </div>
 
+      <div className="legend">
+        <span><i className="sw airbnb" /> Airbnb</span>
+        <span><i className="sw direct" /> {t(lang, "source_direct")} / {t(lang, "source_phone")}</span>
+        <span><i className="sw option" /> {t(lang, "status_option")}</span>
+        <span><i className="sw inhouse" /> {t(lang, "status_checked_in")}</span>
+        <span><i className="sw block" /> {t(lang, "block")}</span>
+      </div>
       {canEdit && <p className="hint">{t(lang, "dragHint")}</p>}
 
       {draft && (

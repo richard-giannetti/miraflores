@@ -3,7 +3,7 @@ import { supabase, OVERLAP } from "../lib/supabase";
 import { daysBetween } from "../lib/dates";
 import { t, type Lang } from "../lib/i18n";
 import { newInvoice } from "./Invoices";
-import { sources, statuses, type Property, type ReservationKind, type ReservationSource, type ReservationStatus, type Unit } from "../lib/types";
+import { sources, statuses, type Guest, type Property, type ReservationKind, type ReservationSource, type ReservationStatus, type Unit } from "../lib/types";
 
 // What the form edits: a reservation plus its guest's main details.
 export interface Draft {
@@ -57,11 +57,20 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  // The guest this booking is linked to; picking an existing guest avoids duplicates for returning guests.
+  const [guestId, setGuestId] = useState<string | null>(draft.guest_id ?? null);
+  const [known, setKnown] = useState<Guest[]>([]);
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     ref.current?.showModal();
-  }, []);
+    if (canEdit)
+      supabase
+        .from("guests")
+        .select("id, first_name, last_name, email, phone, notes")
+        .is("deleted_at", null)
+        .then(({ data }) => setKnown((data as Guest[]) ?? []));
+  }, [canEdit]);
 
   const set = <K extends keyof typeof f>(k: K, v: (typeof f)[K]) => setF((x) => ({ ...x, [k]: v }));
   const nights = daysBetween(f.check_in, f.check_out);
@@ -74,20 +83,20 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
     setError(null);
 
     // The guest: update the linked one, or create one if a name or contact was given.
-    let guestId = draft.guest_id ?? null;
+    let linked = guestId;
     const guest = { first_name: f.first_name.trim(), last_name: f.last_name.trim(), email: f.email.trim() || null, phone: f.phone.trim() || null };
     const hasGuest = !isBlock && (guest.first_name || guest.last_name || guest.email || guest.phone);
     if (hasGuest) {
-      const res = guestId
-        ? await supabase.from("guests").update(guest).eq("id", guestId).select("id").single()
+      const res = linked
+        ? await supabase.from("guests").update(guest).eq("id", linked).select("id").single()
         : await supabase.from("guests").insert(guest).select("id").single();
       if (res.error) return fail(res.error.message);
-      guestId = res.data.id;
+      linked = res.data.id;
     }
 
     const row = {
       unit_id: f.unit_id,
-      guest_id: isBlock ? null : guestId,
+      guest_id: isBlock ? null : linked,
       kind: f.kind,
       status: f.status,
       source: isBlock ? "other" : f.source,
@@ -138,6 +147,21 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
     setError(msg);
   }
 
+  // Existing guests matching what's typed in the name fields (only while no guest is linked).
+  const needle = `${f.first_name} ${f.last_name}`.trim().toLowerCase();
+  const matches =
+    !guestId && needle.length >= 2
+      ? known.filter((g) => `${g.first_name} ${g.last_name}`.toLowerCase().includes(needle) || g.email?.toLowerCase().includes(needle)).slice(0, 5)
+      : [];
+  function pick(g: Guest) {
+    setGuestId(g.id);
+    setF((x) => ({ ...x, first_name: g.first_name, last_name: g.last_name, email: g.email ?? "", phone: g.phone ?? "" }));
+  }
+  function unlink() {
+    setGuestId(null);
+    setF((x) => ({ ...x, first_name: "", last_name: "", email: "", phone: "" }));
+  }
+
   return (
     <dialog ref={ref} className="dialog" onClose={onClose} onCancel={onClose}>
       <form onSubmit={submit}>
@@ -177,6 +201,16 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
             </label>
           ) : (
             <>
+              {guestId && (
+                <p className="linked">
+                  <span className="pill ok">{t(lang, "existingGuest")}</span>
+                  {canEdit && (
+                    <button type="button" className="link" onClick={unlink}>
+                      {t(lang, "otherGuest")}
+                    </button>
+                  )}
+                </p>
+              )}
               <div className="two">
                 <label>
                   {t(lang, "firstName")}
@@ -187,6 +221,18 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
                   <input value={f.last_name} onChange={(e) => set("last_name", e.target.value)} />
                 </label>
               </div>
+              {matches.length > 0 && (
+                <ul className="suggest" aria-label={t(lang, "existingGuest")}>
+                  {matches.map((g) => (
+                    <li key={g.id}>
+                      <button type="button" onClick={() => pick(g)}>
+                        <strong>{[g.first_name, g.last_name].filter(Boolean).join(" ")}</strong>
+                        <small>{[g.email, g.phone].filter(Boolean).join(" · ")}</small>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <div className="two">
                 <label>
                   {t(lang, "email")}

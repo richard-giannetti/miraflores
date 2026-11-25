@@ -6,6 +6,8 @@ export const locale: Record<Lang, string> = { es: "es-ES", fr: "fr-FR", en: "en-
 
 const dict = {
   appName: { es: "Miraflores · Gestión", fr: "Miraflores · Gestion", en: "Miraflores · Management" },
+  welcome: { es: "Bienvenido", fr: "Bienvenue", en: "Welcome back" },
+  welcomeSub: { es: "Gestión de Villa Los Olivos y Villa La Playa", fr: "Gestion de Villa Los Olivos et Villa La Playa", en: "Managing Villa Los Olivos and Villa La Playa" },
   signIn: { es: "Entrar", fr: "Se connecter", en: "Sign in" },
   signOut: { es: "Salir", fr: "Se déconnecter", en: "Sign out" },
   email: { es: "Email", fr: "E-mail", en: "Email" },
@@ -102,6 +104,10 @@ const dict = {
   search: { es: "Buscar por nombre, email o teléfono", fr: "Rechercher par nom, e-mail ou téléphone", en: "Search by name, email or phone" },
   stays: { es: "Estancias", fr: "Séjours", en: "Stays" },
   stay: { es: "Estancia", fr: "Séjour", en: "Stay" },
+  existingGuest: { es: "Huésped existente", fr: "Client existant", en: "Existing guest" },
+  otherGuest: { es: "Cambiar de huésped", fr: "Changer de client", en: "Change guest" },
+  newGuest: { es: "Nuevo huésped", fr: "Nouveau client", en: "New guest" },
+  nameRequired: { es: "Indica al menos un nombre o apellido.", fr: "Indiquez au moins un prénom ou un nom.", en: "Enter at least a first or last name." },
   lastStay: { es: "Última estancia", fr: "Dernier séjour", en: "Last stay" },
   noGuests: { es: "Ningún huésped encontrado.", fr: "Aucun client trouvé.", en: "No guests found." },
   guest: { es: "Huésped", fr: "Client", en: "Guest" },

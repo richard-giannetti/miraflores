@@ -4,6 +4,7 @@ import { format, today } from "../lib/dates";
 import { locale, t, type Lang } from "../lib/i18n";
 import { INVOICE_FIELDS, money, totals, withoutVat, type Company, type Invoice, type InvoiceKind, type InvoiceLine } from "../lib/invoices";
 import type { Profile } from "../lib/types";
+import { Icon } from "./Icon";
 
 const go = (id?: string) => (location.hash = id ? `#invoices/${id}` : "#invoices");
 
@@ -60,23 +61,30 @@ export function Invoices({ lang, profile, openId }: Props) {
         </>
       ) : (
         <>
-          <div className="toolbar">
+          <div className="page-head">
+            <h1 className="title">{t(lang, "tab_invoices")}</h1>
             <div className="nav">
+              {profile.role === "owner" && (
+                <button onClick={() => setEditCompany(true)}>
+                  <Icon name="settings" size={18} /> {t(lang, "company")}
+                </button>
+              )}
+              <button className="primary" onClick={() => newInvoice()}>
+                <Icon name="plus" size={18} /> {t(lang, "newInvoice")}
+              </button>
+            </div>
+          </div>
+          <div className="toolbar">
+            <div className="segmented">
               {years.map((y) => (
                 <button key={y} className={y === year ? "on" : ""} onClick={() => setYear(y)}>
                   {y}
                 </button>
               ))}
-              <span className="range">
-                {t(lang, "totalLabel")} {t(lang, "issued").toLowerCase()}: {money(sum, loc)}
-              </span>
             </div>
-            <div className="nav">
-              {profile.role === "owner" && <button onClick={() => setEditCompany(true)}>{t(lang, "company")}</button>}
-              <button className="primary" onClick={() => newInvoice()}>
-                + {t(lang, "newInvoice")}
-              </button>
-            </div>
+            <span className="range">
+              {t(lang, "totalLabel")} {t(lang, "issued").toLowerCase()}: <strong>{money(sum, loc)}</strong>
+            </span>
           </div>
           {banners}
           {shown.length === 0 ? (
@@ -86,6 +94,9 @@ export function Invoices({ lang, profile, openId }: Props) {
               {shown.map((i) => (
                 <li key={i.id} className="item">
                   <button className="item-main" onClick={() => go(i.id)}>
+                    <span className="avatar muted-avatar">
+                      <Icon name="invoices" size={16} />
+                    </span>
                     <span>
                       <strong>
                         {i.full_number ?? t(lang, "draft")} · {i.customer_name || t(lang, "untitled")}
@@ -162,11 +173,15 @@ function InvoiceDetail({ lang, invoice, company, onChanged }: { lang: Lang; invo
     <>
       <div className="toolbar no-print">
         <div className="nav">
-          <button onClick={() => go()}>‹ {t(lang, "back")}</button>
+          <button onClick={() => go()}>
+            <Icon name="left" size={18} /> {t(lang, "back")}
+          </button>
           <span className="range">{invoice.full_number ?? `${t(lang, `inv_${invoice.kind}`)} · ${t(lang, "draft")}`}</span>
         </div>
         <div className="nav">
-          <button onClick={() => window.print()}>{t(lang, "print")}</button>
+          <button onClick={() => window.print()}>
+            <Icon name="printer" size={18} /> {t(lang, "print")}
+          </button>
           {!draft && invoice.kind !== "corrective" && <button onClick={() => setCorrecting(true)}>{t(lang, "correct")}</button>}
         </div>
       </div>

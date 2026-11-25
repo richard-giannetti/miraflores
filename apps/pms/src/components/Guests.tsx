@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { format } from "../lib/dates";
 import { locale, t, type Lang } from "../lib/i18n";
 import type { GuestFull, ReservationStatus } from "../lib/types";
+import { Avatar, Icon } from "./Icon";
 
 interface Stay {
   id: string;
@@ -21,7 +22,8 @@ export function Guests({ lang }: { lang: Lang }) {
   const [guests, setGuests] = useState<GuestFull[]>([]);
   const [stays, setStays] = useState<Stay[]>([]);
   const [q, setQ] = useState("");
-  const [open, setOpen] = useState<GuestFull | null>(null);
+  // A guest to edit, or "new" to add one by hand (a phone booking, a returning family…).
+  const [open, setOpen] = useState<GuestFull | "new" | null>(null);
   const loc = locale[lang];
 
   async function refresh() {
@@ -55,7 +57,16 @@ export function Guests({ lang }: { lang: Lang }) {
 
   return (
     <main className="page">
-      <input className="search" type="search" placeholder={t(lang, "search")} value={q} onChange={(e) => setQ(e.target.value)} />
+      <div className="page-head">
+        <h1 className="title">{t(lang, "tab_guests")}</h1>
+        <button className="primary" onClick={() => setOpen("new")}>
+          <Icon name="plus" size={18} /> {t(lang, "newGuest")}
+        </button>
+      </div>
+      <div className="search-box">
+        <Icon name="search" size={18} />
+        <input type="search" placeholder={t(lang, "search")} value={q} onChange={(e) => setQ(e.target.value)} />
+      </div>
       {shown.length === 0 ? (
         <p className="muted">{t(lang, "noGuests")}</p>
       ) : (
@@ -63,6 +74,7 @@ export function Guests({ lang }: { lang: Lang }) {
           {shown.map(({ g, s }) => (
             <li key={g.id} className="item">
               <button className="item-main" onClick={() => setOpen(g)}>
+                <Avatar name={name(g)} />
                 <span>
                   <strong>
                     {name(g)} {s.length > 1 && <span className="pill ok">{t(lang, "returning")}</span>}
@@ -81,8 +93,8 @@ export function Guests({ lang }: { lang: Lang }) {
       {open && (
         <GuestDialog
           lang={lang}
-          guest={open}
-          stays={staysOf(open.id)}
+          guest={open === "new" ? null : open}
+          stays={open === "new" ? [] : staysOf(open.id)}
           onClose={() => setOpen(null)}
           onSaved={() => {
             setOpen(null);
@@ -94,16 +106,16 @@ export function Guests({ lang }: { lang: Lang }) {
   );
 }
 
-function GuestDialog({ lang, guest, stays, onClose, onSaved }: { lang: Lang; guest: GuestFull; stays: Stay[]; onClose: () => void; onSaved: () => void }) {
+function GuestDialog({ lang, guest, stays, onClose, onSaved }: { lang: Lang; guest: GuestFull | null; stays: Stay[]; onClose: () => void; onSaved: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [f, setF] = useState({
-    first_name: guest.first_name,
-    last_name: guest.last_name,
-    email: guest.email ?? "",
-    phone: guest.phone ?? "",
-    nationality: guest.nationality ?? "",
-    language: guest.language ?? "",
-    notes: guest.notes,
+    first_name: guest?.first_name ?? "",
+    last_name: guest?.last_name ?? "",
+    email: guest?.email ?? "",
+    phone: guest?.phone ?? "",
+    nationality: guest?.nationality ?? "",
+    language: guest?.language ?? "",
+    notes: guest?.notes ?? "",
   });
   const [error, setError] = useState<string | null>(null);
   const loc = locale[lang];
@@ -112,10 +124,9 @@ function GuestDialog({ lang, guest, stays, onClose, onSaved }: { lang: Lang; gue
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    const { error } = await supabase
-      .from("guests")
-      .update({ ...f, email: f.email.trim() || null, phone: f.phone.trim() || null, nationality: f.nationality.trim() || null, language: f.language.trim() || null })
-      .eq("id", guest.id);
+    if (!f.first_name.trim() && !f.last_name.trim()) return setError(t(lang, "nameRequired"));
+    const row = { ...f, email: f.email.trim() || null, phone: f.phone.trim() || null, nationality: f.nationality.trim() || null, language: f.language.trim() || null };
+    const { error } = guest ? await supabase.from("guests").update(row).eq("id", guest.id) : await supabase.from("guests").insert(row);
     if (error) return setError(`${t(lang, "saveFailed")} ${error.message}`);
     onSaved();
   }
@@ -123,7 +134,7 @@ function GuestDialog({ lang, guest, stays, onClose, onSaved }: { lang: Lang; gue
   return (
     <dialog ref={ref} className="dialog" onClose={onClose} onCancel={onClose}>
       <form onSubmit={submit}>
-        <h2>{t(lang, "guest")}</h2>
+        <h2>{guest ? t(lang, "guest") : t(lang, "newGuest")}</h2>
         <div className="two">
           <label>{t(lang, "firstName")}<input value={f.first_name} onChange={(e) => set("first_name", e.target.value)} /></label>
           <label>{t(lang, "lastName")}<input value={f.last_name} onChange={(e) => set("last_name", e.target.value)} /></label>
@@ -138,7 +149,7 @@ function GuestDialog({ lang, guest, stays, onClose, onSaved }: { lang: Lang; gue
         </div>
         <label>{t(lang, "notes")}<textarea rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} /></label>
 
-        <h3>{t(lang, "stays")} ({stays.length})</h3>
+        {guest && <h3>{t(lang, "stays")} ({stays.length})</h3>}
         <ul className="list">
           {stays.map((s) => (
             <li key={s.id} className="item">
