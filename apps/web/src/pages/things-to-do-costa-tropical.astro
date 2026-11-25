@@ -1,0 +1,78 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import { inVilla, nearby } from "../data/experiences";
+import { site } from "../data/site";
+import { experienceImage } from "../data/villas";
+---
+<Base
+  title="Things to Do on the Costa Tropical: Granada, Nerja & Beaches"
+  description="Our family's guide to the Costa Tropical: hidden beaches, the Alhambra, Nerja caves, the Alpujarra, golf, water sports, local food, and private chefs at the villa."
+  image={experienceImage("granada")}
+  breadcrumbs={[{ name: "Things to do", href: "/things-to-do-costa-tropical/" }]}
+>
+  <Hero
+    image={{ src: experienceImage("beaches"), alt: "Turquoise cove on the Costa Tropical" }}
+    eyebrow="Experiences"
+    title="Things to do on the Costa Tropical"
+    subtitle="From private chefs at the villa to day trips to Granada and Nerja, here is how to make the most of your stay."
+    compact
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">At the villa</span>
+        <h2>Elevate your stay</h2>
+        <p class="lead">We can arrange tailored services at both villas, from private chefs to catering for private events.</p>
+      </div>
+      <div class="grid cols-3 list">
+        {inVilla.map((x) => (
+          <article class="card">
+            <Image src={x.image.src} alt={x.image.alt} widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />
+            <div class="body"><h3>{x.title}</h3><p>{x.text}</p></div>
+          </article>
+        ))}
+      </div>
+      <p class="center guide">
+        Our guests get two guidebooks: our <a href={site.airbnbGuidebook} rel="noopener">Airbnb guidebook</a>, and a personal one with
+        private chefs, restaurants and much more. <a href={`mailto:${site.email}?subject=Guidebook request`}>Email us</a> to request it.
+      </p>
+    </div>
+  </section>
+
+  {nearby.map((g, i) => (
+    <section class:list={["section", { alt: i % 2 === 0 }]}>
+      <div class="container">
+        <span class="eyebrow">Nearby</span>
+        <h2>{g.group}</h2>
+        <div class="grid cols-3 list">
+          {g.items.map((x) => (
+            <article class="card">
+              <Image src={x.image.src} alt={x.image.alt} widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />
+              <div class="body">
+                <h3>{x.title}</h3>
+                <p>{x.text}</p>
+                {x.link && <p><a href={x.link.href} rel="noopener">{x.link.label} →</a></p>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section">
+    <div class="narrow center">
+      <h2>Let us plan it for you</h2>
+      <p class="lead">Boat trips, private guides, tickets or a table at our favourite restaurant: tell us what you'd like and we'll arrange it.</p>
+      <div class="actions"><a class="btn" href="/contact/">Contact us</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .list { margin-top: 36px; }
+  .guide { margin-top: 36px; color: var(--muted); }
+</style>

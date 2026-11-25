@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+import type { Photo } from "../data/villas";
+
+interface Props { image: Photo; eyebrow?: string; title: string; subtitle?: string; compact?: boolean }
+const { image, eyebrow, title, subtitle, compact = false } = Astro.props;
+---
+<section class:list={["hero", { compact }]}>
+  <Image src={image.src} alt={image.alt} widths={[640, 1024, 1600, 2400]} sizes="100vw" loading="eager" fetchpriority="high" />
+  <div class="overlay">
+    <div class="container">
+      {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+      <h1>{title}</h1>
+      {subtitle && <p>{subtitle}</p>}
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; min-height: min(86vh, 820px); display: grid; color: #fff; }
+  .hero.compact { min-height: min(56vh, 520px); }
+  .hero > :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .overlay { position: relative; display: flex; align-items: flex-end; padding: 0 0 clamp(40px, 8vw, 90px); background: linear-gradient(to top, rgba(20, 15, 8, .7), rgba(20, 15, 8, .1) 60%); }
+  h1 { color: #fff; max-width: 18ch; }
+  .eyebrow { color: #f3e6cf; }
+  p { font-size: 1.2rem; max-width: 52ch; opacity: .95; }
+</style>

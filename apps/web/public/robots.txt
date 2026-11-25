@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://miraflorescostatropical.com/sitemap-index.xml

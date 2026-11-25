@@ -1,0 +1,31 @@
+---
+import { reviews } from "../data/reviews";
+
+interface Props { title?: string }
+const { title = "What our guests say" } = Astro.props;
+---
+<section class="section">
+  <div class="container">
+    <div class="center">
+      <span class="eyebrow">Google reviews</span>
+      <h2>{title}</h2>
+    </div>
+    <div class="grid cols-3 list">
+      {reviews.map((r) => (
+        <figure lang={r.lang}>
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <blockquote>{r.text}</blockquote>
+          <figcaption>{r.author}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .list { margin-top: 40px; }
+  figure { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; display: flex; flex-direction: column; }
+  .stars { color: #c99a2e; letter-spacing: 2px; margin-bottom: 10px; }
+  blockquote { margin: 0 0 16px; color: var(--muted); font-size: .98rem; flex: 1; }
+  figcaption { font-weight: 600; }
+</style>

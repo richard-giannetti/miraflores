@@ -1,0 +1,62 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Reviews from "../components/Reviews.astro";
+import { villas, familyPhoto } from "../data/villas";
+import { site } from "../data/site";
+---
+<Base
+  title="Contact & Book Your Costa Tropical Villa"
+  description="Book Villa Los Olivos (Motril) or Villa La Playa (Calahonda) on Airbnb, or email our family directly to plan your stay on the Costa Tropical."
+  breadcrumbs={[{ name: "Contact", href: "/contact/" }]}
+>
+  <Hero image={villas[1].hero} eyebrow="Contact us" title="Get in touch" subtitle="Book your stay on Airbnb, or drop us a line and let's start planning your getaway." compact />
+
+  <section class="section">
+    <div class="container grid cols-3">
+      {villas.map((v) => (
+        <article class="card">
+          <Image src={v.cover.src} alt={v.cover.alt} widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />
+          <div class="body">
+            <span class="eyebrow">{v.locality}</span>
+            <h2 class="h3">{v.name}</h2>
+            <p>{v.facts.suites} suites · {v.facts.guests}</p>
+            <div class="actions">
+              <a class="btn" href={v.booking.airbnb} rel="noopener">Book on Airbnb</a>
+              {v.booking.vrbo && <a class="btn ghost" href={v.booking.vrbo} rel="noopener">Vrbo</a>}
+            </div>
+          </div>
+        </article>
+      ))}
+      <article class="card">
+        <div class="body">
+          <span class="eyebrow">Write to us</span>
+          <h2 class="h3">Email & social</h2>
+          <p>For questions, groups, events or a private chef, email us and we'll get back to you quickly.</p>
+          <p><a class="email" href={`mailto:${site.email}`}>{site.email}</a></p>
+          <p><a href={site.instagram} rel="noopener">Follow us on Instagram</a></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container split">
+      <Image src={familyPhoto.src} alt={familyPhoto.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+      <div>
+        <span class="eyebrow">About us</span>
+        <h2>Our family</h2>
+        <p>As a family-run retreat, welcoming you is not just a tradition, it's our passion, built on generations of heartfelt hospitality.</p>
+        <p>Choose a peaceful, authentic retreat in the hills of Motril, or the ultimate beachfront escape in Calahonda. We can't wait to share our corner of the Costa Tropical with you.</p>
+      </div>
+    </div>
+  </section>
+
+  <Reviews title="Don't take our word for it" />
+</Base>
+
+<style>
+  .h3 { font-size: 1.6rem; font-weight: 600; }
+  .email { font-weight: 600; word-break: break-all; }
+</style>

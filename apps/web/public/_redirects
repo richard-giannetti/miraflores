@@ -1,0 +1,18 @@
+# 301s from the old WordPress URLs (Cloudflare Pages / Netlify format). See docs/seo-migration.md
+/group-home/discover-villa-los-olivos         /villa-los-olivos/                    301
+/group-home/discover-villa-los-olivos/        /villa-los-olivos/                    301
+/losolivos-rooms-list                         /villa-los-olivos/rooms/              301
+/losolivos-amenities                          /villa-los-olivos/amenities/          301
+/losolivos-gallery                            /villa-los-olivos/gallery/            301
+/losolivos-things-to-do                       /things-to-do-costa-tropical/         301
+/losolivos-contact-us                         /contact/                             301
+/group-home/homepage-la-playa-calahonda       /villa-la-playa-calahonda/            301
+/group-home/homepage-la-playa-calahonda/      /villa-la-playa-calahonda/            301
+/rooms-list-la-playa-calahonda                /villa-la-playa-calahonda/rooms/      301
+/amenities-la-playa-calahonda                 /villa-la-playa-calahonda/amenities/  301
+/gallery-la-playa-calahonda                   /villa-la-playa-calahonda/gallery/    301
+/things-to-do-la-playa-calahonda              /things-to-do-costa-tropical/         301
+/contact-us-la-playa-calahonda                /contact/                             301
+/group-home                                   /                                     301
+/blog/tag/*                                   /blog/                                301
+/feed                                         /blog/                                301

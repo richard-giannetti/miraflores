@@ -4,7 +4,7 @@ Monorepo for **Miraflores — Villa Los Olivos & Villa La Playa (Calahonda)**, t
 
 | Path | What | Status |
 |---|---|---|
-| `apps/web` | Public website (replaces the WordPress site at miraflorescostatropical.com). Static, SEO-first. | Step 1 — next |
+| `apps/web` | Public website (replaces the WordPress site at miraflorescostatropical.com). Static, SEO-first. | Step 1 — built, not deployed yet |
 | `apps/pms` | Property management system for the owners: calendar, bookings, guests, cleaning, payments. | Step 2 — not started |
 | `packages/*` | Code shared by both apps (domain types, calendar sync, UI). Created only when a second app needs it. | — |
 | `migration/` | One-off export of the old WordPress content and images. | Done (content), images on demand |
@@ -14,7 +14,7 @@ Start with [docs/architecture.md](docs/architecture.md) and [docs/roadmap.md](do
 
 ## Requirements
 
-- Node 22 (`nvm use`)
+- Node 24 (`nvm use`)
 - pnpm (`corepack enable`)
 
 ## Common commands

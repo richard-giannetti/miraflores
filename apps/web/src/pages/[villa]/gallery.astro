@@ -1,0 +1,50 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import Hero from "../../components/Hero.astro";
+import VillaNav from "../../components/VillaNav.astro";
+import BookCta from "../../components/BookCta.astro";
+import { villas, type Villa } from "../../data/villas";
+
+export const getStaticPaths = () => villas.map((v) => ({ params: { villa: v.slug }, props: { villa: v } }));
+
+const { villa } = Astro.props as { villa: Villa };
+---
+<Base
+  title={`Photo Gallery — ${villa.name}, ${villa.locality}`}
+  description={`Photos of ${villa.name} in ${villa.locality} on the Costa Tropical: the outdoors, terrace, living spaces and suites.`}
+  image={villa.hero.src}
+  breadcrumbs={[{ name: villa.name, href: `/${villa.slug}/` }, { name: "Gallery", href: `/${villa.slug}/gallery/` }]}
+>
+  <Hero image={villa.gallery[0].photos[0]} eyebrow={villa.name} title="Gallery" compact />
+  <VillaNav villa={villa} />
+
+  <section class="section">
+    <div class="container">
+      <p class="lead">Experience the laid-back art of living on the Costa Tropical: long, slow days by the sea, fresh local food and the relaxed atmosphere of this beautiful region.</p>
+      {villa.gallery.map((g) => (
+        <section class="group">
+          <h2>{g.title}</h2>
+          <div class="photos">
+            {g.photos.map((p) => (
+              <a href={p.src.src} target="_blank">
+                <Image src={p.src} alt={p.alt} widths={[400, 800]} sizes="(max-width: 700px) 100vw, 380px" />
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+      <p class="insta">See more on our <a href="https://www.instagram.com/olivosdemiraflores" rel="noopener">Instagram</a>.</p>
+    </div>
+  </section>
+
+  <BookCta villa={villa} />
+</Base>
+
+<style>
+  .group { margin-top: 48px; }
+  .photos { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+  .photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; transition: opacity .2s; }
+  .photos a:hover img { opacity: .9; }
+  .insta { margin-top: 40px; }
+</style>
