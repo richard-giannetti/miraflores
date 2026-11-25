@@ -14,5 +14,13 @@
 /things-to-do-la-playa-calahonda              /things-to-do-costa-tropical/         301
 /contact-us-la-playa-calahonda                /contact/                             301
 /group-home                                   /                                     301
-/blog/tag/*                                   /blog/                                301
 /feed                                         /blog/                                301
+
+# Old blog URLs had no trailing slash; make that redirect permanent (Cloudflare's default is a 307)
+/blog                                         /blog/                                301
+/blog/category/:category                      /blog/category/:category/             301
+/blog/a-day-in-granada-where-history-meets-culinary-delights  /blog/a-day-in-granada-where-history-meets-culinary-delights/  301
+/blog/blog-canyoning-at-la-junta-de-los-rios  /blog/blog-canyoning-at-la-junta-de-los-rios/  301
+/blog/discover-the-charm-of-nerja-a-perfect-day-trip-from-villa-los-olivos  /blog/discover-the-charm-of-nerja-a-perfect-day-trip-from-villa-los-olivos/  301
+/blog/unveiling-the-secret-charms-of-la-rijana-beach-your-ultimate-hideaway-on-the-costa-tropical  /blog/unveiling-the-secret-charms-of-la-rijana-beach-your-ultimate-hideaway-on-the-costa-tropical/  301
+/blog/tag/*                                   /blog/                                301
