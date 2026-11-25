@@ -42,10 +42,9 @@ The repo is shaped from day 0 so goal 3 is an addition, not a rewrite.
 - **Airbnb integration = iCal**, the only channel-sync Airbnb offers to non-partners. Each
   villa's Airbnb calendar exports an `.ics` URL; the PMS imports it and publishes its own
   `.ics` for Airbnb to import back. This is what makes direct booking safe later.
-- **PMS stack: decided at the start of step 2.** Likely a TypeScript web app with Postgres
-  (e.g. Supabase) and Stripe for direct-booking payments. Not chosen yet on purpose.
+- **PMS: Supabase (Postgres, auth, storage) in an EU region, app hosted on Cloudflare.** Proposed in
+  [ADR 0002](adr/0002-pms-backend.md); features in [pms/features.md](pms/features.md).
 
 ## What is deliberately *not* here yet
 
-- No database, auth or payments — nothing needs them until step 2.
 - No shared `packages/` — created when the PMS needs code the website already has.
