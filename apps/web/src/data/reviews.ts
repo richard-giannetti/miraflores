@@ -1,0 +1,10 @@
+// Google reviews shown on the WordPress site (via the Trustindex widget).
+// They all appear to be about Villa Los Olivos (Motril, olive trees, pool).
+export const reviews = [
+  { author: "James Shaw", lang: "en", text: "A wonderful villa with a fantastic view of the main town and the sea, perfect for large groups including families, had a lovely time there." },
+  { author: "Marina Jane", lang: "en", text: "Amazing house located above the city of Motril with incredible views of the sea as well as the avocado and mango fields surrounding the house. Very nicely decorated and with spacious rooms all with en-suite bathrooms and a superb kitchen and living room offering great views of the sunset. The house also has a great swimming pool and a jacuzzi on the roof terrace. Great place to spend a relaxing few days with friends or family. It won't disappoint!" },
+  { author: "Laura Hardcastle", lang: "en", text: "Wonderful stay. Absolutely amazing views & beautiful villa. Great for large groups. Hosts very helpful & friendly. Easy access to town with a car." },
+  { author: "Pichon Marc", lang: "fr", text: "Magnifique séjour dans cette très belle villa, très agréable et confortable, en pleine nature avec une vue superbe sur la mer. Salon et espace cuisine très spacieux, et une piscine et terrasse avec la vue. À 15 mn en voiture de la plage et à 40 mn de Grenade, endroit idéal pour une escapade de quelques jours au soleil. Hôtes accueillants et réactifs." },
+  { author: "R Gomez", lang: "es", text: "Espectacular villa para pasar unos días de relax con amigos o familia. Tiene todo lo que necesitas para que tu estancia sea amena, además de una piscina privada y vistas geniales. Totalmente recomendable." },
+  { author: "Sophie Billaux", lang: "fr", text: "Nous avons passé un merveilleux week-end en famille : c'est le lieu idéal pour se ressourcer et profiter pleinement d'un break ou des vacances ! Les oliviers et la vue imprenable sur les collines environnantes et la mer vous charmeront tout au long de votre séjour." },
+];

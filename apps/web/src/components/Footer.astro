@@ -1,0 +1,47 @@
+---
+import { Image } from "astro:assets";
+import { site } from "../data/site";
+import { villas, emblem } from "../data/villas";
+---
+<footer class="site-footer">
+  <div class="container cols">
+    <div>
+      <Image src={emblem} alt="" width={90} />
+      <p>Family-run luxury holiday villas on Spain's Costa Tropical, between Málaga and Granada.</p>
+    </div>
+    {villas.map((v) => (
+      <div>
+        <h2>{v.name}</h2>
+        <ul>
+          <li><a href={`/${v.slug}/`}>Overview</a></li>
+          <li><a href={`/${v.slug}/rooms/`}>Rooms</a></li>
+          <li><a href={`/${v.slug}/amenities/`}>Amenities</a></li>
+          <li><a href={`/${v.slug}/gallery/`}>Gallery</a></li>
+          <li><a href={v.booking.airbnb} rel="noopener">Book on Airbnb</a></li>
+        </ul>
+      </div>
+    ))}
+    <div>
+      <h2>Get in touch</h2>
+      <ul>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><a href={site.instagram} rel="noopener">Instagram</a></li>
+        <li><a href="/things-to-do-costa-tropical/">Things to do</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container legal">© {new Date().getFullYear()} {site.name}</div>
+</footer>
+
+<style>
+  .site-footer { background: var(--olive-dark); color: #eadfcd; padding: 64px 0 28px; }
+  .cols { display: grid; gap: 36px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .cols :global(img) { filter: brightness(0) invert(1); opacity: .85; margin-bottom: 14px; }
+  h2 { color: #fff; font-size: 1.4rem; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { margin: 6px 0; }
+  a { color: #eadfcd; text-decoration: none; }
+  a:hover { color: #fff; text-decoration: underline; }
+  .legal { margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, .15); font-size: .85rem; opacity: .7; }
+</style>

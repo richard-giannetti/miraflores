@@ -2,9 +2,14 @@
   "name": "miraflores",
   "private": true,
   "packageManager": "pnpm@9.15.0",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "wp:export": "node migration/wp-export.mjs",
     "wp:export:media": "node migration/wp-export.mjs --media"
+  },
+  "devDependencies": {
+    "turndown": "7.2.5"
   }
 }

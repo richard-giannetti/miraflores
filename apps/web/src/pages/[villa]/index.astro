@@ -1,0 +1,110 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import Hero from "../../components/Hero.astro";
+import VillaNav from "../../components/VillaNav.astro";
+import BookCta from "../../components/BookCta.astro";
+import Reviews from "../../components/Reviews.astro";
+import { villas, getVilla, type Villa } from "../../data/villas";
+import { airports, site } from "../../data/site";
+import { villaSchema } from "../../data/schema";
+
+export const getStaticPaths = () => villas.map((v) => ({ params: { villa: v.slug }, props: { villa: v } }));
+
+const { villa } = Astro.props as { villa: Villa };
+const sister = getVilla(villa.sister);
+---
+<Base
+  title={villa.seoTitle}
+  description={villa.seoDescription}
+  image={villa.hero.src}
+  breadcrumbs={[{ name: villa.name, href: `/${villa.slug}/` }]}
+  jsonLd={[await villaSchema(villa)]}
+>
+  <Hero image={villa.hero} eyebrow={`${villa.locality} · Costa Tropical`} title={villa.name} subtitle={villa.tagline}>
+    <div class="actions">
+      <a class="btn light" href={villa.booking.airbnb} rel="noopener">Book on Airbnb</a>
+    </div>
+  </Hero>
+  <VillaNav villa={villa} />
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Welcome</span>
+        <h2>Welcome to {villa.name}</h2>
+        {villa.intro.map((p) => <p>{p}</p>)}
+        <ul class="ticks facts">
+          <li>{villa.facts.suites} en-suite suites</li>
+          <li>{villa.facts.guests}</li>
+        </ul>
+      </div>
+      <Image src={villa.cover.src} alt={villa.cover.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container grid cols-3">
+      {villa.highlights.map((h) => (
+        <article class="card">
+          <Image src={h.image.src} alt={h.image.alt} widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />
+          <div class="body"><h3>{h.title}</h3><p>{h.text}</p></div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <Image src={villa.rooms.image.src} alt={villa.rooms.image.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+      <div>
+        <span class="eyebrow">Rooms</span>
+        <h2>{villa.facts.suites} elegant suites</h2>
+        <p>{villa.rooms.intro}</p>
+        <a class="btn ghost" href={`/${villa.slug}/rooms/`}>See the rooms</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <span class="eyebrow">Amenities</span>
+      <h2>Everything for a relaxing stay</h2>
+      <p class="lead">{villa.poolBlurb}</p>
+      <ul class="ticks amen">{villa.keyAmenities.map((a) => <li>{a}</li>)}</ul>
+      <div class="actions"><a class="btn ghost" href={`/${villa.slug}/amenities/`}>See all amenities</a></div>
+    </div>
+  </section>
+
+  {villa.slug === "villa-los-olivos" && <Reviews title={`What guests say about ${villa.name}`} />}
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Location</span>
+        <h2>Getting to {villa.name}</h2>
+        <p>In the heart of the Costa Tropical, {villa.name} is within easy driving distance of Málaga and Granada, their culture, history and airports.</p>
+        <ul class="ticks">{airports.map((a) => <li>{a.name}: {a.distance}</li>)}</ul>
+        <p class="guide">We've written a free <a href={site.airbnbGuidebook} rel="noopener">guidebook</a> for our guests, and our <a href="/things-to-do-costa-tropical/">things to do</a> page has our favourite trips.</p>
+      </div>
+      <a class="card sister" href={`/${sister.slug}/`}>
+        <Image src={sister.cover.src} alt={sister.cover.alt} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 560px" />
+        <div class="body">
+          <span class="eyebrow">Also by our family</span>
+          <h3>{sister.name}, {sister.locality}</h3>
+          <p>{sister.summary}</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <BookCta villa={villa} />
+</Base>
+
+<style>
+  .facts { margin-top: 20px; font-weight: 600; }
+  .amen { margin-top: 28px; }
+  .sister { color: inherit; text-decoration: none; }
+  .sister img { border-radius: 0; }
+  .guide { margin-top: 20px; }
+</style>

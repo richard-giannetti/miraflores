@@ -1,0 +1,44 @@
+---
+import { Image } from "astro:assets";
+import { nav, site } from "../data/site";
+import { logo } from "../data/villas";
+
+const path = Astro.url.pathname;
+const current = (href: string) => (path.startsWith(href) ? "page" : undefined);
+---
+<header class="site-header">
+  <div class="container bar">
+    <a href="/" class="brand" aria-label={`${site.name} home`}>
+      <Image src={logo} alt="Grupo Miraflores" width={150} loading="eager" />
+    </a>
+    <nav class="desktop" aria-label="Main">
+      {nav.map((item) => <a href={item.href} aria-current={current(item.href)}>{item.label}</a>)}
+    </nav>
+    <details class="mobile">
+      <summary aria-label="Menu"><span></span><span></span><span></span></summary>
+      <nav aria-label="Main">
+        {nav.map((item) => <a href={item.href} aria-current={current(item.href)}>{item.label}</a>)}
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header { position: sticky; top: 0; z-index: 20; background: rgba(250, 246, 239, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+  .brand img { width: 130px; height: auto; }
+  .desktop { display: flex; gap: 30px; }
+  nav a { color: var(--ink); text-decoration: none; font-size: .95rem; font-weight: 500; padding: 6px 0; border-bottom: 1px solid transparent; }
+  nav a:hover, nav a[aria-current] { color: var(--olive); border-color: var(--olive); }
+  .mobile { display: none; }
+
+  @media (max-width: 900px) {
+    .desktop { display: none; }
+    .mobile { display: block; }
+    summary { display: grid; gap: 5px; padding: 10px; cursor: pointer; list-style: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary span { width: 24px; height: 2px; background: var(--ink); display: block; }
+    .mobile nav { position: absolute; left: 0; right: 0; top: 76px; display: flex; flex-direction: column; background: var(--cream); border-bottom: 1px solid var(--line); padding: 8px 16px 16px; }
+    .mobile nav a { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  }
+</style>

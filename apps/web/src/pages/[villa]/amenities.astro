@@ -1,0 +1,52 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import Hero from "../../components/Hero.astro";
+import VillaNav from "../../components/VillaNav.astro";
+import BookCta from "../../components/BookCta.astro";
+import { villas, amenityDetails, type Villa } from "../../data/villas";
+
+export const getStaticPaths = () => villas.map((v) => ({ params: { villa: v.slug }, props: { villa: v } }));
+
+const { villa } = Astro.props as { villa: Villa };
+const feature = villa.highlights[2].image;
+---
+<Base
+  title={`${villa.name} Amenities — ${villa.poolAmenities[0]} & Sea Views`}
+  description={`Amenities at ${villa.name}, ${villa.locality}: ${villa.keyAmenities.slice(0, 6).join(", ").toLowerCase()}.`}
+  image={feature.src}
+  breadcrumbs={[{ name: villa.name, href: `/${villa.slug}/` }, { name: "Amenities", href: `/${villa.slug}/amenities/` }]}
+>
+  <Hero image={feature} eyebrow={villa.name} title="Amenities" compact />
+  <VillaNav villa={villa} />
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <h2>Handpicked by our family</h2>
+        <p class="lead">{villa.amenitiesIntro}</p>
+        <ul class="ticks">{villa.keyAmenities.map((a) => <li>{a}</li>)}</ul>
+      </div>
+      <Image src={villa.cover.src} alt={villa.cover.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+      <h2 class="center">Poolside bliss with views</h2>
+      <p class="lead center" style="margin-inline:auto">{villa.poolBlurb}</p>
+      <div class="grid cols-3 details">
+        {amenityDetails.map((d) => (
+          <article class="card"><div class="body"><h3>{d.title}</h3><p>{d.text}</p></div></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <BookCta villa={villa} />
+</Base>
+
+<style>
+  .details { margin-top: 40px; }
+  .details h3 { font-size: 1.4rem; }
+</style>

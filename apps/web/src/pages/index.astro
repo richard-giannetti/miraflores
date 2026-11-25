@@ -1,0 +1,106 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Reviews from "../components/Reviews.astro";
+import { villas, familyPhoto } from "../data/villas";
+import { site, airports } from "../data/site";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort((a, b) => +b.data.pubDate - +a.data.pubDate).slice(0, 3);
+---
+<Base
+  title="Luxury Holiday Villas on the Costa Tropical, Spain | Miraflores"
+  description="Two family-run luxury villas on Spain's Costa Tropical: Villa Los Olivos with infinity pool above Motril, and beachfront Villa La Playa in Calahonda."
+  image={villas[0].hero.src}
+>
+  <Hero
+    image={villas[0].hero}
+    eyebrow="Costa Tropical · Andalucía"
+    title="Your luxury holidays in the heart of Andalucía"
+    subtitle="Two family-run villas between Málaga and Granada, with sea views, private pools and full services."
+  >
+    <div class="actions">
+      {villas.map((v) => <a class="btn light" href={`/${v.slug}/`}>{v.name}</a>)}
+    </div>
+  </Hero>
+
+  <section class="section">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">Our villas</span>
+        <h2>Two homes, one family</h2>
+        <p class="lead">Unwind in the hills above Motril or step straight onto the beach in Calahonda. Both villas are run by our family, with the same care and attention to detail.</p>
+      </div>
+      <div class="grid cols-2 villas">
+        {villas.map((v) => (
+          <a class="card villa" href={`/${v.slug}/`}>
+            <Image src={v.cover.src} alt={v.cover.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 580px" />
+            <div class="body">
+              <span class="eyebrow">{v.locality}</span>
+              <h3>{v.name}</h3>
+              <p>{v.summary}</p>
+              <p class="facts">{v.facts.suites} suites · {v.facts.guests}</p>
+              <span class="more">Discover {v.name} →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container split">
+      <Image src={familyPhoto.src} alt={familyPhoto.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 560px" />
+      <div>
+        <span class="eyebrow">About us</span>
+        <h2>From our family to yours</h2>
+        <p>Welcoming guests is not just a tradition for us, it's our passion. Our commitment to an exceptional stay comes from generations of heartfelt hospitality.</p>
+        <p>We invite you to share our slice of paradise, where every corner reflects warmth, care and the spirit of coastal living on the Costa Tropical.</p>
+        <h3>Getting here</h3>
+        <ul class="ticks">
+          {airports.map((a) => <li>{a.name}: {a.distance}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <Reviews />
+
+  <section class="section alt">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">From the blog</span>
+        <h2>Discover the Costa Tropical</h2>
+        <p class="lead">Insider tips, day trips and hidden gems around our villas.</p>
+      </div>
+      <div class="grid cols-3 posts">
+        {posts.map((p) => (
+          <a class="card" href={`/blog/${p.id}/`}>
+            {p.data.cover && <Image src={p.data.cover} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />}
+            <div class="body"><h3>{p.data.title}</h3></div>
+          </a>
+        ))}
+      </div>
+      <div class="actions center" style="justify-content:center"><a class="btn ghost" href="/blog/">Read the blog</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="narrow center">
+      <h2>Plan your stay</h2>
+      <p class="lead">Questions about dates, groups or private chefs? Write to us at <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <div class="actions"><a class="btn" href="/contact/">Contact us</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .villas, .posts { margin-top: 44px; }
+  .villa { color: inherit; text-decoration: none; }
+  .villa img { aspect-ratio: 3 / 2; }
+  .facts { font-weight: 600; color: var(--ink); }
+  .more { color: var(--olive); font-weight: 600; }
+  .posts a { color: inherit; text-decoration: none; }
+  .posts h3 { font-size: 1.35rem; margin: 0; }
+</style>

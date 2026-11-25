@@ -1,0 +1,65 @@
+---
+import { Image, getImage } from "astro:assets";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { categories } from "../../data/categories";
+import { villas } from "../../data/villas";
+import { site } from "../../data/site";
+
+export const getStaticPaths = async () =>
+  (await getCollection("blog")).map((post) => ({ params: { slug: post.id }, props: { post } }));
+
+const { post } = Astro.props as { post: CollectionEntry<"blog"> };
+const { Content } = await render(post);
+const url = new URL(`/blog/${post.id}/`, site.url).href;
+const fmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
+const cover = post.data.cover && new URL((await getImage({ src: post.data.cover, width: 1200, format: "jpg" })).src, site.url).href;
+
+const article = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+  mainEntityOfPage: url,
+  ...(cover && { image: cover }),
+  author: { "@type": "Organization", name: site.name, url: site.url },
+  publisher: { "@type": "Organization", name: site.name, url: site.url },
+};
+---
+<Base
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.cover}
+  type="article"
+  jsonLd={[article]}
+  breadcrumbs={[{ name: "Blog", href: "/blog/" }, { name: post.data.title, href: `/blog/${post.id}/` }]}
+>
+  <article class="section">
+    <div class="narrow">
+      <a href="/blog/">← Blog</a>
+      <h1>{post.data.title}</h1>
+      <p class="meta">
+        <time datetime={post.data.pubDate.toISOString()}>{fmt.format(post.data.pubDate)}</time>
+        {post.data.categories.map((c) => categories[c] && <> · <a href={`/blog/category/${c}/`}>{categories[c]}</a></>)}
+      </p>
+      {post.data.cover && <Image class="cover" src={post.data.cover} alt="" widths={[700, 1200]} sizes="(max-width: 800px) 100vw, 760px" loading="eager" />}
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+
+  <section class="section alt">
+    <div class="narrow center">
+      <h2>Stay with us on the Costa Tropical</h2>
+      <p class="lead">Explore it all from one of our family's villas.</p>
+      <div class="actions">{villas.map((v) => <a class="btn ghost" href={`/${v.slug}/`}>{v.name}</a>)}</div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); margin-top: 18px; }
+  .meta { color: var(--muted); }
+  .cover { border-radius: var(--radius); margin: 28px 0 36px; width: 100%; }
+</style>
