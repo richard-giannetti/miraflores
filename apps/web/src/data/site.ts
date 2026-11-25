@@ -8,7 +8,7 @@ export const site = {
   instagram: "https://www.instagram.com/olivosdemiraflores",
   // Web3Forms access key for the contact form (public by design; messages go to `email`).
   // Get one at https://web3forms.com with info@miraflorescostatropical.com. Empty = form hidden.
-  contactFormKey: "",
+  contactFormKey: "0edd3603-72f2-41fc-8c54-d6becc5c6add",
   airbnbGuidebook:
     "https://www.airbnb.com/s/guidebooks?refinement_paths%5B%5D=%2Fguidebooks%2F5721617&s=67&unique_share_id=47646142-cd14-4fd8-991f-52713c020120",
 };
