@@ -19,5 +19,5 @@ const spanish404 = {
 export default defineConfig({
   site: "https://miraflorescostatropical.com",
   trailingSlash: "always",
-  integrations: [sitemap({ filter: (page) => !/\/404\/?$/.test(page) }), spanish404],
+  integrations: [sitemap({ filter: (page) => !/\/(404|checking)\/?$/.test(page) }), spanish404],
 });

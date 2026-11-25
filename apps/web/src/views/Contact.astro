@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
 import Reviews from "../components/Reviews.astro";
+import ContactForm from "../components/ContactForm.astro";
 import { getVillas, getFamilyPhoto } from "../data/villas";
 import { site } from "../data/site";
 import { pick, t, paths, type Lang } from "../i18n";
@@ -52,7 +53,7 @@ const c = pick({
             <h2 class="h3">{v.name}</h2>
             <p>{v.facts.suites} {c.suites} · {v.facts.guests}</p>
             <div class="actions">
-              <a class="btn" href={v.booking.airbnb} rel="noopener">{ui.bookAirbnb}</a>
+              <a class="btn" href={v.booking.airbnb} target="_blank" rel="noopener">{ui.bookAirbnb}</a>
             </div>
           </div>
         </article>
@@ -67,6 +68,7 @@ const c = pick({
         </div>
       </article>
     </div>
+    {site.contactFormKey && <div class="narrow form" id="message"><ContactForm lang={lang} /></div>}
   </section>
 
   <section class="section alt">
@@ -87,4 +89,5 @@ const c = pick({
 <style>
   .h3 { font-size: 1.6rem; font-weight: 600; }
   .email { font-weight: 600; word-break: break-all; }
+  .form { margin-top: clamp(36px, 6vw, 64px); }
 </style>
