@@ -109,7 +109,7 @@ export function TaskCard({ task, lang, profile, villas, ctx, today: day, compact
   const doneCount = items.filter((i) => task.checked.includes(i.id)).length;
 
   return (
-    <article className={`task status-${task.status}${overdue ? " overdue" : ""}`} style={{ borderLeftColor: property?.color }}>
+    <article className={`task status-${task.status}${overdue ? " overdue" : ""}`} style={{ ["--villa" as string]: property?.color }}>
       <header>
         <strong>
           {t(lang, `kind_${task.kind}`)} · {villas.unitName(task.unit_id)}
@@ -226,14 +226,17 @@ export function Tasks({ lang, profile, villas }: Props) {
 
   return (
     <main className="page">
-      <div className="toolbar">
+      <div className="page-head">
+        <h1 className="title">{t(lang, "tab_cleaning")}</h1>
         <div className="nav">
-          <button className={onlyOpen ? "on" : ""} onClick={() => setOnlyOpen(true)}>{t(lang, "open")}</button>
-          <button className={!onlyOpen ? "on" : ""} onClick={() => setOnlyOpen(false)}>{t(lang, "all")}</button>
-        </div>
-        <div className="nav">
-          <button className={!onlyMine ? "on" : ""} onClick={() => setOnlyMine(false)}>{t(lang, "all")}</button>
-          <button className={onlyMine ? "on" : ""} onClick={() => setOnlyMine(true)}>{t(lang, "mine")}</button>
+          <div className="segmented">
+            <button className={onlyOpen ? "on" : ""} onClick={() => setOnlyOpen(true)}>{t(lang, "open")}</button>
+            <button className={!onlyOpen ? "on" : ""} onClick={() => setOnlyOpen(false)}>{t(lang, "all")}</button>
+          </div>
+          <div className="segmented">
+            <button className={!onlyMine ? "on" : ""} onClick={() => setOnlyMine(false)}>{t(lang, "all")}</button>
+            <button className={onlyMine ? "on" : ""} onClick={() => setOnlyMine(true)}>{t(lang, "mine")}</button>
+          </div>
         </div>
       </div>
       {byDay.length === 0 && <p className="muted">{t(lang, "noTasks")}</p>}
