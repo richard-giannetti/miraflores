@@ -55,6 +55,7 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
   });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -103,8 +104,10 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
     onSaved();
   }
 
+  // Deleting takes two clicks: the button turns into "Delete this reservation?" first.
   async function remove() {
-    if (!draft.id || !confirm(t(lang, "confirmDelete"))) return;
+    if (!draft.id) return;
+    if (!confirming) return setConfirming(true);
     setBusy(true);
     // Soft delete, so offline devices can sync the deletion later (Wave 4).
     const res = await supabase.from("reservations").update({ deleted_at: new Date().toISOString() }).eq("id", draft.id);
@@ -223,8 +226,8 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
 
         <div className="actions">
           {canEdit && draft.id && (
-            <button type="button" className="danger" onClick={remove} disabled={busy}>
-              {t(lang, "delete")}
+            <button type="button" className={confirming ? "danger confirm" : "danger"} onClick={remove} disabled={busy}>
+              {t(lang, confirming ? "confirmDelete" : "delete")}
             </button>
           )}
           <span className="spacer" />
