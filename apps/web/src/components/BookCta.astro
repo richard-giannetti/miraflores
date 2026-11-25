@@ -1,17 +1,19 @@
 ---
 import type { Villa } from "../data/villas";
+import { t, paths, type Lang } from "../i18n";
 
-interface Props { villa: Villa }
-const { villa } = Astro.props;
+interface Props { villa: Villa; lang: Lang }
+const { villa, lang } = Astro.props;
+const ui = t(lang);
 ---
 <section class="section cta">
   <div class="narrow center">
-    <span class="eyebrow">Book your stay</span>
-    <h2>Book your stay at {villa.name}</h2>
-    <p class="lead">Book directly on Airbnb, or write to us and we'll help you plan your getaway.</p>
+    <span class="eyebrow">{ui.bookCta.eyebrow}</span>
+    <h2>{ui.bookCta.title} {villa.name}</h2>
+    <p class="lead">{ui.bookCta.lead}</p>
     <div class="actions">
-      <a class="btn" href={villa.booking.airbnb} rel="noopener">Book on Airbnb</a>
-      <a class="btn ghost" href="/contact/">Contact us</a>
+      <a class="btn" href={villa.booking.airbnb} rel="noopener">{ui.bookAirbnb}</a>
+      <a class="btn ghost" href={paths.contact[lang]}>{ui.contactUs}</a>
     </div>
   </div>
 </section>

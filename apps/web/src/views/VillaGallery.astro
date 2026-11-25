@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import VillaNav from "../components/VillaNav.astro";
+import BookCta from "../components/BookCta.astro";
+import { getVilla } from "../data/villas";
+import { site } from "../data/site";
+import { pick, t, villaPath, villaAlternates, type Lang } from "../i18n";
+
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const villa = getVilla(lang, slug);
+const ui = t(lang);
+const c = pick({
+  title: { en: "Photo Gallery", es: "Galería de fotos" },
+  descA: { en: "Photos of", es: "Fotos de" },
+  descB: { en: "on the Costa Tropical: the outdoors, terrace, living spaces and suites.", es: "en la Costa Tropical: exterior, terraza, zonas comunes y suites." },
+  in: { en: "in", es: "en" },
+  hero: { en: "Gallery", es: "Galería" },
+  lead: {
+    en: "Experience the laid-back art of living on the Costa Tropical: long, slow days by the sea, fresh local food and the relaxed atmosphere of this beautiful region.",
+    es: "Vive el arte de la vida tranquila en la Costa Tropical: días largos junto al mar, comida local fresca y el ambiente relajado de esta preciosa región.",
+  },
+  insta1: { en: "See more on our", es: "Mira más en nuestro" },
+}, lang);
+---
+<Base
+  lang={lang}
+  title={`${c.title} — ${villa.name}, ${villa.locality}`}
+  description={`${c.descA} ${villa.name} ${c.in} ${villa.locality} ${c.descB}`}
+  image={villa.hero.src}
+  alternates={villaAlternates(slug, "gallery")}
+  breadcrumbs={[{ name: villa.name, href: villaPath(lang, slug) }, { name: ui.villaNav.gallery, href: villaPath(lang, slug, "gallery") }]}
+>
+  <Hero image={villa.gallery[0].photos[0]} eyebrow={villa.name} title={c.hero} compact />
+  <VillaNav villa={villa} lang={lang} />
+
+  <section class="section">
+    <div class="container">
+      <p class="lead">{c.lead}</p>
+      {villa.gallery.map((g) => (
+        <section class="group">
+          <h2>{g.title}</h2>
+          <div class="photos">
+            {g.photos.map((p) => (
+              <a href={p.src.src} target="_blank">
+                <Image src={p.src} alt={p.alt} widths={[400, 800]} sizes="(max-width: 700px) 100vw, 380px" />
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+      <p class="insta">{c.insta1} <a href={site.instagram} rel="noopener">Instagram</a>.</p>
+    </div>
+  </section>
+
+  <BookCta villa={villa} lang={lang} />
+</Base>
+
+<style>
+  .group { margin-top: 48px; }
+  .photos { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+  .photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; transition: opacity .2s; }
+  .photos a:hover img { opacity: .9; }
+  .insta { margin-top: 40px; }
+</style>

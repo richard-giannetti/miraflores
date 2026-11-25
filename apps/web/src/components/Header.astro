@@ -1,25 +1,43 @@
 ---
 import { Image } from "astro:assets";
-import { nav, site } from "../data/site";
-import { logo } from "../data/villas";
+import { site } from "../data/site";
+import { getVillas, logo } from "../data/villas";
+import { t, paths, villaPath, htmlLang, type Lang } from "../i18n";
 
+interface Props { lang: Lang; alternates: Partial<Record<Lang, string>> }
+const { lang, alternates } = Astro.props;
+const ui = t(lang);
+const other: Lang = lang === "en" ? "es" : "en";
+const switchHref = alternates[other] ?? paths.home[other];
+
+const nav = [
+  ...getVillas(lang).map((v) => ({ href: villaPath(lang, v.slug), label: v.name })),
+  { href: paths.thingsToDo[lang], label: ui.nav.thingsToDo },
+  { href: paths.blog[lang], label: ui.nav.blog },
+  { href: paths.contact[lang], label: ui.nav.contact },
+];
 const path = Astro.url.pathname;
 const current = (href: string) => (path.startsWith(href) ? "page" : undefined);
 ---
 <header class="site-header">
   <div class="container bar">
-    <a href="/" class="brand" aria-label={`${site.name} home`}>
+    <a href={paths.home[lang]} class="brand" aria-label={`${site.name} — ${ui.home}`}>
       <Image src={logo} alt="Grupo Miraflores" width={150} loading="eager" />
     </a>
     <nav class="desktop" aria-label="Main">
       {nav.map((item) => <a href={item.href} aria-current={current(item.href)}>{item.label}</a>)}
+      <a class="lang" href={switchHref} hreflang={htmlLang[other].slice(0, 2)} lang={htmlLang[other]} title={ui.switchTo}>{other.toUpperCase()}</a>
     </nav>
-    <details class="mobile">
-      <summary aria-label="Menu"><span></span><span></span><span></span></summary>
-      <nav aria-label="Main">
-        {nav.map((item) => <a href={item.href} aria-current={current(item.href)}>{item.label}</a>)}
-      </nav>
-    </details>
+    <div class="mobile">
+      <a class="lang" href={switchHref} hreflang={htmlLang[other].slice(0, 2)} lang={htmlLang[other]} title={ui.switchTo}>{other.toUpperCase()}</a>
+      <details>
+        <summary aria-label={ui.menu}><span></span><span></span><span></span></summary>
+        <nav aria-label="Main">
+          {nav.map((item) => <a href={item.href} aria-current={current(item.href)}>{item.label}</a>)}
+          <a href={switchHref} lang={htmlLang[other]}>{ui.switchTo}</a>
+        </nav>
+      </details>
+    </div>
   </div>
 </header>
 
@@ -27,14 +45,16 @@ const current = (href: string) => (path.startsWith(href) ? "page" : undefined);
   .site-header { position: sticky; top: 0; z-index: 20; background: rgba(250, 246, 239, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
   .bar { display: flex; align-items: center; justify-content: space-between; height: 76px; }
   .brand img { width: 130px; height: auto; }
-  .desktop { display: flex; gap: 30px; }
+  .desktop { display: flex; gap: 28px; align-items: center; }
   nav a { color: var(--ink); text-decoration: none; font-size: .95rem; font-weight: 500; padding: 6px 0; border-bottom: 1px solid transparent; }
   nav a:hover, nav a[aria-current] { color: var(--olive); border-color: var(--olive); }
+  .lang, nav .lang { font-size: .8rem; font-weight: 600; letter-spacing: .08em; color: var(--olive); text-decoration: none; border: 1px solid var(--olive); border-radius: 999px; padding: 5px 10px; }
+  .lang:hover, nav .lang:hover { background: var(--olive); color: #fff; border-color: var(--olive); }
   .mobile { display: none; }
 
   @media (max-width: 900px) {
     .desktop { display: none; }
-    .mobile { display: block; }
+    .mobile { display: flex; align-items: center; gap: 8px; }
     summary { display: grid; gap: 5px; padding: 10px; cursor: pointer; list-style: none; }
     summary::-webkit-details-marker { display: none; }
     summary span { width: 24px; height: 2px; background: var(--ink); display: block; }

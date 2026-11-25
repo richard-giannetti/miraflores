@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+import { getVillas } from "../data/villas";
+import { t, paths, villaPath, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+---
+<Base lang={lang} title={ui.notFound.title} description={ui.notFound.lead} alternates={paths.home} noindex>
+  <section class="section">
+    <div class="narrow center">
+      <h1>{ui.notFound.title}</h1>
+      <p class="lead">{ui.notFound.lead}</p>
+      <div class="actions">
+        <a class="btn" href={paths.home[lang]}>{ui.notFound.home}</a>
+        {getVillas(lang).map((v) => <a class="btn ghost" href={villaPath(lang, v.slug)}>{v.name}</a>)}
+      </div>
+    </div>
+  </section>
+</Base>

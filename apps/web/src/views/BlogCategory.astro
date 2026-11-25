@@ -1,0 +1,32 @@
+---
+import Base from "../layouts/Base.astro";
+import PostList from "../components/PostList.astro";
+import { pick, paths, categories, categoryPath, type Lang } from "../i18n";
+import { getPosts } from "../i18n/blog";
+
+interface Props { lang: Lang; category: string }
+const { lang, category } = Astro.props;
+const name = categories[category].name[lang];
+const posts = (await getPosts(lang)).filter((p) => p.data.categories.includes(category));
+const c = pick({
+  titleSuffix: { en: "on the Costa Tropical — Blog", es: "en la Costa Tropical — Blog" },
+  descA: { en: "Our family's tips and guides about", es: "Consejos y guías de nuestra familia sobre" },
+  descB: { en: "on the Costa Tropical, near Motril and Calahonda.", es: "en la Costa Tropical, cerca de Motril y Calahonda." },
+  all: { en: "← All posts", es: "← Todas las entradas" },
+}, lang);
+---
+<Base
+  lang={lang}
+  title={`${name} ${c.titleSuffix}`}
+  description={`${c.descA} ${name.toLowerCase()} ${c.descB}`}
+  alternates={{ en: categoryPath("en", category), es: categoryPath("es", category) }}
+  breadcrumbs={[{ name: "Blog", href: paths.blog[lang] }, { name, href: categoryPath(lang, category) }]}
+>
+  <section class="section">
+    <div class="container">
+      <a href={paths.blog[lang]}>{c.all}</a>
+      <h1>{name}</h1>
+      <PostList posts={posts} lang={lang} />
+    </div>
+  </section>
+</Base>

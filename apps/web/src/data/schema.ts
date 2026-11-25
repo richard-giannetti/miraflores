@@ -1,10 +1,11 @@
 import { getImage } from "astro:assets";
 import { site } from "./site";
 import type { Villa } from "./villas";
+import { villaPath, type Lang } from "../i18n";
 
 const abs = (p: string) => new URL(p, site.url).href;
 
-export async function villaSchema(villa: Villa) {
+export async function villaSchema(villa: Villa, lang: Lang) {
   const images = await Promise.all(
     [villa.hero, villa.cover, ...villa.highlights.map((h) => h.image)].map(async (p) =>
       abs((await getImage({ src: p.src, width: 1600, format: "jpg" })).src),
@@ -16,7 +17,7 @@ export async function villaSchema(villa: Villa) {
     "@id": abs(`/${villa.slug}/#lodging`),
     name: villa.name,
     description: villa.seoDescription,
-    url: abs(`/${villa.slug}/`),
+    url: abs(villaPath(lang, villa.slug)),
     image: images,
     email: site.email,
     address: {

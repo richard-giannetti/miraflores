@@ -1,6 +1,6 @@
 ---
 title: "Canyoning at La Junta de los Ríos"
-description: "Hey there, fellow adventurer! Let me tell you about this amazing spot just a short drive away from Villa Los Olivos. It’s called La Junta de los Ríos, and trust me, it’s like stepping into a real-life jungle gym! Picture this: waterfalls cascading into crystal-clear pools, rugged rocks to climb, and"
+description: "Waterfalls, crystal-clear pools and rocks to climb: La Junta de los Ríos in Otívar is a canyoning paradise, a short drive from Villa Los Olivos."
 pubDate: "2024-05-09"
 updatedDate: "2025-02-18"
 categories: ["canyoning","day-trips"]

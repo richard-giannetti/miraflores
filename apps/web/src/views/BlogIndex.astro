@@ -1,0 +1,41 @@
+---
+import Base from "../layouts/Base.astro";
+import PostList from "../components/PostList.astro";
+import { pick, paths, categories, categoryPath, type Lang } from "../i18n";
+import { getPosts } from "../i18n/blog";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const posts = await getPosts(lang);
+const c = pick({
+  title: { en: "Costa Tropical Travel Blog — Insider Tips & Day Trips", es: "Blog de viajes de la Costa Tropical — Consejos y excursiones" },
+  description: {
+    en: "Our family's insider tips for the Costa Tropical: day trips to Granada and Nerja, hidden beaches like La Rijana, canyoning and more. Not sponsored, no commissions.",
+    es: "Los consejos de nuestra familia para la Costa Tropical: excursiones a Granada y Nerja, calas como La Rijana, barranquismo y más. Sin patrocinios ni comisiones.",
+  },
+  h1: { en: "Discover the Costa Tropical's best-kept secrets", es: "Descubre los secretos mejor guardados de la Costa Tropical" },
+  lead: {
+    en: "Insider tips, travel guides and hidden gems, all chosen by our family. Nothing here is sponsored and we take no commissions: we just want our guests to enjoy the very best of the region.",
+    es: "Consejos, guías y rincones escondidos, todo elegido por nuestra familia. Nada está patrocinado y no cobramos comisiones: solo queremos que nuestros huéspedes disfruten de lo mejor de la región.",
+  },
+  categories: { en: "Categories", es: "Categorías" },
+}, lang);
+---
+<Base lang={lang} title={c.title} description={c.description} alternates={paths.blog} breadcrumbs={[{ name: "Blog", href: paths.blog[lang] }]}>
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Blog</span>
+      <h1>{c.h1}</h1>
+      <p class="lead">{c.lead}</p>
+      <nav class="cats" aria-label={c.categories}>
+        {Object.entries(categories).map(([key, cat]) => <a href={categoryPath(lang, key)}>{cat.name[lang]}</a>)}
+      </nav>
+      <PostList posts={posts} lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cats { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 40px; }
+  .cats a { padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; background: #fff; font-size: .9rem; }
+</style>

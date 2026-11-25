@@ -31,6 +31,10 @@ into one page avoids duplicate content and concentrates ranking signals.
 
 ## What the new site adds
 
+- A full Spanish version under `/es/` with Spanish URLs (`/es/villa-los-olivos/habitaciones/`,
+  `/es/que-hacer-costa-tropical/`, `/es/contacto/`, translated blog slugs). Every page declares its
+  translation with `hreflang` (`en`, `es`, `x-default` = English), so Google shows the right one.
+
 - Unique `<title>` (≤ ~60 chars) and meta description on every page; the old homepage had none.
 - `LodgingBusiness` structured data per villa, `BlogPosting` per post, `BreadcrumbList`, `Organization`.
 - `sitemap-index.xml` + `robots.txt`, canonical URLs, Open Graph images.

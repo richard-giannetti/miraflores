@@ -1,6 +1,6 @@
 ---
 title: "Unveiling the Secret Charms of La Rijana Beach: Your Ultimate Hideaway on the Costa Tropical!"
-description: "Unveiling the Secret Charms of La Rijana Beach: Your Ultimate Hideaway on the Costa Tropical!"
+description: "Cliffs, crystal-clear water and few crowds: discover La Rijana, one of our favourite hidden beaches on the Costa Tropical, 20 minutes from Villa Los Olivos."
 pubDate: "2024-05-10"
 updatedDate: "2025-02-18"
 categories: ["beach","day-trips"]

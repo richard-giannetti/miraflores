@@ -1,14 +1,16 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
+import { dateLocale, postPath, type Lang } from "../i18n";
+import { postSlug } from "../i18n/blog";
 
-interface Props { posts: CollectionEntry<"blog">[] }
-const { posts } = Astro.props;
-const fmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
+interface Props { posts: CollectionEntry<"blog">[]; lang: Lang }
+const { posts, lang } = Astro.props;
+const fmt = new Intl.DateTimeFormat(dateLocale[lang], { day: "numeric", month: "long", year: "numeric" });
 ---
 <div class="grid cols-3">
   {posts.map((p) => (
-    <a class="card post" href={`/blog/${p.id}/`}>
+    <a class="card post" href={postPath(lang, postSlug(p))}>
       {p.data.cover && <Image src={p.data.cover} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />}
       <div class="body">
         <time datetime={p.data.pubDate.toISOString()}>{fmt.format(p.data.pubDate)}</time>

@@ -1,0 +1,110 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import { getExperiences } from "../data/experiences";
+import { site } from "../data/site";
+import { experienceImage } from "../data/villas";
+import { pick, paths, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const { inVilla, nearby } = getExperiences(lang);
+const c = pick({
+  title: { en: "Things to Do on the Costa Tropical: Granada, Nerja & Beaches", es: "Qué hacer en la Costa Tropical: Granada, Nerja y playas" },
+  description: {
+    en: "Our family's guide to the Costa Tropical: hidden beaches, the Alhambra, Nerja caves, the Alpujarra, golf, water sports, local food, and private chefs at the villa.",
+    es: "Nuestra guía de la Costa Tropical: calas escondidas, la Alhambra, la Cueva de Nerja, la Alpujarra, golf, deportes acuáticos, gastronomía y chef privado en la villa.",
+  },
+  crumb: { en: "Things to do", es: "Qué hacer" },
+  heroAlt: { en: "Turquoise cove on the Costa Tropical", es: "Cala de agua turquesa en la Costa Tropical" },
+  eyebrow: { en: "Experiences", es: "Experiencias" },
+  heroTitle: { en: "Things to do on the Costa Tropical", es: "Qué hacer en la Costa Tropical" },
+  heroSub: {
+    en: "From private chefs at the villa to day trips to Granada and Nerja, here is how to make the most of your stay.",
+    es: "Del chef privado en la villa a excursiones a Granada y Nerja: así le sacarás el máximo partido a tu estancia.",
+  },
+  atVilla: { en: "At the villa", es: "En la villa" },
+  elevate: { en: "Elevate your stay", es: "Una estancia aún mejor" },
+  elevateLead: { en: "We can arrange tailored services at both villas, from private chefs to catering for private events.", es: "Organizamos servicios a medida en las dos villas, desde chef privado hasta catering para eventos privados." },
+  guideA: { en: "Our guests get two guidebooks: our", es: "Nuestros huéspedes reciben dos guías: nuestra" },
+  guideAirbnb: { en: "Airbnb guidebook", es: "guía de Airbnb" },
+  guideB: { en: ", and a personal one with private chefs, restaurants and much more.", es: " y otra personal con chefs privados, restaurantes y mucho más." },
+  email: { en: "Email us", es: "Escríbenos" },
+  guideC: { en: "to request it.", es: "para pedirla." },
+  subject: { en: "Guidebook request", es: "Solicitud de guía" },
+  nearbyEyebrow: { en: "Nearby", es: "Cerca" },
+  planTitle: { en: "Let us plan it for you", es: "Déjanos organizarlo" },
+  planLead: {
+    en: "Boat trips, private guides, tickets or a table at our favourite restaurant: tell us what you'd like and we'll arrange it.",
+    es: "Paseos en barco, guías privados, entradas o una mesa en nuestro restaurante favorito: dinos qué te apetece y lo organizamos.",
+  },
+  contact: { en: "Contact us", es: "Contáctanos" },
+}, lang);
+---
+<Base
+  lang={lang}
+  title={c.title}
+  description={c.description}
+  image={experienceImage("granada")}
+  alternates={paths.thingsToDo}
+  breadcrumbs={[{ name: c.crumb, href: paths.thingsToDo[lang] }]}
+>
+  <Hero image={{ src: experienceImage("beaches"), alt: c.heroAlt }} eyebrow={c.eyebrow} title={c.heroTitle} subtitle={c.heroSub} compact />
+
+  <section class="section">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">{c.atVilla}</span>
+        <h2>{c.elevate}</h2>
+        <p class="lead">{c.elevateLead}</p>
+      </div>
+      <div class="grid cols-3 list">
+        {inVilla.map((x) => (
+          <article class="card">
+            <Image src={x.image.src} alt={x.image.alt} widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />
+            <div class="body"><h3>{x.title}</h3><p>{x.text}</p></div>
+          </article>
+        ))}
+      </div>
+      <p class="center guide">
+        {c.guideA} <a href={site.airbnbGuidebook} rel="noopener">{c.guideAirbnb}</a>{c.guideB}
+        <a href={`mailto:${site.email}?subject=${encodeURIComponent(c.subject)}`}>{c.email}</a> {c.guideC}
+      </p>
+    </div>
+  </section>
+
+  {nearby.map((g, i) => (
+    <section class:list={["section", { alt: i % 2 === 0 }]}>
+      <div class="container">
+        <span class="eyebrow">{c.nearbyEyebrow}</span>
+        <h2>{g.group}</h2>
+        <div class="grid cols-3 list">
+          {g.items.map((x) => (
+            <article class="card">
+              <Image src={x.image.src} alt={x.image.alt} widths={[400, 700]} sizes="(max-width: 900px) 100vw, 380px" />
+              <div class="body">
+                <h3>{x.title}</h3>
+                <p>{x.text}</p>
+                {x.link && <p><a href={x.link.href} rel="noopener">{x.link.label} →</a></p>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section">
+    <div class="narrow center">
+      <h2>{c.planTitle}</h2>
+      <p class="lead">{c.planLead}</p>
+      <div class="actions"><a class="btn" href={paths.contact[lang]}>{c.contact}</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .list { margin-top: 36px; }
+  .guide { margin-top: 36px; color: var(--muted); }
+</style>

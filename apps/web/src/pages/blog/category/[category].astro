@@ -1,25 +1,8 @@
 ---
-import { getCollection } from "astro:content";
-import Base from "../../../layouts/Base.astro";
-import PostList from "../../../components/PostList.astro";
-import { categories } from "../../../data/categories";
+import BlogCategory from "../../../views/BlogCategory.astro";
+import { categories } from "../../../i18n";
 
-export const getStaticPaths = () => Object.keys(categories).map((category) => ({ params: { category } }));
-
-const { category } = Astro.params;
-const name = categories[category];
-const posts = (await getCollection("blog", (p) => p.data.categories.includes(category))).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
+export const getStaticPaths = () =>
+  Object.entries(categories).map(([key, c]) => ({ params: { category: c.slug.en }, props: { key } }));
 ---
-<Base
-  title={`${name} on the Costa Tropical — Blog`}
-  description={`Our family's tips and guides about ${name.toLowerCase()} on the Costa Tropical, near Motril and Calahonda.`}
-  breadcrumbs={[{ name: "Blog", href: "/blog/" }, { name, href: `/blog/category/${category}/` }]}
->
-  <section class="section">
-    <div class="container">
-      <a href="/blog/">← All posts</a>
-      <h1>{name}</h1>
-      <PostList posts={posts} />
-    </div>
-  </section>
-</Base>
+<BlogCategory lang="en" category={Astro.props.key} />

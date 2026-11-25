@@ -1,6 +1,6 @@
 ---
 title: "Discover the Charm of Nerja: A Perfect Day Trip from Villa Los Olivos"
-description: "Nestled along the Costa del Sol, just a short drive from Villa Los Olivos (less than 30 minutes away), lies the enchanting town of Nerja. Famous for its crystal-clear waters, stunning viewpoints, and rich cultural heritage, Nerja offers a perfect blend of relaxation and adventure. Whether you’re see"
+description: "The Nerja Caves, the Balcony of Europe, Burriana beach and the best tapas: how to spend a perfect day in Nerja, less than 30 minutes from Villa Los Olivos."
 pubDate: "2024-05-27"
 updatedDate: "2025-02-18"
 categories: ["day-trips"]
