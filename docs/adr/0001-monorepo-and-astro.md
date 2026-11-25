@@ -18,4 +18,4 @@ into a booking site. We also plan an owner management system and, later, direct 
 
 - Content edits happen in the repo (or later through a lightweight CMS / the PMS).
 - Website and PMS can share types and calendar code without publishing packages.
-- WordPress hosting can be cancelled once DNS moves and redirects are verified.
+- The Hostalia hosting plan stays: it includes the domain and the email (see `docs/domain-switch.md`).
