@@ -13,6 +13,12 @@ The back-office for both villas: [features](../../docs/pms/features.md),
 - Double bookings are refused by the database (`reservations_no_overlap`).
 - Live updates between devices; the last loaded data stays readable offline.
 - Interface in Spanish, French and English.
+- **Today** screen: arrivals, departures, in house, blocks, and the cleaning due (or overdue), with
+  one-tap "checked in / checked out".
+- **Cleaning**: a task is created automatically for every booking's departure day and follows the booking
+  (moved, cancelled, reconfirmed). Shows who's leaving and the next arrival (warns on same-day turnovers).
+  Assign to a team member, tick the villa's checklist, add notes, mark done (who and when is recorded).
+- **Guests**: search, profile with contact details, nationality, language, notes and every stay.
 
 ## Develop
 
@@ -28,7 +34,7 @@ Database changes go in `supabase/migrations/` (one SQL file per change, reviewed
 | --- | --- |
 | owner | everything, including users, villas and rooms |
 | manager | reservations and guests |
-| staff | read the calendar |
+| staff | read the calendar, update the cleaning tasks assigned to them |
 
 To give someone access: create the user in Supabase (Authentication → Users → Add user), then add a
 row in `profiles` with their user id and role.

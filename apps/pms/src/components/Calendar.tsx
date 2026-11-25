@@ -3,7 +3,8 @@ import { supabase, OVERLAP } from "../lib/supabase";
 import { addDays, daysBetween, format, range, startOfWeek, today, weekday, type Day } from "../lib/dates";
 import { locale, t, type Lang } from "../lib/i18n";
 import { load, save } from "../lib/cache";
-import type { Property, Reservation, Role, Unit } from "../lib/types";
+import { RESERVATION_FIELDS, type Villas } from "../lib/villas";
+import type { Reservation, Role } from "../lib/types";
 import { ReservationDialog, type Draft } from "./ReservationDialog";
 
 const DAY_W = 48; // px per day column
@@ -11,21 +12,21 @@ const DAY_W = 48; // px per day column
 interface Props {
   lang: Lang;
   role: Role;
+  villas: Villas;
 }
 
 type Drag =
   | { mode: "select"; unitId: string; from: number; to: number }
   | { mode: "move" | "resize"; res: Reservation; x0: number; dDays: number; unitId: string; moved: boolean };
 
-export function Calendar({ lang, role }: Props) {
+export function Calendar({ lang, role, villas }: Props) {
+  const { properties, units } = villas;
   const canEdit = role === "owner" || role === "manager";
   const [span, setSpan] = useState<14 | 31>(14);
   const [start, setStart] = useState<Day>(() => startOfWeek(today()));
   const days = useMemo(() => range(start, span), [start, span]);
   const end = addDays(start, span);
 
-  const [properties, setProperties] = useState<Property[]>(() => load("properties") ?? []);
-  const [units, setUnits] = useState<Unit[]>(() => load("units") ?? []);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [offline, setOffline] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -34,27 +35,13 @@ export function Calendar({ lang, role }: Props) {
   const dragRef = useRef<Drag | null>(null);
   dragRef.current = drag;
 
-  // Properties and units rarely change: load once.
-  useEffect(() => {
-    Promise.all([
-      supabase.from("properties").select("id, name, slug, locality, color, sort").is("deleted_at", null).order("sort"),
-      supabase.from("units").select("id, property_id, name, capacity, bedrooms, sort").is("deleted_at", null).eq("active", true).order("sort"),
-    ]).then(([p, u]) => {
-      if (p.error || u.error) return setOffline(true);
-      setProperties(p.data as Property[]);
-      setUnits(u.data as Unit[]);
-      save("properties", p.data);
-      save("units", u.data);
-    });
-  }, []);
-
   // Reservations overlapping the visible range, plus a margin so neighbouring pages are cached too.
   const from = addDays(start, -31);
   const to = addDays(end, 62);
   const refresh = useCallback(async () => {
     const { data, error } = await supabase
       .from("reservations")
-      .select("id, unit_id, guest_id, kind, status, source, check_in, check_out, adults, children, total_amount, title, notes, updated_at, guest:guests(id, first_name, last_name, email, phone, notes)")
+      .select(RESERVATION_FIELDS)
       .is("deleted_at", null)
       .lt("check_in", to)
       .gt("check_out", from);
@@ -301,7 +288,7 @@ export function Calendar({ lang, role }: Props) {
 const isWeekend = (d: Day) => [0, 6].includes(weekday(d));
 const maxDay = (a: Day, b: Day) => (a > b ? a : b);
 
-function toDraft(r: Reservation): Draft {
+export function toDraft(r: Reservation): Draft {
   return {
     id: r.id,
     unit_id: r.unit_id,
