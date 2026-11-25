@@ -236,19 +236,13 @@ build our own anyway:
 If the MVP drags on, a paid tool for check-in and SES.Hospedajes (Chekin, for example) can cover the
 legal part in the meantime.
 
-**Hotelgest**, which the family likes, is the closest benchmark. It's a Spanish PMS for hotels *and*
-vacation rentals, from €55/month (excl. VAT) for up to 5 units. It already includes:
-- Online check-in with ID scan and signature, and automatic SES.Hospedajes submission.
-- VeriFactu invoicing with exports to accounting software.
-- Housekeeping, a booking engine and a channel manager (Airbnb, Booking).
+**Decision: we build our own.** The family doesn't want to use an off-the-shelf PMS.
 
-Two fair options:
-- **Use Hotelgest now** for check-in and invoicing, and build only what it lacks (staff time clock,
-  our own website's booking flow).
-- **Build our own**, using Hotelgest as the model for the guest experience.
-
-This choice is worth making with the family before building the MVP. The price difference is small;
-the deciding factors are the hotel plans and how much control they want.
+**Hotelgest** is the reference to take inspiration from: a Spanish PMS for hotels and vacation rentals
+that the father likes. Ideas taken from it so far:
+- The guest-facing online check-in: link, ID scan, signature, invoice details, door code.
+- VeriFactu invoicing with exports for the accountant.
+- Housekeeping checklists and the "Today" planning view.
 
 ## Questions for the parents
 
@@ -262,7 +256,7 @@ the deciding factors are the hotel plans and how much control they want.
 7. Anything they hate about Airbnb's host tools that this should fix?
 8. Invoicing today: who issues invoices, with what tool, and does the gestor want a particular export
    or software? Has the gestor said how the 10% VAT from December applies to Airbnb stays?
-9. Has the father tried Hotelgest (demo or trial)? What does he like beyond online check-in?
+9. Beyond online check-in and invoicing, which Hotelgest screens or features does the father like most?
 
 ## Sources
 
