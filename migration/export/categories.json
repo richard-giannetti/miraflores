@@ -1,0 +1,860 @@
+[
+  {
+    "id": 13,
+    "count": 1,
+    "description": "",
+    "link": "https://miraflorescostatropical.com/blog/category/beach",
+    "name": "Beach",
+    "slug": "beach",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": [],
+    "yoast_head": "<!-- This site is optimized with the Yoast SEO plugin v28.9 - https://yoast.com/product/yoast-seo-wordpress/ -->\n<title>Beach Archives - Miraflores</title>\n<meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n<link rel=\"canonical\" href=\"https://miraflorescostatropical.com/blog/category/beach\" />\n<meta property=\"og:locale\" content=\"en_GB\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:title\" content=\"Beach Archives - Miraflores\" />\n<meta property=\"og:url\" content=\"https://miraflorescostatropical.com/blog/category/beach\" />\n<meta property=\"og:site_name\" content=\"Miraflores\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<script type=\"application/ld+json\" class=\"yoast-schema-graph\">{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/beach\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/beach\",\"name\":\"Beach Archives - Miraflores\",\"isPartOf\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/beach#breadcrumb\"},\"inLanguage\":\"en-GB\"},{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/beach#breadcrumb\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/miraflorescostatropical.com\\/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Beach\"}]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"name\":\"Miraflores\",\"description\":\"Villa Los Olivos &amp; Villa La Playa\",\"publisher\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\"},\"alternateName\":\"Villa Los Olivos Miraflores - Motril\",\"potentialAction\":[{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https:\\/\\/miraflorescostatropical.com\\/?s={search_term_string}\"},\"query-input\":{\"@type\":\"PropertyValueSpecification\",\"valueRequired\":true,\"valueName\":\"search_term_string\"}}],\"inLanguage\":\"en-GB\"},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\",\"name\":\"Miraflores\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"logo\":{\"@type\":\"ImageObject\",\"inLanguage\":\"en-GB\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"contentUrl\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"width\":573,\"height\":270,\"caption\":\"Miraflores\"},\"image\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\"}}]}</script>\n<!-- / Yoast SEO plugin. -->",
+    "yoast_head_json": {
+      "title": "Beach Archives - Miraflores",
+      "robots": {
+        "index": "index",
+        "follow": "follow",
+        "max-snippet": "max-snippet:-1",
+        "max-image-preview": "max-image-preview:large",
+        "max-video-preview": "max-video-preview:-1"
+      },
+      "canonical": "https://miraflorescostatropical.com/blog/category/beach",
+      "og_locale": "en_GB",
+      "og_type": "article",
+      "og_title": "Beach Archives - Miraflores",
+      "og_url": "https://miraflorescostatropical.com/blog/category/beach",
+      "og_site_name": "Miraflores",
+      "twitter_card": "summary_large_image",
+      "schema": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "@id": "https://miraflorescostatropical.com/blog/category/beach",
+            "url": "https://miraflorescostatropical.com/blog/category/beach",
+            "name": "Beach Archives - Miraflores",
+            "isPartOf": {
+              "@id": "https://miraflorescostatropical.com/#website"
+            },
+            "breadcrumb": {
+              "@id": "https://miraflorescostatropical.com/blog/category/beach#breadcrumb"
+            },
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://miraflorescostatropical.com/blog/category/beach#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://miraflorescostatropical.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Beach"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://miraflorescostatropical.com/#website",
+            "url": "https://miraflorescostatropical.com/",
+            "name": "Miraflores",
+            "description": "Villa Los Olivos &amp; Villa La Playa",
+            "publisher": {
+              "@id": "https://miraflorescostatropical.com/#organization"
+            },
+            "alternateName": "Villa Los Olivos Miraflores - Motril",
+            "potentialAction": [
+              {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://miraflorescostatropical.com/?s={search_term_string}"
+                },
+                "query-input": {
+                  "@type": "PropertyValueSpecification",
+                  "valueRequired": true,
+                  "valueName": "search_term_string"
+                }
+              }
+            ],
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://miraflorescostatropical.com/#organization",
+            "name": "Miraflores",
+            "url": "https://miraflorescostatropical.com/",
+            "logo": {
+              "@type": "ImageObject",
+              "inLanguage": "en-GB",
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/",
+              "url": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "contentUrl": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "width": 573,
+              "height": 270,
+              "caption": "Miraflores"
+            },
+            "image": {
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/"
+            }
+          }
+        ]
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories/13",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/taxonomies/category"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/posts?categories=13"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 11,
+    "count": 1,
+    "description": "",
+    "link": "https://miraflorescostatropical.com/blog/category/canyoning",
+    "name": "Canyoning",
+    "slug": "canyoning",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": [],
+    "yoast_head": "<!-- This site is optimized with the Yoast SEO plugin v28.9 - https://yoast.com/product/yoast-seo-wordpress/ -->\n<title>Canyoning Archives - Miraflores</title>\n<meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n<link rel=\"canonical\" href=\"https://miraflorescostatropical.com/blog/category/canyoning\" />\n<meta property=\"og:locale\" content=\"en_GB\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:title\" content=\"Canyoning Archives - Miraflores\" />\n<meta property=\"og:url\" content=\"https://miraflorescostatropical.com/blog/category/canyoning\" />\n<meta property=\"og:site_name\" content=\"Miraflores\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<script type=\"application/ld+json\" class=\"yoast-schema-graph\">{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/canyoning\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/canyoning\",\"name\":\"Canyoning Archives - Miraflores\",\"isPartOf\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/canyoning#breadcrumb\"},\"inLanguage\":\"en-GB\"},{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/canyoning#breadcrumb\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/miraflorescostatropical.com\\/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Canyoning\"}]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"name\":\"Miraflores\",\"description\":\"Villa Los Olivos &amp; Villa La Playa\",\"publisher\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\"},\"alternateName\":\"Villa Los Olivos Miraflores - Motril\",\"potentialAction\":[{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https:\\/\\/miraflorescostatropical.com\\/?s={search_term_string}\"},\"query-input\":{\"@type\":\"PropertyValueSpecification\",\"valueRequired\":true,\"valueName\":\"search_term_string\"}}],\"inLanguage\":\"en-GB\"},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\",\"name\":\"Miraflores\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"logo\":{\"@type\":\"ImageObject\",\"inLanguage\":\"en-GB\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"contentUrl\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"width\":573,\"height\":270,\"caption\":\"Miraflores\"},\"image\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\"}}]}</script>\n<!-- / Yoast SEO plugin. -->",
+    "yoast_head_json": {
+      "title": "Canyoning Archives - Miraflores",
+      "robots": {
+        "index": "index",
+        "follow": "follow",
+        "max-snippet": "max-snippet:-1",
+        "max-image-preview": "max-image-preview:large",
+        "max-video-preview": "max-video-preview:-1"
+      },
+      "canonical": "https://miraflorescostatropical.com/blog/category/canyoning",
+      "og_locale": "en_GB",
+      "og_type": "article",
+      "og_title": "Canyoning Archives - Miraflores",
+      "og_url": "https://miraflorescostatropical.com/blog/category/canyoning",
+      "og_site_name": "Miraflores",
+      "twitter_card": "summary_large_image",
+      "schema": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "@id": "https://miraflorescostatropical.com/blog/category/canyoning",
+            "url": "https://miraflorescostatropical.com/blog/category/canyoning",
+            "name": "Canyoning Archives - Miraflores",
+            "isPartOf": {
+              "@id": "https://miraflorescostatropical.com/#website"
+            },
+            "breadcrumb": {
+              "@id": "https://miraflorescostatropical.com/blog/category/canyoning#breadcrumb"
+            },
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://miraflorescostatropical.com/blog/category/canyoning#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://miraflorescostatropical.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Canyoning"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://miraflorescostatropical.com/#website",
+            "url": "https://miraflorescostatropical.com/",
+            "name": "Miraflores",
+            "description": "Villa Los Olivos &amp; Villa La Playa",
+            "publisher": {
+              "@id": "https://miraflorescostatropical.com/#organization"
+            },
+            "alternateName": "Villa Los Olivos Miraflores - Motril",
+            "potentialAction": [
+              {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://miraflorescostatropical.com/?s={search_term_string}"
+                },
+                "query-input": {
+                  "@type": "PropertyValueSpecification",
+                  "valueRequired": true,
+                  "valueName": "search_term_string"
+                }
+              }
+            ],
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://miraflorescostatropical.com/#organization",
+            "name": "Miraflores",
+            "url": "https://miraflorescostatropical.com/",
+            "logo": {
+              "@type": "ImageObject",
+              "inLanguage": "en-GB",
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/",
+              "url": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "contentUrl": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "width": 573,
+              "height": 270,
+              "caption": "Miraflores"
+            },
+            "image": {
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/"
+            }
+          }
+        ]
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories/11",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/taxonomies/category"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/posts?categories=11"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 12,
+    "count": 4,
+    "description": "",
+    "link": "https://miraflorescostatropical.com/blog/category/day-trips",
+    "name": "Day trips",
+    "slug": "day-trips",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": [],
+    "yoast_head": "<!-- This site is optimized with the Yoast SEO plugin v28.9 - https://yoast.com/product/yoast-seo-wordpress/ -->\n<title>Day trips Archives - Miraflores</title>\n<meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n<link rel=\"canonical\" href=\"https://miraflorescostatropical.com/blog/category/day-trips\" />\n<meta property=\"og:locale\" content=\"en_GB\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:title\" content=\"Day trips Archives - Miraflores\" />\n<meta property=\"og:url\" content=\"https://miraflorescostatropical.com/blog/category/day-trips\" />\n<meta property=\"og:site_name\" content=\"Miraflores\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<script type=\"application/ld+json\" class=\"yoast-schema-graph\">{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/day-trips\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/day-trips\",\"name\":\"Day trips Archives - Miraflores\",\"isPartOf\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/day-trips#breadcrumb\"},\"inLanguage\":\"en-GB\"},{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/day-trips#breadcrumb\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/miraflorescostatropical.com\\/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Day trips\"}]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"name\":\"Miraflores\",\"description\":\"Villa Los Olivos &amp; Villa La Playa\",\"publisher\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\"},\"alternateName\":\"Villa Los Olivos Miraflores - Motril\",\"potentialAction\":[{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https:\\/\\/miraflorescostatropical.com\\/?s={search_term_string}\"},\"query-input\":{\"@type\":\"PropertyValueSpecification\",\"valueRequired\":true,\"valueName\":\"search_term_string\"}}],\"inLanguage\":\"en-GB\"},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\",\"name\":\"Miraflores\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"logo\":{\"@type\":\"ImageObject\",\"inLanguage\":\"en-GB\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"contentUrl\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"width\":573,\"height\":270,\"caption\":\"Miraflores\"},\"image\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\"}}]}</script>\n<!-- / Yoast SEO plugin. -->",
+    "yoast_head_json": {
+      "title": "Day trips Archives - Miraflores",
+      "robots": {
+        "index": "index",
+        "follow": "follow",
+        "max-snippet": "max-snippet:-1",
+        "max-image-preview": "max-image-preview:large",
+        "max-video-preview": "max-video-preview:-1"
+      },
+      "canonical": "https://miraflorescostatropical.com/blog/category/day-trips",
+      "og_locale": "en_GB",
+      "og_type": "article",
+      "og_title": "Day trips Archives - Miraflores",
+      "og_url": "https://miraflorescostatropical.com/blog/category/day-trips",
+      "og_site_name": "Miraflores",
+      "twitter_card": "summary_large_image",
+      "schema": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "@id": "https://miraflorescostatropical.com/blog/category/day-trips",
+            "url": "https://miraflorescostatropical.com/blog/category/day-trips",
+            "name": "Day trips Archives - Miraflores",
+            "isPartOf": {
+              "@id": "https://miraflorescostatropical.com/#website"
+            },
+            "breadcrumb": {
+              "@id": "https://miraflorescostatropical.com/blog/category/day-trips#breadcrumb"
+            },
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://miraflorescostatropical.com/blog/category/day-trips#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://miraflorescostatropical.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Day trips"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://miraflorescostatropical.com/#website",
+            "url": "https://miraflorescostatropical.com/",
+            "name": "Miraflores",
+            "description": "Villa Los Olivos &amp; Villa La Playa",
+            "publisher": {
+              "@id": "https://miraflorescostatropical.com/#organization"
+            },
+            "alternateName": "Villa Los Olivos Miraflores - Motril",
+            "potentialAction": [
+              {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://miraflorescostatropical.com/?s={search_term_string}"
+                },
+                "query-input": {
+                  "@type": "PropertyValueSpecification",
+                  "valueRequired": true,
+                  "valueName": "search_term_string"
+                }
+              }
+            ],
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://miraflorescostatropical.com/#organization",
+            "name": "Miraflores",
+            "url": "https://miraflorescostatropical.com/",
+            "logo": {
+              "@type": "ImageObject",
+              "inLanguage": "en-GB",
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/",
+              "url": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "contentUrl": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "width": 573,
+              "height": 270,
+              "caption": "Miraflores"
+            },
+            "image": {
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/"
+            }
+          }
+        ]
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories/12",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/taxonomies/category"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/posts?categories=12"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "count": 0,
+    "description": "",
+    "link": "https://miraflorescostatropical.com/blog/category/island",
+    "name": "Island",
+    "slug": "island",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": [],
+    "yoast_head": "<!-- This site is optimized with the Yoast SEO plugin v28.9 - https://yoast.com/product/yoast-seo-wordpress/ -->\n<title>Island Archives - Miraflores</title>\n<meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n<link rel=\"canonical\" href=\"https://miraflorescostatropical.com/blog/category/island\" />\n<meta property=\"og:locale\" content=\"en_GB\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:title\" content=\"Island Archives - Miraflores\" />\n<meta property=\"og:url\" content=\"https://miraflorescostatropical.com/blog/category/island\" />\n<meta property=\"og:site_name\" content=\"Miraflores\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<script type=\"application/ld+json\" class=\"yoast-schema-graph\">{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/island\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/island\",\"name\":\"Island Archives - Miraflores\",\"isPartOf\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/island#breadcrumb\"},\"inLanguage\":\"en-GB\"},{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/island#breadcrumb\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/miraflorescostatropical.com\\/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Island\"}]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"name\":\"Miraflores\",\"description\":\"Villa Los Olivos &amp; Villa La Playa\",\"publisher\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\"},\"alternateName\":\"Villa Los Olivos Miraflores - Motril\",\"potentialAction\":[{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https:\\/\\/miraflorescostatropical.com\\/?s={search_term_string}\"},\"query-input\":{\"@type\":\"PropertyValueSpecification\",\"valueRequired\":true,\"valueName\":\"search_term_string\"}}],\"inLanguage\":\"en-GB\"},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\",\"name\":\"Miraflores\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"logo\":{\"@type\":\"ImageObject\",\"inLanguage\":\"en-GB\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"contentUrl\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"width\":573,\"height\":270,\"caption\":\"Miraflores\"},\"image\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\"}}]}</script>\n<!-- / Yoast SEO plugin. -->",
+    "yoast_head_json": {
+      "title": "Island Archives - Miraflores",
+      "robots": {
+        "index": "index",
+        "follow": "follow",
+        "max-snippet": "max-snippet:-1",
+        "max-image-preview": "max-image-preview:large",
+        "max-video-preview": "max-video-preview:-1"
+      },
+      "canonical": "https://miraflorescostatropical.com/blog/category/island",
+      "og_locale": "en_GB",
+      "og_type": "article",
+      "og_title": "Island Archives - Miraflores",
+      "og_url": "https://miraflorescostatropical.com/blog/category/island",
+      "og_site_name": "Miraflores",
+      "twitter_card": "summary_large_image",
+      "schema": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "@id": "https://miraflorescostatropical.com/blog/category/island",
+            "url": "https://miraflorescostatropical.com/blog/category/island",
+            "name": "Island Archives - Miraflores",
+            "isPartOf": {
+              "@id": "https://miraflorescostatropical.com/#website"
+            },
+            "breadcrumb": {
+              "@id": "https://miraflorescostatropical.com/blog/category/island#breadcrumb"
+            },
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://miraflorescostatropical.com/blog/category/island#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://miraflorescostatropical.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Island"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://miraflorescostatropical.com/#website",
+            "url": "https://miraflorescostatropical.com/",
+            "name": "Miraflores",
+            "description": "Villa Los Olivos &amp; Villa La Playa",
+            "publisher": {
+              "@id": "https://miraflorescostatropical.com/#organization"
+            },
+            "alternateName": "Villa Los Olivos Miraflores - Motril",
+            "potentialAction": [
+              {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://miraflorescostatropical.com/?s={search_term_string}"
+                },
+                "query-input": {
+                  "@type": "PropertyValueSpecification",
+                  "valueRequired": true,
+                  "valueName": "search_term_string"
+                }
+              }
+            ],
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://miraflorescostatropical.com/#organization",
+            "name": "Miraflores",
+            "url": "https://miraflorescostatropical.com/",
+            "logo": {
+              "@type": "ImageObject",
+              "inLanguage": "en-GB",
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/",
+              "url": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "contentUrl": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "width": 573,
+              "height": 270,
+              "caption": "Miraflores"
+            },
+            "image": {
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/"
+            }
+          }
+        ]
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories/2",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/taxonomies/category"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/posts?categories=2"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "count": 0,
+    "description": "",
+    "link": "https://miraflorescostatropical.com/blog/category/travel",
+    "name": "Travel",
+    "slug": "travel",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": [],
+    "yoast_head": "<!-- This site is optimized with the Yoast SEO plugin v28.9 - https://yoast.com/product/yoast-seo-wordpress/ -->\n<title>Travel Archives - Miraflores</title>\n<meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n<link rel=\"canonical\" href=\"https://miraflorescostatropical.com/blog/category/travel\" />\n<meta property=\"og:locale\" content=\"en_GB\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:title\" content=\"Travel Archives - Miraflores\" />\n<meta property=\"og:url\" content=\"https://miraflorescostatropical.com/blog/category/travel\" />\n<meta property=\"og:site_name\" content=\"Miraflores\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<script type=\"application/ld+json\" class=\"yoast-schema-graph\">{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/travel\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/travel\",\"name\":\"Travel Archives - Miraflores\",\"isPartOf\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/travel#breadcrumb\"},\"inLanguage\":\"en-GB\"},{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/travel#breadcrumb\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/miraflorescostatropical.com\\/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Travel\"}]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"name\":\"Miraflores\",\"description\":\"Villa Los Olivos &amp; Villa La Playa\",\"publisher\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\"},\"alternateName\":\"Villa Los Olivos Miraflores - Motril\",\"potentialAction\":[{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https:\\/\\/miraflorescostatropical.com\\/?s={search_term_string}\"},\"query-input\":{\"@type\":\"PropertyValueSpecification\",\"valueRequired\":true,\"valueName\":\"search_term_string\"}}],\"inLanguage\":\"en-GB\"},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\",\"name\":\"Miraflores\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"logo\":{\"@type\":\"ImageObject\",\"inLanguage\":\"en-GB\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"contentUrl\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"width\":573,\"height\":270,\"caption\":\"Miraflores\"},\"image\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\"}}]}</script>\n<!-- / Yoast SEO plugin. -->",
+    "yoast_head_json": {
+      "title": "Travel Archives - Miraflores",
+      "robots": {
+        "index": "index",
+        "follow": "follow",
+        "max-snippet": "max-snippet:-1",
+        "max-image-preview": "max-image-preview:large",
+        "max-video-preview": "max-video-preview:-1"
+      },
+      "canonical": "https://miraflorescostatropical.com/blog/category/travel",
+      "og_locale": "en_GB",
+      "og_type": "article",
+      "og_title": "Travel Archives - Miraflores",
+      "og_url": "https://miraflorescostatropical.com/blog/category/travel",
+      "og_site_name": "Miraflores",
+      "twitter_card": "summary_large_image",
+      "schema": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "@id": "https://miraflorescostatropical.com/blog/category/travel",
+            "url": "https://miraflorescostatropical.com/blog/category/travel",
+            "name": "Travel Archives - Miraflores",
+            "isPartOf": {
+              "@id": "https://miraflorescostatropical.com/#website"
+            },
+            "breadcrumb": {
+              "@id": "https://miraflorescostatropical.com/blog/category/travel#breadcrumb"
+            },
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://miraflorescostatropical.com/blog/category/travel#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://miraflorescostatropical.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Travel"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://miraflorescostatropical.com/#website",
+            "url": "https://miraflorescostatropical.com/",
+            "name": "Miraflores",
+            "description": "Villa Los Olivos &amp; Villa La Playa",
+            "publisher": {
+              "@id": "https://miraflorescostatropical.com/#organization"
+            },
+            "alternateName": "Villa Los Olivos Miraflores - Motril",
+            "potentialAction": [
+              {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://miraflorescostatropical.com/?s={search_term_string}"
+                },
+                "query-input": {
+                  "@type": "PropertyValueSpecification",
+                  "valueRequired": true,
+                  "valueName": "search_term_string"
+                }
+              }
+            ],
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://miraflorescostatropical.com/#organization",
+            "name": "Miraflores",
+            "url": "https://miraflorescostatropical.com/",
+            "logo": {
+              "@type": "ImageObject",
+              "inLanguage": "en-GB",
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/",
+              "url": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "contentUrl": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "width": 573,
+              "height": 270,
+              "caption": "Miraflores"
+            },
+            "image": {
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/"
+            }
+          }
+        ]
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories/3",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/taxonomies/category"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/posts?categories=3"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 1,
+    "count": 0,
+    "description": "",
+    "link": "https://miraflorescostatropical.com/blog/category/uncategorized",
+    "name": "Uncategorized",
+    "slug": "uncategorized",
+    "taxonomy": "category",
+    "parent": 0,
+    "meta": [],
+    "yoast_head": "<!-- This site is optimized with the Yoast SEO plugin v28.9 - https://yoast.com/product/yoast-seo-wordpress/ -->\n<title>Uncategorized Archives - Miraflores</title>\n<meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n<link rel=\"canonical\" href=\"https://miraflorescostatropical.com/blog/category/uncategorized\" />\n<meta property=\"og:locale\" content=\"en_GB\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:title\" content=\"Uncategorized Archives - Miraflores\" />\n<meta property=\"og:url\" content=\"https://miraflorescostatropical.com/blog/category/uncategorized\" />\n<meta property=\"og:site_name\" content=\"Miraflores\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<script type=\"application/ld+json\" class=\"yoast-schema-graph\">{\"@context\":\"https:\\/\\/schema.org\",\"@graph\":[{\"@type\":\"CollectionPage\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/uncategorized\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/uncategorized\",\"name\":\"Uncategorized Archives - Miraflores\",\"isPartOf\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\"},\"breadcrumb\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/uncategorized#breadcrumb\"},\"inLanguage\":\"en-GB\"},{\"@type\":\"BreadcrumbList\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/blog\\/category\\/uncategorized#breadcrumb\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Home\",\"item\":\"https:\\/\\/miraflorescostatropical.com\\/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Uncategorized\"}]},{\"@type\":\"WebSite\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#website\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"name\":\"Miraflores\",\"description\":\"Villa Los Olivos &amp; Villa La Playa\",\"publisher\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\"},\"alternateName\":\"Villa Los Olivos Miraflores - Motril\",\"potentialAction\":[{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https:\\/\\/miraflorescostatropical.com\\/?s={search_term_string}\"},\"query-input\":{\"@type\":\"PropertyValueSpecification\",\"valueRequired\":true,\"valueName\":\"search_term_string\"}}],\"inLanguage\":\"en-GB\"},{\"@type\":\"Organization\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#organization\",\"name\":\"Miraflores\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/\",\"logo\":{\"@type\":\"ImageObject\",\"inLanguage\":\"en-GB\",\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\",\"url\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"contentUrl\":\"https:\\/\\/miraflorescostatropical.com\\/wp-content\\/uploads\\/2024\\/01\\/cropped-Logo-name.png\",\"width\":573,\"height\":270,\"caption\":\"Miraflores\"},\"image\":{\"@id\":\"https:\\/\\/miraflorescostatropical.com\\/#\\/schema\\/logo\\/image\\/\"}}]}</script>\n<!-- / Yoast SEO plugin. -->",
+    "yoast_head_json": {
+      "title": "Uncategorized Archives - Miraflores",
+      "robots": {
+        "index": "index",
+        "follow": "follow",
+        "max-snippet": "max-snippet:-1",
+        "max-image-preview": "max-image-preview:large",
+        "max-video-preview": "max-video-preview:-1"
+      },
+      "canonical": "https://miraflorescostatropical.com/blog/category/uncategorized",
+      "og_locale": "en_GB",
+      "og_type": "article",
+      "og_title": "Uncategorized Archives - Miraflores",
+      "og_url": "https://miraflorescostatropical.com/blog/category/uncategorized",
+      "og_site_name": "Miraflores",
+      "twitter_card": "summary_large_image",
+      "schema": {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "@id": "https://miraflorescostatropical.com/blog/category/uncategorized",
+            "url": "https://miraflorescostatropical.com/blog/category/uncategorized",
+            "name": "Uncategorized Archives - Miraflores",
+            "isPartOf": {
+              "@id": "https://miraflorescostatropical.com/#website"
+            },
+            "breadcrumb": {
+              "@id": "https://miraflorescostatropical.com/blog/category/uncategorized#breadcrumb"
+            },
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://miraflorescostatropical.com/blog/category/uncategorized#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://miraflorescostatropical.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Uncategorized"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://miraflorescostatropical.com/#website",
+            "url": "https://miraflorescostatropical.com/",
+            "name": "Miraflores",
+            "description": "Villa Los Olivos &amp; Villa La Playa",
+            "publisher": {
+              "@id": "https://miraflorescostatropical.com/#organization"
+            },
+            "alternateName": "Villa Los Olivos Miraflores - Motril",
+            "potentialAction": [
+              {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://miraflorescostatropical.com/?s={search_term_string}"
+                },
+                "query-input": {
+                  "@type": "PropertyValueSpecification",
+                  "valueRequired": true,
+                  "valueName": "search_term_string"
+                }
+              }
+            ],
+            "inLanguage": "en-GB"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://miraflorescostatropical.com/#organization",
+            "name": "Miraflores",
+            "url": "https://miraflorescostatropical.com/",
+            "logo": {
+              "@type": "ImageObject",
+              "inLanguage": "en-GB",
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/",
+              "url": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "contentUrl": "https://miraflorescostatropical.com/wp-content/uploads/2024/01/cropped-Logo-name.png",
+              "width": 573,
+              "height": 270,
+              "caption": "Miraflores"
+            },
+            "image": {
+              "@id": "https://miraflorescostatropical.com/#/schema/logo/image/"
+            }
+          }
+        ]
+      }
+    },
+    "_links": {
+      "self": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories/1",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/categories"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/taxonomies/category"
+        }
+      ],
+      "wp:post_type": [
+        {
+          "href": "https://miraflorescostatropical.com/wp-json/wp/v2/posts?categories=1"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  }
+]
