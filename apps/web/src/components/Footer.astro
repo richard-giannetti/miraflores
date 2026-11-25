@@ -22,7 +22,7 @@ const ui = t(lang);
           <li><a href={villaPath(lang, v.slug, "rooms")}>{ui.villaNav.rooms}</a></li>
           <li><a href={villaPath(lang, v.slug, "amenities")}>{ui.villaNav.amenities}</a></li>
           <li><a href={villaPath(lang, v.slug, "gallery")}>{ui.villaNav.gallery}</a></li>
-          <li><a href={v.booking.airbnb} rel="noopener">{ui.bookAirbnb}</a></li>
+          <li><a href={v.booking.airbnb} target="_blank" rel="noopener">{ui.bookAirbnb}</a></li>
         </ul>
       </div>
     ))}

@@ -10,7 +10,9 @@
       structured data, sitemap, Open Graph images, per-page titles/descriptions
 - [x] Spanish version (`/es/`, translated URLs, hreflang, language switcher, blog translated)
 - [x] "Book on Airbnb" buttons per villa
-- [ ] Contact form (today: email link)
+- [x] Contact form (Web3Forms; shows once `contactFormKey` is set in `apps/web/src/data/site.ts`)
+- [x] Interim `/checking/` page: guests are told details are collected via Airbnb messages
+- [ ] Real Airbnb reviews per villa (pasted from the host dashboard) + rating badge
 - [ ] Deploy to Cloudflare (Workers static assets, see `wrangler.jsonc`)
 - [ ] Google Search Console + analytics
 - [ ] Switch DNS from WordPress hosting to the new host

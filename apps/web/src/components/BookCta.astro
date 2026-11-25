@@ -12,7 +12,7 @@ const ui = t(lang);
     <h2>{ui.bookCta.title} {villa.name}</h2>
     <p class="lead">{ui.bookCta.lead}</p>
     <div class="actions">
-      <a class="btn" href={villa.booking.airbnb} rel="noopener">{ui.bookAirbnb}</a>
+      <a class="btn" href={villa.booking.airbnb} target="_blank" rel="noopener">{ui.bookAirbnb}</a>
       <a class="btn ghost" href={paths.contact[lang]}>{ui.contactUs}</a>
     </div>
   </div>

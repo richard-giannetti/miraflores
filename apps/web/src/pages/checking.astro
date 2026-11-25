@@ -1,0 +1,29 @@
+---
+// Replaces the old WordPress online check-in form, which guests may still have links to.
+// Online check-in will come back as part of the management system (apps/pms).
+import Base from "../layouts/Base.astro";
+import { site } from "../data/site";
+---
+<Base lang="en" title="Guest check-in" description="Guest check-in for Villa Los Olivos and Villa La Playa." alternates={{}} noindex>
+  <section class="section">
+    <div class="narrow">
+      <h1>Guest check-in</h1>
+      <p class="lead">Thank you for staying with us! Online check-in has moved.</p>
+      <p>Spanish law requires us to register every guest. Before your arrival, we will ask you for the details we need (full name, ID or passport number, and your dates) through <strong>Airbnb messages</strong>. Please reply there. You don't need to fill in anything on this website.</p>
+      <p>Any questions? Write to us at <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+
+      <hr />
+
+      <h2 lang="es-ES">Registro de huéspedes</h2>
+      <div lang="es-ES">
+        <p class="lead">¡Gracias por alojarte con nosotros! El registro online ha cambiado.</p>
+        <p>La ley española nos obliga a registrar a todos los huéspedes. Antes de tu llegada, te pediremos los datos necesarios (nombre completo, número de DNI o pasaporte y fechas de estancia) por <strong>mensaje de Airbnb</strong>. Por favor, respóndenos por ahí. No tienes que rellenar nada en esta web.</p>
+        <p>¿Tienes dudas? Escríbenos a <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0; }
+</style>

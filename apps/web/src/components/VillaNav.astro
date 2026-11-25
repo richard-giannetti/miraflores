@@ -13,7 +13,7 @@ const pages: VillaPage[] = ["overview", "rooms", "amenities", "gallery"];
       const href = villaPath(lang, villa.slug, p);
       return <a href={href} aria-current={Astro.url.pathname === href ? "page" : undefined}>{ui.villaNav[p]}</a>;
     })}
-    <a class="book" href={villa.booking.airbnb} rel="noopener">{ui.bookAirbnb}</a>
+    <a class="book" href={villa.booking.airbnb} target="_blank" rel="noopener">{ui.bookAirbnb}</a>
   </div>
 </nav>
 

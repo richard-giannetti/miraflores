@@ -1,0 +1,107 @@
+---
+import { site } from "../data/site";
+import { getVillas } from "../data/villas";
+import { pick, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const villas = getVillas(lang);
+const c = pick({
+  title: { en: "Send us a message", es: "Envíanos un mensaje" },
+  name: { en: "Your name", es: "Tu nombre" },
+  email: { en: "Email", es: "Email" },
+  villa: { en: "Villa", es: "Villa" },
+  either: { en: "Not sure yet", es: "Aún no lo sé" },
+  arrival: { en: "Arrival", es: "Llegada" },
+  departure: { en: "Departure", es: "Salida" },
+  guests: { en: "Guests", es: "Personas" },
+  message: { en: "Message", es: "Mensaje" },
+  placeholder: { en: "Dates, group size, private chef, questions…", es: "Fechas, número de personas, chef privado, dudas…" },
+  send: { en: "Send message", es: "Enviar mensaje" },
+  sending: { en: "Sending…", es: "Enviando…" },
+  privacy: {
+    en: "We only use your details to reply to your message.",
+    es: "Solo usamos tus datos para responder a tu mensaje.",
+  },
+  ok: { en: "Thank you! We've received your message and will reply soon.", es: "¡Gracias! Hemos recibido tu mensaje y te responderemos pronto." },
+  fail: { en: "Sorry, the message couldn't be sent. Please email us at", es: "Lo sentimos, no se pudo enviar el mensaje. Escríbenos a" },
+  subject: { en: "Website enquiry", es: "Consulta desde la web" },
+}, lang);
+---
+{site.contactFormKey && (
+  <form class="contact-form" action="https://api.web3forms.com/submit" method="POST" data-ok={c.ok} data-fail={`${c.fail} ${site.email}.`} data-sending={c.sending}>
+    <h2>{c.title}</h2>
+    <input type="hidden" name="access_key" value={site.contactFormKey} />
+    <input type="hidden" name="subject" value={`${c.subject} — Miraflores`} />
+    <input type="hidden" name="from_name" value="miraflorescostatropical.com" />
+    <input type="hidden" name="language" value={lang} />
+    <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+    <div class="row">
+      <label>{c.name}<input name="name" required autocomplete="name" /></label>
+      <label>{c.email}<input name="email" type="email" required autocomplete="email" /></label>
+    </div>
+    <div class="row">
+      <label>{c.villa}
+        <select name="villa">
+          {villas.map((v) => <option>{v.name}</option>)}
+          <option>{c.either}</option>
+        </select>
+      </label>
+      <label>{c.guests}<input name="guests" type="number" min="1" max="20" inputmode="numeric" /></label>
+    </div>
+    <div class="row">
+      <label>{c.arrival}<input name="arrival" type="date" /></label>
+      <label>{c.departure}<input name="departure" type="date" /></label>
+    </div>
+    <label>{c.message}<textarea name="message" rows="5" required placeholder={c.placeholder}></textarea></label>
+    <p class="privacy">{c.privacy}</p>
+    <button class="btn" type="submit">{c.send}</button>
+    <p class="status" role="status" aria-live="polite"></p>
+  </form>
+)}
+
+<script>
+  // Submit without leaving the page; without JS the form still posts normally.
+  for (const form of document.querySelectorAll<HTMLFormElement>(".contact-form")) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = form.querySelector<HTMLElement>(".status")!;
+      const button = form.querySelector<HTMLButtonElement>("button")!;
+      const label = button.textContent;
+      button.disabled = true;
+      button.textContent = form.dataset.sending!;
+      status.className = "status";
+      try {
+        const res = await fetch(form.action, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(form) });
+        const data = await res.json();
+        if (!res.ok || !data.success) throw new Error(data.message);
+        form.reset();
+        status.textContent = form.dataset.ok!;
+        status.classList.add("ok");
+      } catch {
+        status.textContent = form.dataset.fail!;
+        status.classList.add("error");
+      } finally {
+        button.disabled = false;
+        button.textContent = label;
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact-form { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(22px, 4vw, 40px); display: grid; gap: 16px; }
+  h2 { font-size: 2rem; margin: 0; }
+  .row { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  label { display: grid; gap: 6px; font-size: .9rem; font-weight: 600; }
+  input, select, textarea { font: 400 1rem/1.4 var(--sans); padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--cream); color: var(--ink); width: 100%; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--olive); outline-offset: 1px; }
+  .hp { position: absolute; left: -9999px; }
+  .privacy { font-size: .85rem; color: var(--muted); margin: 0; }
+  button { justify-self: start; border: 0; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: wait; }
+  .status { margin: 0; font-weight: 600; }
+  .status.ok { color: #2f6b3a; }
+  .status.error { color: #a33a2a; }
+</style>
