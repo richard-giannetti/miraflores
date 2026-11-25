@@ -29,6 +29,8 @@ interface VillaData {
   poolAmenities: L[];
   gallery: { title: L; photos: PhotoData[] }[];
   booking: { airbnb: string };
+  // Google Business Profile / Maps pin
+  maps: { url: string; lat: number; lng: number };
   sister: string;
 }
 
@@ -171,6 +173,7 @@ const villaData: VillaData[] = [
       )) },
     ],
     booking: { airbnb: "https://airbnb.com/h/losolivosmiraflores" },
+    maps: { url: "https://maps.app.goo.gl/HEyGXC3AZNQHCZF3A", lat: 36.7691341, lng: -3.5293926 },
     sister: "villa-la-playa-calahonda",
   },
   {
@@ -284,6 +287,7 @@ const villaData: VillaData[] = [
       ] },
     ],
     booking: { airbnb: "https://airbnb.com/h/laplayamiraflores" },
+    maps: { url: "https://maps.app.goo.gl/68yCqmyhEyhgYCW26", lat: 36.6989339, lng: -3.4165364 },
     sister: "villa-los-olivos",
   },
 ];

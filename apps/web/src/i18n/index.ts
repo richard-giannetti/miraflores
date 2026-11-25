@@ -80,6 +80,7 @@ export const ui = {
   },
   menu: { en: "Menu", es: "Menú" },
   bookAirbnb: { en: "Book on Airbnb", es: "Reservar en Airbnb" },
+  googleMaps: { en: "See on Google Maps", es: "Ver en Google Maps" },
   contactUs: { en: "Contact us", es: "Contáctanos" },
   bookCta: {
     eyebrow: { en: "Book your stay", es: "Reserva tu estancia" },

@@ -112,6 +112,7 @@ const c = pick({
         <h2>{c.gettingTo} {villa.name}</h2>
         <p>{villa.name} {c.locText}</p>
         <ul class="ticks">{getAirports(lang).map((a) => <li>{a.name}: {a.distance}</li>)}</ul>
+        <div class="actions"><a class="btn ghost" href={villa.maps.url} target="_blank" rel="noopener">{ui.googleMaps}</a></div>
         <p class="guide">{c.guide1} <a href={site.airbnbGuidebook} rel="noopener">{c.guidebook}</a> {c.guide2} <a href={paths.thingsToDo[lang]}>{c.thingsToDo}</a> {c.guide3}</p>
       </div>
       <a class="card sister" href={villaPath(lang, sister.slug)}>
