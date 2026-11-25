@@ -36,7 +36,7 @@ The repo is shaped from day 0 so goal 3 is an addition, not a rewrite.
 - **Website: Astro, statically generated.** Pages are plain HTML on a CDN: top Core Web
   Vitals scores, full control of meta tags, structured data and sitemaps. Content lives
   as Markdown in the repo — no WordPress to patch or pay for.
-- **Hosting: Cloudflare Pages or Vercel** (free tier is enough for the website).
+- **Hosting: Cloudflare Workers (static assets)**, free tier. Config in `wrangler.jsonc`; deploys on every push to `main`.
 - **Bilingual from the start: English + Spanish** (`/` and `/es/`, with `hreflang`). Room to add
   German/Dutch later — big Costa Tropical markets.
 - **Airbnb integration = iCal**, the only channel-sync Airbnb offers to non-partners. Each

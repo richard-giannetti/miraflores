@@ -11,7 +11,7 @@
 - [ ] Spanish version
 - [x] "Book on Airbnb" buttons per villa
 - [ ] Contact form (today: email link)
-- [ ] Deploy to Cloudflare Pages
+- [ ] Deploy to Cloudflare (Workers static assets, see `wrangler.jsonc`)
 - [ ] Google Search Console + analytics
 - [ ] Switch DNS from WordPress hosting to the new host
 

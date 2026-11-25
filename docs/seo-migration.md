@@ -2,7 +2,7 @@
 
 Google has indexed the current URLs. Every one of them must either stay the same or
 301-redirect to its new home, or we lose rankings. The redirects live in
-[`apps/web/public/_redirects`](../apps/web/public/_redirects) (Cloudflare Pages / Netlify format).
+[`apps/web/public/_redirects`](../apps/web/public/_redirects) (Cloudflare format).
 Titles and descriptions from Yoast are in `migration/export/seo.json`.
 
 | Old URL | New URL |
@@ -38,8 +38,9 @@ into one page avoids duplicate content and concentrates ranking signals.
 
 ## Before switching DNS
 
-1. Deploy `apps/web` to Cloudflare Pages (build command `pnpm --filter @miraflores/web build`,
-   output `apps/web/dist`) and check it on the `*.pages.dev` URL.
+1. Cloudflare Workers project `miraflores`, connected to GitHub: every push to `main` runs
+   `pnpm --filter @miraflores/web build`, then `npx wrangler deploy`, which uses `wrangler.jsonc`
+   at the repo root. Check the site on its `*.workers.dev` URL.
 2. Make sure guests are no longer sent to `/checking` (it moves to the management system).
 3. Point the domain at the new host; keep WordPress hosting for a few weeks as a fallback.
 4. In Google Search Console: submit the new sitemap, and spot-check old URLs redirect with 301.
