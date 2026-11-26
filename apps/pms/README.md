@@ -19,6 +19,12 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   (moved, cancelled, reconfirmed). Shows who's leaving and the next arrival (warns on same-day turnovers).
   Assign to a team member, tick the villa's checklist, add notes, mark done (who and when is recorded).
 - **Guests**: search, profile with contact details, nationality, language, notes and every stay.
+- **Online check-in** (Wave 2): "Create check-in link" in a booking gives a private link `/c/<token>`
+  (copy, WhatsApp, email). The guest page (EN/ES/FR) collects every traveller's SES.Hospedajes data,
+  arrival time, optional company invoice details, house-rules acceptance and signature, then shows the
+  villa guide (Wi-Fi, directions…). The guest page only uses the `checkin_get` / `checkin_submit` database
+  functions. Owners see the registration, print the traveller sheet and mark it as sent to SES.
+  Registration data is deleted 3 years after departure (nightly pg_cron job). Guide texts: ⚙ Settings.
 - **Invoices** (Wave 2, owners and managers): draft from a reservation in one click, edit customer and lines
   (enter prices with or without VAT), issue. Issuing numbers the invoice in its series with no gaps
   (`F2026-0001`, `S…` simplified, `R…` corrective), dates it today, freezes the company details and locks it;

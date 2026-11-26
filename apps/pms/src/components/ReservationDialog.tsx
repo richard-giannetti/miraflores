@@ -3,6 +3,7 @@ import { supabase, OVERLAP } from "../lib/supabase";
 import { daysBetween } from "../lib/dates";
 import { t, type Lang } from "../lib/i18n";
 import { newInvoice } from "./Invoices";
+import { CheckinPanel } from "./CheckinPanel";
 import { sources, statuses, type Guest, type Property, type ReservationKind, type ReservationSource, type ReservationStatus, type Unit } from "../lib/types";
 
 // What the form edits: a reservation plus its guest's main details.
@@ -278,6 +279,18 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
                 />
               </label>
             </>
+          )}
+
+          {canEdit && draft.id && !isBlock && (
+            <CheckinPanel
+              lang={lang}
+              reservationId={draft.id}
+              guestName={[f.first_name, f.last_name].filter(Boolean).join(" ")}
+              guestEmail={f.email}
+              guestPhone={f.phone}
+              villa={units.find((u) => u.id === f.unit_id)?.name ?? ""}
+              checkIn={f.check_in}
+            />
           )}
 
           <label>

@@ -24,6 +24,8 @@ export function Today({ lang, profile, villas }: Props) {
   // Bookings arriving or leaving in the next 3 days, so the parents can prepare ahead.
   const [upcoming, setUpcoming] = useState<Reservation[]>(() => load("upcoming") ?? []);
   const [draft, setDraft] = useState<Draft | null>(null);
+  // Online check-in status per reservation (owners and managers only).
+  const [checkins, setCheckins] = useState<Record<string, "pending" | "complete">>({});
   const loc = locale[lang];
 
   const refresh = useCallback(async () => {
@@ -48,11 +50,16 @@ export function Today({ lang, profile, villas }: Props) {
       .order("check_in");
     const ahead = (next.data ?? []) as unknown as Reservation[];
     setUpcoming(ahead);
+    const ids = [...data, ...ahead].map((r) => r.id);
+    if (isManager && ids.length) {
+      const ck = await supabase.from("checkins").select("reservation_id, status").in("reservation_id", ids);
+      setCheckins(Object.fromEntries((ck.data ?? []).map((c) => [c.reservation_id, c.status])));
+    }
     if (day === today()) {
       save("today", data);
       save("upcoming", ahead);
     }
-  }, [day]);
+  }, [day, isManager]);
 
   useEffect(() => {
     refresh();
@@ -106,6 +113,11 @@ export function Today({ lang, profile, villas }: Props) {
               {r.kind === "booking" && ` · ${r.adults + r.children} ${t(lang, "guests")} · ${t(lang, `source_${r.source}`)}`}
               {r.check_out > addDays(day, 1) && ` · ${t(lang, "untilDate")} ${format(r.check_out, loc, { day: "numeric", month: "short" })}`}
             </small>
+            {isManager && r.kind === "booking" && r.check_in >= day && (
+              <span className={`pill ${checkins[r.id] === "complete" ? "ok" : checkins[r.id] ? "todo" : ""}`} style={{ justifySelf: "start" }}>
+                {t(lang, "checkinOnline")}: {t(lang, checkins[r.id] === "complete" ? "checkinDone" : checkins[r.id] ? "checkinPending" : "noCheckin")}
+              </span>
+            )}
           </span>
         </button>
         {r.guest?.phone && (

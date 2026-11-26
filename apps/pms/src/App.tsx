@@ -10,12 +10,15 @@ import { Today } from "./components/Today";
 import { Tasks } from "./components/Tasks";
 import { Guests } from "./components/Guests";
 import { Invoices } from "./components/Invoices";
+import { Settings } from "./components/Settings";
 import { Avatar, Icon, type IconName } from "./components/Icon";
 import { useVillas } from "./lib/villas";
 
-type Tab = "today" | "calendar" | "cleaning" | "guests" | "invoices";
-const tabs: Tab[] = ["today", "calendar", "cleaning", "guests", "invoices"];
-const managerTabs: Tab[] = ["guests", "invoices"];
+type Tab = "today" | "calendar" | "cleaning" | "guests" | "invoices" | "settings";
+const tabs: Tab[] = ["today", "calendar", "cleaning", "guests", "invoices", "settings"];
+const managerTabs: Tab[] = ["guests", "invoices", "settings"];
+// Reached from the gear in the header, not the main navigation.
+const hiddenTabs: Tab[] = ["settings"];
 // "#invoices/<id>" opens one invoice.
 const route = (): { tab: Tab; id: string | null } => {
   const [h, id] = location.hash.slice(1).split("/") as [Tab, string | undefined];
@@ -80,13 +83,13 @@ export function App() {
   return <Workspace lang={lang} profile={profile} langPicker={langPicker} />;
 }
 
-const tabIcon: Record<Tab, IconName> = { today: "today", calendar: "calendar", cleaning: "cleaning", guests: "guests", invoices: "invoices" };
+const tabIcon: Record<Tab, IconName> = { today: "today", calendar: "calendar", cleaning: "cleaning", guests: "guests", invoices: "invoices", settings: "settings" };
 
 function Workspace({ lang, profile, langPicker }: { lang: Lang; profile: Profile; langPicker: ReactNode }) {
   const villas = useVillas();
   const [{ tab, id }, setRoute] = useState(route);
   const isManager = profile.role === "owner" || profile.role === "manager";
-  const visible = tabs.filter((x) => isManager || !managerTabs.includes(x));
+  const visible = tabs.filter((x) => (isManager || !managerTabs.includes(x)) && !hiddenTabs.includes(x));
 
   useEffect(() => {
     const onHash = () => setRoute(route());
@@ -110,6 +113,11 @@ function Workspace({ lang, profile, langPicker }: { lang: Lang; profile: Profile
         <nav className="nav-top">{links}</nav>
         <div className="top-right">
           {langPicker}
+          {isManager && (
+            <a className={`icon-btn${tab === "settings" ? " on-icon" : ""}`} href="#settings" aria-label={t(lang, "settings")} title={t(lang, "settings")}>
+              <Icon name="settings" />
+            </a>
+          )}
           <span className="me" title={profile.full_name}>
             <Avatar name={profile.full_name || "?"} />
           </span>
@@ -124,6 +132,7 @@ function Workspace({ lang, profile, langPicker }: { lang: Lang; profile: Profile
         {tab === "cleaning" && <Tasks lang={lang} profile={profile} villas={villas} />}
         {tab === "guests" && isManager && <Guests lang={lang} />}
         {tab === "invoices" && isManager && <Invoices lang={lang} profile={profile} openId={id} />}
+        {tab === "settings" && isManager && <Settings lang={lang} villas={villas} />}
       </div>
       <nav className="nav-bottom">{links}</nav>
     </div>
