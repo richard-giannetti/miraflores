@@ -19,6 +19,7 @@ import { Maintenance } from "./components/Maintenance";
 import { Money } from "./components/Money";
 import { Avatar, Icon, type IconName } from "./components/Icon";
 import { useVillas } from "./lib/villas";
+import { ThemeButton } from "./components/ThemeButton";
 
 type Tab = "today" | "calendar" | "cleaning" | "maintenance" | "guests" | "invoices" | "money" | "staff" | "me" | "settings" | "more";
 const tabs: Tab[] = ["today", "calendar", "cleaning", "maintenance", "guests", "invoices", "money", "staff", "me", "settings", "more"];
@@ -161,6 +162,7 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
           <div className="sidebar-me">
             <Avatar name={profile.full_name || "?"} />
             <span className="sidebar-name">{profile.full_name}</span>
+            <ThemeButton lang={lang} />
             {settingsLink}
             {signOut}
           </div>
@@ -173,6 +175,7 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
         </a>
         <div className="top-right">
           {langPicker}
+          <ThemeButton lang={lang} />
           {settingsLink}
           {signOut}
         </div>
