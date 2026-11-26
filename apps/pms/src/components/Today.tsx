@@ -11,6 +11,7 @@ import { TaskCard, useTasks } from "./Tasks";
 import { Avatar, Icon, type IconName } from "./Icon";
 import { ClockCard, OnDuty } from "./MyTime";
 import { IssueDialog, IssueRow, useIssues } from "./Maintenance";
+import { MessagesToSend } from "./Messages";
 import type { Issue } from "../lib/types";
 
 interface Props {
@@ -226,6 +227,7 @@ export function Today({ lang, profile, villas, me }: Props) {
           </section>
         )}
         {isManager && day === today() && <OnDuty lang={lang} villas={villas} />}
+        {isManager && day === today() && <MessagesToSend lang={lang} villas={villas} />}
         {blocks.length > 0 && section("lock", t(lang, "blocksToday"), blocks)}
       </div>
 

@@ -4,6 +4,7 @@ import { t, type Lang } from "../lib/i18n";
 import type { Villas } from "../lib/villas";
 import type { Multi } from "../lib/checkin";
 import { Icon } from "./Icon";
+import { TemplatesEditor } from "./Messages";
 
 type Kind = "wifi" | "directions" | "rules" | "info";
 interface Item {
@@ -68,6 +69,7 @@ export function Settings({ lang, villas }: { lang: Lang; villas: Villas }) {
           <GuideItem key={it.id} lang={lang} item={it} onChanged={load} />
         ))}
       </div>
+      <TemplatesEditor lang={lang} />
     </main>
   );
 }

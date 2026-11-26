@@ -4,6 +4,7 @@ import { daysBetween } from "../lib/dates";
 import { t, type Lang } from "../lib/i18n";
 import { newInvoice } from "./Invoices";
 import { CheckinPanel } from "./CheckinPanel";
+import { MessagesPanel } from "./Messages";
 import { sources, statuses, type Guest, type Property, type ReservationKind, type ReservationSource, type ReservationStatus, type Unit } from "../lib/types";
 
 // What the form edits: a reservation plus its guest's main details.
@@ -292,6 +293,7 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
               checkIn={f.check_in}
             />
           )}
+          {canEdit && draft.id && !isBlock && <MessagesPanel lang={lang} reservationId={draft.id} villa={units.find((u) => u.id === f.unit_id)?.name ?? ""} />}
 
           <label>
             {t(lang, "notes")}
