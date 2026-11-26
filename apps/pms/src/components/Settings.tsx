@@ -5,6 +5,8 @@ import type { Villas } from "../lib/villas";
 import type { Multi } from "../lib/checkin";
 import { Icon } from "./Icon";
 import { TemplatesEditor } from "./Messages";
+import { AirbnbSync } from "./AirbnbSync";
+import type { Profile } from "../lib/types";
 
 type Kind = "wifi" | "directions" | "rules" | "info";
 interface Item {
@@ -19,7 +21,7 @@ const textLangs = ["en", "es", "fr"] as const;
 const kinds: Kind[] = ["wifi", "directions", "info", "rules"];
 
 // What guests see after checking in, per villa, defined by the family.
-export function Settings({ lang, villas }: { lang: Lang; villas: Villas }) {
+export function Settings({ lang, villas, profile }: { lang: Lang; villas: Villas; profile: Profile }) {
   const [items, setItems] = useState<Item[]>([]);
   const [propertyId, setPropertyId] = useState<string | null>(null);
   const property = propertyId ?? villas.properties[0]?.id ?? null;
@@ -69,6 +71,7 @@ export function Settings({ lang, villas }: { lang: Lang; villas: Villas }) {
           <GuideItem key={it.id} lang={lang} item={it} onChanged={load} />
         ))}
       </div>
+      <AirbnbSync lang={lang} profile={profile} />
       <TemplatesEditor lang={lang} />
     </main>
   );

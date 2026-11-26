@@ -49,6 +49,18 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   goes through the family's own WhatsApp and mail app.
 - On phones, the tab bar shows four tabs and "More" for the rest.
 
+## Wave 3: connecting to the outside
+
+- **Airbnb calendar sync (iCal), both ways.** Settings → Airbnb calendar sync, per villa:
+  - *Airbnb calendar* (owners): the villa's Airbnb export link. The `ical-sync` Edge Function reads it every hour
+    (pg_cron, at :07, authenticated by a Vault secret) or on "Sync now": new Airbnb reservations become bookings
+    (source airbnb, keyed by the HM… code), hand-typed ones with the same dates are linked, moved ones follow,
+    vanished ones are cancelled. An Airbnb booking that overlaps one already here is refused by the database and
+    reported as a conflict (Settings and a warning on Today). Airbnb's "Not available" events are ignored.
+  - *PMS link*: `ical-export?t=<units.ical_token>`, the villa's own bookings and blocks (not Airbnb's) for Airbnb
+    to import. Airbnb refreshes imported calendars every few hours, so a direct booking takes a while to close
+    the dates there.
+
 ## Design system
 
 The interface follows the **macOS 26 UI** design system (a Design System artifact in Claude). Its tokens live in

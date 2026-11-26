@@ -171,7 +171,8 @@ export function MessagesToSend({ lang, villas }: { lang: Lang; villas: Villas })
     refresh();
   }, [refresh]);
 
-  const due = bookings.flatMap((b) => templates.list.filter((tpl) => isDue(tpl, b, day) && !sent.has(`${b.id}|${tpl.id}`)).map((tpl) => ({ b, tpl })));
+  // Only bookings with a guest to write to.
+  const due = bookings.filter((b) => b.guest).flatMap((b) => templates.list.filter((tpl) => isDue(tpl, b, day) && !sent.has(`${b.id}|${tpl.id}`)).map((tpl) => ({ b, tpl })));
   if (!due.length) return null;
 
   return (
