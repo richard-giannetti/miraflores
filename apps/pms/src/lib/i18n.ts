@@ -75,6 +75,7 @@ const dict = {
   blocksToday: { es: "Bloqueos", fr: "Blocages", en: "Blocks" },
   cleaningToday: { es: "Limpiezas", fr: "Ménages", en: "Cleaning" },
   nothing: { es: "Nada", fr: "Rien", en: "Nothing" },
+  nextDays: { es: "Próximos 3 días", fr: "Les 3 prochains jours", en: "Next 3 days" },
   markCheckedIn: { es: "Han llegado", fr: "Arrivés", en: "Checked in" },
   markCheckedOut: { es: "Se han ido", fr: "Partis", en: "Checked out" },
   untilDate: { es: "hasta el", fr: "jusqu'au", en: "until" },
