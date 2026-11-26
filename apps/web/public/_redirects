@@ -16,9 +16,35 @@
 /group-home                                   /                                     301
 /feed                                         /blog/                                301
 
+# The same old pages with a trailing slash (Google reported these as 404s)
+/losolivos-rooms-list/                        /villa-los-olivos/rooms/              301
+/losolivos-amenities/                         /villa-los-olivos/amenities/          301
+/losolivos-gallery/                           /villa-los-olivos/gallery/            301
+/losolivos-things-to-do/                      /things-to-do-costa-tropical/         301
+/losolivos-contact-us/                        /contact/                             301
+/rooms-list-la-playa-calahonda/               /villa-la-playa-calahonda/rooms/      301
+/amenities-la-playa-calahonda/                /villa-la-playa-calahonda/amenities/  301
+/gallery-la-playa-calahonda/                  /villa-la-playa-calahonda/gallery/    301
+/things-to-do-la-playa-calahonda/             /things-to-do-costa-tropical/         301
+/contact-us-la-playa-calahonda/               /contact/                             301
+/group-home/                                  /                                     301
+/feed/                                        /blog/                                301
+/comments/feed/                               /blog/                                301
+/blog/feed/                                   /blog/                                301
+/blog/page/*                                  /blog/                                301
+/author/*                                     /                                     301
+/checking                                     /checking/                            301
+
 # Old blog URLs had no trailing slash; make that redirect permanent (Cloudflare's default is a 307)
 /blog                                         /blog/                                301
-/blog/category/:category                      /blog/category/:category/             301
+# WordPress categories with no posts, which the new site doesn't have (must come before the :category rule)
+/blog/category/island                         /blog/                                301
+/blog/category/island/                        /blog/                                301
+/blog/category/travel                         /blog/                                301
+/blog/category/travel/                        /blog/                                301
+/blog/category/uncategorized                  /blog/                                301
+/blog/category/uncategorized/                 /blog/                                301
+/blog/category/:category                     /blog/category/:category/             301
 /blog/a-day-in-granada-where-history-meets-culinary-delights  /blog/a-day-in-granada-where-history-meets-culinary-delights/  301
 /blog/blog-canyoning-at-la-junta-de-los-rios  /blog/blog-canyoning-at-la-junta-de-los-rios/  301
 /blog/discover-the-charm-of-nerja-a-perfect-day-trip-from-villa-los-olivos  /blog/discover-the-charm-of-nerja-a-perfect-day-trip-from-villa-los-olivos/  301
