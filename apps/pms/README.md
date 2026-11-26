@@ -32,6 +32,14 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   Company details (NIF, address, default VAT) under "Company details" (owners).
   **Not yet VeriFactu-signed**: from 2027 a certified service must sign them (see docs/pms/features.md, module 9).
 
+## Design system
+
+The interface follows the **macOS 26 UI** design system (a Design System artifact in Claude). Its tokens live in
+`src/design/tokens.json`; `node scripts/gen-tokens.mjs` turns them into `src/design/tokens.css` (light and dark,
+following the device). `src/styles.css` uses only those variables — no hard-coded colours. Desktop uses the
+floating glass sidebar; phones get a glass top bar and tab bar with 44px touch targets. The printed invoice and the
+signature pad stay white paper in both themes.
+
 ## Develop
 
 ```bash

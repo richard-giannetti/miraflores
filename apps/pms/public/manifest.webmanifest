@@ -3,7 +3,7 @@
   "short_name": "Miraflores",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#faf7f0",
-  "theme_color": "#6b7a3a",
+  "background_color": "#ececec",
+  "theme_color": "#ececec",
   "icons": [{ "src": "/icon.png", "sizes": "96x96", "type": "image/png" }]
 }
