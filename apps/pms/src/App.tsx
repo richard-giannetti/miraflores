@@ -15,14 +15,18 @@ import { Settings } from "./components/Settings";
 import { Staff } from "./components/Staff";
 import { MyTime } from "./components/MyTime";
 import { ChangePassword } from "./components/ChangePassword";
+import { Maintenance } from "./components/Maintenance";
+import { Money } from "./components/Money";
 import { Avatar, Icon, type IconName } from "./components/Icon";
 import { useVillas } from "./lib/villas";
 
-type Tab = "today" | "calendar" | "cleaning" | "guests" | "invoices" | "staff" | "me" | "settings";
-const tabs: Tab[] = ["today", "calendar", "cleaning", "guests", "invoices", "staff", "me", "settings"];
-const managerTabs: Tab[] = ["guests", "invoices", "staff", "settings"];
-// Reached from the gear in the header, not the main navigation.
-const hiddenTabs: Tab[] = ["settings"];
+type Tab = "today" | "calendar" | "cleaning" | "maintenance" | "guests" | "invoices" | "money" | "staff" | "me" | "settings" | "more";
+const tabs: Tab[] = ["today", "calendar", "cleaning", "maintenance", "guests", "invoices", "money", "staff", "me", "settings", "more"];
+const managerTabs: Tab[] = ["guests", "invoices", "money", "staff", "settings"];
+// Reached from the gear in the header (settings) or the phone tab bar (more), not the main navigation.
+const hiddenTabs: Tab[] = ["settings", "more"];
+// Phones show this many tabs, then "More" for the rest.
+const BOTTOM_TABS = 4;
 // "#invoices/<id>" opens one invoice; "#staff/schedule" a part of the team screen.
 const route = (): { tab: Tab; id: string | null } => {
   const [h, id] = location.hash.slice(1).split("/") as [Tab, string | undefined];
@@ -92,7 +96,19 @@ export function App() {
   return <Workspace lang={lang} profile={profile} me={me} langPicker={langPicker} />;
 }
 
-const tabIcon: Record<Tab, IconName> = { today: "today", calendar: "calendar", cleaning: "cleaning", guests: "guests", invoices: "invoices", staff: "team", me: "clock", settings: "settings" };
+const tabIcon: Record<Tab, IconName> = {
+  today: "today",
+  calendar: "calendar",
+  cleaning: "cleaning",
+  maintenance: "wrench",
+  guests: "guests",
+  invoices: "invoices",
+  money: "money",
+  staff: "team",
+  me: "clock",
+  settings: "settings",
+  more: "more",
+};
 
 function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Profile; me: StaffMember | null; langPicker: ReactNode }) {
   const villas = useVillas();
@@ -100,7 +116,7 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
   const isManager = profile.role === "owner" || profile.role === "manager";
   // Owners and managers see everything; a staff login sees its department's screens (cleaning without a team record).
   const allowed = (x: Tab) =>
-    x === "me" ? !!me : isManager ? true : !managerTabs.includes(x) && (me ? departmentTabs[me.department] : ["today", "cleaning"]).includes(x);
+    x === "me" ? !!me : x === "more" || isManager ? true : !managerTabs.includes(x) && (me ? departmentTabs[me.department] : ["today", "cleaning", "maintenance"]).includes(x);
   const visible = tabs.filter((x) => allowed(x) && !hiddenTabs.includes(x));
   const tab: Tab = allowed(asked) ? asked : "today";
 
@@ -110,12 +126,16 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  const links = visible.map((x) => (
-    <a key={x} href={`#${x}`} className={x === tab ? "on" : ""} aria-current={x === tab ? "page" : undefined} title={t(lang, `tab_${x}`)}>
+  const link = (x: Tab, on = x === tab) => (
+    <a key={x} href={`#${x}`} className={on ? "on" : ""} aria-current={on ? "page" : undefined} title={t(lang, `tab_${x}`)}>
       <Icon name={tabIcon[x]} />
       <span>{t(lang, `tab_${x}`)}</span>
     </a>
-  ));
+  );
+  const links = visible.map((x) => link(x));
+  // Phones: the first tabs, then "More" (highlighted while on one of the others).
+  const overflow = visible.length > BOTTOM_TABS + 1 ? visible.slice(BOTTOM_TABS) : [];
+  const bottomLinks = overflow.length ? [...visible.slice(0, BOTTOM_TABS).map((x) => link(x)), link("more", tab === "more" || overflow.includes(tab))] : links;
 
   const settingsLink = isManager && (
     <a className={`icon-btn${tab === "settings" ? " on-icon" : ""}`} href="#settings" aria-label={t(lang, "settings")} title={t(lang, "settings")}>
@@ -161,13 +181,31 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
         {tab === "today" && <Today lang={lang} profile={profile} villas={villas} me={me} />}
         {tab === "calendar" && <Calendar lang={lang} role={profile.role} villas={villas} />}
         {tab === "cleaning" && <Tasks lang={lang} profile={profile} villas={villas} />}
+        {tab === "maintenance" && <Maintenance lang={lang} profile={profile} villas={villas} view={id} />}
         {tab === "guests" && isManager && <Guests lang={lang} />}
         {tab === "invoices" && isManager && <Invoices lang={lang} profile={profile} openId={id} />}
+        {tab === "money" && isManager && <Money lang={lang} villas={villas} view={id} />}
         {tab === "staff" && isManager && <Staff lang={lang} profile={profile} villas={villas} view={id} />}
         {tab === "me" && <MyTime lang={lang} me={me} villas={villas} />}
         {tab === "settings" && isManager && <Settings lang={lang} villas={villas} />}
+        {tab === "more" && (
+          <main className="page narrow">
+            <h1 className="title">{t(lang, "tab_more")}</h1>
+            <ul className="list panel more-list">
+              {[...(overflow.length ? overflow : visible), ...(isManager ? (["settings"] as Tab[]) : [])].map((x) => (
+                <li key={x} className="item">
+                  <a className="item-main" href={`#${x}`}>
+                    <span className="h-icon"><Icon name={tabIcon[x]} /></span>
+                    <span><strong>{t(lang, x === "settings" ? "settings" : `tab_${x}`)}</strong></span>
+                  </a>
+                  <Icon name="right" size={16} />
+                </li>
+              ))}
+            </ul>
+          </main>
+        )}
       </div>
-      <nav className="nav-bottom">{links}</nav>
+      <nav className="nav-bottom">{bottomLinks}</nav>
     </div>
   );
 }

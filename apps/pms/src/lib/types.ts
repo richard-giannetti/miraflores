@@ -131,3 +131,39 @@ export interface TimeEntry {
   source: "app" | "manual";
   voided_at: string | null;
 }
+
+export type IssueStatus = "open" | "in_progress" | "waiting" | "done";
+export const issueStatuses: IssueStatus[] = ["open", "in_progress", "waiting", "done"];
+export type IssuePriority = "low" | "normal" | "urgent";
+export const issuePriorities: IssuePriority[] = ["low", "normal", "urgent"];
+
+export interface Issue {
+  id: string;
+  property_id: string;
+  title: string;
+  description: string;
+  location: string;
+  priority: IssuePriority;
+  status: IssueStatus;
+  photos: string[];
+  assigned_to: string | null;
+  due_date: string | null;
+  recurring_job_id: string | null;
+  cost: number | null;
+  resolution: string;
+  reported_by: string | null;
+  resolved_at: string | null;
+  created_at: string;
+}
+
+export interface RecurringJob {
+  id: string;
+  property_id: string;
+  title: string;
+  notes: string;
+  every: number;
+  unit: "week" | "month";
+  next_due: string;
+  assigned_to: string | null;
+  active: boolean;
+}

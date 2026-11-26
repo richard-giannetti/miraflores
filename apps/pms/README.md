@@ -32,6 +32,23 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   Company details (NIF, address, default VAT) under "Company details" (owners).
   **Not yet VeriFactu-signed**: from 2027 a certified service must sign them (see docs/pms/features.md, module 9).
 
+## Wave 2, the rest of internal management
+
+- **Team** (owners and managers): people and departments, one login each (an owner sets a temporary password
+  through the `staff-admin` Edge Function), weekly schedule, and the hours register. Staff clock in and out on
+  "My time" and on Today; corrections go through database functions that log the reason.
+- **Maintenance** (everyone): report an issue with photos (private `issue-photos` bucket), assign it, follow it
+  to resolved. Recurring jobs open their issue a few days ahead (nightly `spawn-recurring-issues` job) and
+  schedule the next one when it's resolved. Urgent and assigned issues show on Today.
+- **Money** (owners and managers): income and expenses per villa, Airbnb's earnings CSV import (gross as income,
+  host fee as expense, never twice), CSV export for the gestor, and a yearly summary: occupancy, average nightly
+  rate, revenue per available night, channels, lead time, nationalities, monthly result.
+- **Guest messages**: templates in EN/ES/FR with placeholders and a moment (days before arrival…), edited in
+  Settings. Today lists the ones due; a tap opens WhatsApp or email with the text ready, or copies it, and
+  records the send. Airbnb guests are skipped unless a template says otherwise. No email provider yet: sending
+  goes through the family's own WhatsApp and mail app.
+- On phones, the tab bar shows four tabs and "More" for the rest.
+
 ## Design system
 
 The interface follows the **macOS 26 UI** design system (a Design System artifact in Claude). Its tokens live in
