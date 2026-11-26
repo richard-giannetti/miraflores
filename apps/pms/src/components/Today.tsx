@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { addDays, format, today, type Day } from "../lib/dates";
+import { addDays, format, range, today, type Day } from "../lib/dates";
 import { locale, t, type Lang } from "../lib/i18n";
 import { load, save } from "../lib/cache";
 import { RESERVATION_FIELDS, type Villas } from "../lib/villas";
@@ -21,7 +21,11 @@ export function Today({ lang, profile, villas }: Props) {
   const isManager = profile.role === "owner" || profile.role === "manager";
   const [day, setDay] = useState<Day>(today);
   const [reservations, setReservations] = useState<Reservation[]>(() => load("today") ?? []);
+  // Bookings arriving or leaving in the next 3 days, so the parents can prepare ahead.
+  const [upcoming, setUpcoming] = useState<Reservation[]>(() => load("upcoming") ?? []);
   const [draft, setDraft] = useState<Draft | null>(null);
+  // Online check-in status per reservation (owners and managers only).
+  const [checkins, setCheckins] = useState<Record<string, "pending" | "complete">>({});
   const loc = locale[lang];
 
   const refresh = useCallback(async () => {
@@ -35,8 +39,27 @@ export function Today({ lang, profile, villas }: Props) {
       .order("check_in");
     if (error) return;
     setReservations(data as unknown as Reservation[]);
-    if (day === today()) save("today", data);
-  }, [day]);
+    const [from, to] = [addDays(day, 1), addDays(day, 3)];
+    const next = await supabase
+      .from("reservations")
+      .select(RESERVATION_FIELDS)
+      .is("deleted_at", null)
+      .neq("status", "cancelled")
+      .eq("kind", "booking")
+      .or(`and(check_in.gte.${from},check_in.lte.${to}),and(check_out.gte.${from},check_out.lte.${to})`)
+      .order("check_in");
+    const ahead = (next.data ?? []) as unknown as Reservation[];
+    setUpcoming(ahead);
+    const ids = [...data, ...ahead].map((r) => r.id);
+    if (isManager && ids.length) {
+      const ck = await supabase.from("checkins").select("reservation_id, status").in("reservation_id", ids);
+      setCheckins(Object.fromEntries((ck.data ?? []).map((c) => [c.reservation_id, c.status])));
+    }
+    if (day === today()) {
+      save("today", data);
+      save("upcoming", ahead);
+    }
+  }, [day, isManager]);
 
   useEffect(() => {
     refresh();
@@ -50,6 +73,13 @@ export function Today({ lang, profile, villas }: Props) {
   }, [refresh]);
 
   const tasks = useTasks({ from: addDays(day, -30), to: day });
+  const aheadTasks = useTasks({ from: addDays(day, 1), to: addDays(day, 3) });
+  const nextDays = range(addDays(day, 1), 3).map((d) => ({
+    day: d,
+    arrivals: upcoming.filter((r) => r.check_in === d),
+    departures: upcoming.filter((r) => r.check_out === d),
+    cleanings: aheadTasks.list.filter((x) => x.due_date === d && x.status !== "done").length,
+  }));
 
   const dueTasks = tasks.list.filter((x) => x.due_date === day || x.status === "todo" || x.status === "in_progress");
   const bookings = reservations.filter((r) => r.kind === "booking");
@@ -83,6 +113,11 @@ export function Today({ lang, profile, villas }: Props) {
               {r.kind === "booking" && ` · ${r.adults + r.children} ${t(lang, "guests")} · ${t(lang, `source_${r.source}`)}`}
               {r.check_out > addDays(day, 1) && ` · ${t(lang, "untilDate")} ${format(r.check_out, loc, { day: "numeric", month: "short" })}`}
             </small>
+            {isManager && r.kind === "booking" && r.check_in >= day && (
+              <span className={`pill ${checkins[r.id] === "complete" ? "ok" : checkins[r.id] ? "todo" : ""}`} style={{ justifySelf: "start" }}>
+                {t(lang, "checkinOnline")}: {t(lang, checkins[r.id] === "complete" ? "checkinDone" : checkins[r.id] ? "checkinPending" : "noCheckin")}
+              </span>
+            )}
           </span>
         </button>
         {r.guest?.phone && (
@@ -168,6 +203,30 @@ export function Today({ lang, profile, villas }: Props) {
         {section("bed", t(lang, "inHouse"), inHouse)}
         {blocks.length > 0 && section("lock", t(lang, "blocksToday"), blocks)}
       </div>
+
+      <section className="panel ahead">
+        <h2>
+          <span className="h-icon"><Icon name="calendar" size={18} /></span>
+          {t(lang, "nextDays")}
+        </h2>
+        <div className="ahead-days">
+          {nextDays.map((d) => (
+            <div key={d.day} className="ahead-day">
+              <h3>{format(d.day, loc, { weekday: "long", day: "numeric", month: "short" })}</h3>
+              <p className="ahead-counts">
+                <span><Icon name="arrive" size={14} /> {d.arrivals.length} {t(lang, "arrivals").toLowerCase()}</span>
+                <span><Icon name="leave" size={14} /> {d.departures.length} {t(lang, "departures").toLowerCase()}</span>
+                <span><Icon name="cleaning" size={14} /> {d.cleanings} {t(lang, "cleaningToday").toLowerCase()}</span>
+              </p>
+              {d.arrivals.length > 0 && <p className="ahead-label">{t(lang, "arrivals")}</p>}
+              {d.arrivals.length > 0 && <ul className="list">{d.arrivals.map((r) => row(r))}</ul>}
+              {d.departures.length > 0 && <p className="ahead-label">{t(lang, "departures")}</p>}
+              {d.departures.length > 0 && <ul className="list">{d.departures.map((r) => row(r))}</ul>}
+              {d.arrivals.length + d.departures.length === 0 && <p className="muted">{t(lang, "nothing")}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
 
       {draft && (
         <ReservationDialog

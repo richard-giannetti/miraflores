@@ -198,6 +198,13 @@ details[open] summary::before { transform: rotate(90deg); }
 .check:hover { background: var(--line-2); }
 .check input { flex: none; margin: 0; }
 .day-group { margin-bottom: 22px; }
+.ahead { margin-top: 16px; }
+.ahead-days { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.ahead-day h3 { margin: 0 0 6px; font-size: .95rem; font-weight: 700; color: var(--ink-2); }
+.ahead-day h3::first-letter { text-transform: uppercase; }
+.ahead-counts { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 8px; font-size: .85rem; color: var(--muted); }
+.ahead-counts span { display: inline-flex; align-items: center; gap: 4px; }
+.ahead-label { margin: 8px 0 0; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
 .day-group h2 { margin: 0 0 10px; font-size: .95rem; font-weight: 700; color: var(--ink-2); display: block; }
 .day-group h2::first-letter { text-transform: uppercase; }
 
@@ -318,6 +325,57 @@ details[open] summary::before { transform: rotate(90deg); }
 .invoice-print .sum .grand td { border-top: 2px solid #222; font-weight: 800; font-size: 1.1rem; padding-top: 8px; }
 .invoice-print footer, .invoice-print .notes { margin-top: 24px; font-size: .8rem; color: #555; white-space: pre-line; }
 
+/* ---------- Guest check-in page (/c/<token>) ---------- */
+.guest { max-width: 640px; margin: 0 auto; padding: 0 16px calc(40px + env(safe-area-inset-bottom)); }
+.guest-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
+.guest-top img { height: 40px; }
+.guest-hero { background: var(--surface); border-radius: 22px; box-shadow: var(--shadow); padding: 22px; margin-bottom: 16px; position: relative; overflow: hidden; }
+.guest-hero::before { content: ""; position: absolute; inset: 0 0 auto; height: 6px; background: var(--brand); }
+.guest-hero h1 { margin: 2px 0 16px; font-size: 1.7rem; font-weight: 750; }
+.guest-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.guest-dates div { background: var(--bg); border-radius: 14px; padding: 12px 14px; display: grid; gap: 2px; }
+.guest-dates span { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 650; }
+.guest-dates strong { font-size: 1rem; }
+.guest-dates strong::first-letter { text-transform: uppercase; }
+.guest-dates small { color: var(--muted); }
+.guest-lead { color: var(--ink-2); margin: 4px 2px 16px; }
+.guest-card { background: var(--surface); border-radius: 18px; box-shadow: var(--shadow); padding: 18px; margin: 0 0 14px; display: grid; gap: 12px; }
+.guest-card h2 { margin: 0; font-size: 1.05rem; font-weight: 750; }
+.guest-card-head { display: flex; justify-content: space-between; align-items: center; }
+.guest-card .check { font-size: .92rem; font-weight: 500; padding: 4px 0; }
+.guest-card .check:hover { background: none; }
+.add-traveller { width: 100%; border-style: dashed; margin-bottom: 14px; min-height: 48px; color: var(--ink-2); }
+.pre { white-space: pre-line; margin: 0; line-height: 1.55; }
+.rules { background: var(--bg); border-radius: 12px; padding: 12px 14px; font-size: .92rem; }
+.guide-wifi .pre { font-size: 1.1rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+label.bad input, label.bad select, .bad canvas { border-color: var(--danger); box-shadow: 0 0 0 3px rgb(192 57 43 / .12); }
+label.bad, .check.bad { color: var(--danger); }
+.sign-label { font-size: .8rem; font-weight: 600; color: var(--ink-2); display: block; margin-bottom: 6px; }
+.signature { display: grid; gap: 4px; }
+.signature canvas { width: 100%; height: 160px; border: 1px dashed #cfc7ba; border-radius: 12px; background: #fff; touch-action: none; cursor: crosshair; }
+.signature .link { justify-self: end; }
+.privacy { font-size: .76rem; color: var(--muted); margin: 0; line-height: 1.5; }
+.guest-submit { width: 100%; }
+.guest-error { margin: 0 2px 12px; }
+.guest-foot { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 24px; }
+
+/* ---------- Check-in in the back-office ---------- */
+.checkin-box { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 10px; background: var(--bg); }
+.checkin-box header { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; font-size: .92rem; }
+.checkin-box .url { font-size: .8rem; word-break: break-all; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+.checkin-box .row-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.checkin-box .row-btns > * { min-height: 36px; font-size: .85rem; border-radius: 999px; }
+.checkin-box .row-btns a { display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; border: 1px solid var(--line); background: var(--surface); text-decoration: none; color: var(--ink); font-weight: 550; }
+.reg-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.reg-table th { text-align: left; color: var(--muted); font-weight: 600; padding: 4px 8px 4px 0; vertical-align: top; width: 42%; }
+.reg-table td { padding: 4px 0; }
+.reg-traveller { border-top: 1px solid var(--line-2); padding-top: 10px; }
+.reg-traveller h3 { margin: 0 0 6px; font-size: .95rem; }
+.sig-img { max-width: 260px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.guide-edit { display: grid; gap: 10px; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; background: var(--surface); }
+.guide-edit header { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.settings-grid { display: grid; gap: 16px; }
+
 @media print {
   body { background: #fff; }
   .top, .nav-bottom, .banner, .no-print { display: none !important; }
@@ -363,3 +421,4 @@ details[open] summary::before { transform: rotate(90deg); }
   .invoice-print header { flex-direction: column; }
   .invoice-print .issuer { text-align: left; }
 }
+.icon-btn.on-icon { background: var(--brand-soft); color: var(--brand); border-color: transparent; }
