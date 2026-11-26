@@ -4,6 +4,10 @@ import { App } from "./App";
 import { GuestCheckin } from "./components/GuestCheckin";
 import "./design/tokens.css";
 import "./styles.css";
+import { applyTheme, savedTheme } from "./lib/theme";
+
+// Before the first paint, so a pinned light or dark theme never flashes the other one.
+applyTheme(savedTheme());
 
 // Guests reach their check-in page through /c/<token>; everything else is the back-office.
 const guestToken = location.pathname.match(/^\/c\/([\w-]+)\/?$/)?.[1];

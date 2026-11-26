@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { supabase } from "../lib/supabase";
 import { t, type Lang } from "../lib/i18n";
+import { ThemeButton } from "./ThemeButton";
 
 export function Login({ lang, langPicker }: { lang: Lang; langPicker: ReactNode }) {
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ export function Login({ lang, langPicker }: { lang: Lang; langPicker: ReactNode 
     <div className="login-page">
       <div className="login-photo" aria-hidden="true" />
       <div className="login-side">
-        <div className="login-lang">{langPicker}</div>
+        <div className="login-lang">{langPicker}<ThemeButton lang={lang} /></div>
         <form className="login" onSubmit={submit}>
           <img className="login-logo" src="/logo.png" alt="Miraflores Costa Tropical" />
           <h1>{t(lang, "welcome")}</h1>
