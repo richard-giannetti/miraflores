@@ -2,15 +2,16 @@ import type { Department, Shift, TimeEntry } from "./types";
 
 // Screens a staff login sees, by department. Owners and managers always see everything.
 // Departments whose own modules come later (kitchen, restaurant, pool, spa) start with Today and their time.
+// Everyone can report a maintenance issue.
 export const departmentTabs: Record<Department, string[]> = {
-  management: ["today", "calendar", "cleaning"],
-  reception: ["today", "calendar", "cleaning"],
-  housekeeping: ["today", "cleaning"],
-  maintenance: ["today", "cleaning"],
-  kitchen: ["today"],
-  restaurant: ["today"],
-  pool: ["today"],
-  spa: ["today"],
+  management: ["today", "calendar", "cleaning", "maintenance"],
+  reception: ["today", "calendar", "cleaning", "maintenance"],
+  housekeeping: ["today", "cleaning", "maintenance"],
+  maintenance: ["today", "maintenance", "cleaning"],
+  kitchen: ["today", "maintenance"],
+  restaurant: ["today", "maintenance"],
+  pool: ["today", "maintenance"],
+  spa: ["today", "maintenance"],
 };
 
 export const STAFF_FIELDS = "id, user_id, full_name, department, contract, phone, email, weekly_hours, notes, active";

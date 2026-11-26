@@ -10,6 +10,8 @@ import { toDraft } from "./Calendar";
 import { TaskCard, useTasks } from "./Tasks";
 import { Avatar, Icon, type IconName } from "./Icon";
 import { ClockCard, OnDuty } from "./MyTime";
+import { IssueDialog, IssueRow, useIssues } from "./Maintenance";
+import type { Issue } from "../lib/types";
 
 interface Props {
   lang: Lang;
@@ -26,6 +28,10 @@ export function Today({ lang, profile, villas, me }: Props) {
   // Bookings arriving or leaving in the next 3 days, so the parents can prepare ahead.
   const [upcoming, setUpcoming] = useState<Reservation[]>(() => load("upcoming") ?? []);
   const [draft, setDraft] = useState<Draft | null>(null);
+  const issues = useIssues(false);
+  const [issue, setIssue] = useState<Issue | null>(null);
+  // Managers see every open issue; staff see the urgent ones and their own.
+  const myIssues = issues.list.filter((i) => isManager || i.priority === "urgent" || i.assigned_to === profile.id);
   // Online check-in status per reservation (owners and managers only).
   const [checkins, setCheckins] = useState<Record<string, "pending" | "complete">>({});
   const loc = locale[lang];
@@ -205,6 +211,20 @@ export function Today({ lang, profile, villas, me }: Props) {
           )}
         </section>
         {section("bed", t(lang, "inHouse"), inHouse)}
+        {myIssues.length > 0 && (
+          <section className="panel">
+            <h2>
+              <span className="h-icon"><Icon name="wrench" size={18} /></span>
+              {t(lang, "openIssues")} <span className="count">{myIssues.length}</span>
+            </h2>
+            <ul className="list">
+              {myIssues.slice(0, 6).map((i) => (
+                <IssueRow key={i.id} issue={i} lang={lang} villas={villas} onOpen={() => setIssue(i)} />
+              ))}
+            </ul>
+            {myIssues.length > 6 && <a className="hint" href="#maintenance">{t(lang, "tab_maintenance")} →</a>}
+          </section>
+        )}
         {isManager && day === today() && <OnDuty lang={lang} villas={villas} />}
         {blocks.length > 0 && section("lock", t(lang, "blocksToday"), blocks)}
       </div>
@@ -233,6 +253,19 @@ export function Today({ lang, profile, villas, me }: Props) {
         </div>
       </section>
 
+      {issue && (
+        <IssueDialog
+          lang={lang}
+          profile={profile}
+          villas={villas}
+          issue={issue}
+          onClose={() => setIssue(null)}
+          onSaved={() => {
+            setIssue(null);
+            issues.refresh();
+          }}
+        />
+      )}
       {draft && (
         <ReservationDialog
           lang={lang}
