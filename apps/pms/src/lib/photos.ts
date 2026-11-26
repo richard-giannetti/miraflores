@@ -28,3 +28,8 @@ export async function photoUrls(paths: string[]) {
   const { data } = await supabase.storage.from(BUCKET).createSignedUrls(paths, 3600);
   return Object.fromEntries((data ?? []).flatMap((d) => (d.signedUrl && d.path ? [[d.path, d.signedUrl] as const] : []))) as Record<string, string>;
 }
+
+// Files of photos taken off an issue. Failures are ignored: a leftover file only costs a little space.
+export async function removePhotos(paths: string[]) {
+  if (paths.length) await supabase.storage.from(BUCKET).remove(paths);
+}

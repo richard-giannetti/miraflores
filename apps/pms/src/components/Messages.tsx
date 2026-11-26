@@ -46,14 +46,17 @@ const msgLangs = ["es", "en", "fr"] as const;
 // The buttons that send one message: WhatsApp, email, or copy (to paste into Airbnb).
 function SendButtons({ lang, tpl, booking, villa, msgLang, onSent }: { lang: Lang; tpl: Template; booking: MsgBooking; villa: string; msgLang: "es" | "en" | "fr"; onSent: () => void }) {
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
   const go = async (c: Channel) => {
     setBusy(true);
-    await send(c, tpl, booking, villa, msgLang);
+    const ok = await send(c, tpl, booking, villa, msgLang);
     setBusy(false);
-    onSent();
+    setFailed(!ok);
+    if (ok) onSent();
   };
   return (
     <span className="task-actions">
+      {failed && <span className="error small">{t(lang, "sendFailed")}</span>}
       {booking.guest?.phone && <button type="button" className="small-btn" disabled={busy} onClick={() => go("whatsapp")}>WhatsApp</button>}
       {booking.guest?.email && <button type="button" className="small-btn" disabled={busy} onClick={() => go("email")}>{t(lang, "email")}</button>}
       <button type="button" className="small-btn" disabled={busy} onClick={() => go("copy")}>{t(lang, "copy")}</button>

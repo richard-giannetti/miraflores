@@ -93,14 +93,23 @@ export async function render(tpl: Template, r: MsgBooking, villa: string, msgLan
 
 export type Channel = "whatsapp" | "email" | "copy";
 
-// Opens the family's own WhatsApp or mail app with the text ready, and records the send.
+// Opens the family's own WhatsApp or mail app with the text ready (or copies it), and records the send.
+// Returns false when the text couldn't be copied, so nothing is recorded.
 export async function send(channel: Channel, tpl: Template, r: MsgBooking, villa: string, msgLang: "es" | "en" | "fr") {
-  // WhatsApp opens in a new tab, opened before any await (browsers only allow it straight after the click).
-  // Email hands over to the mail app without leaving the page.
+  // Browsers only allow a new tab or a clipboard write straight after the tap, before any await:
+  // WhatsApp's tab opens now, and the clipboard gets the text as a promise.
   const w = channel === "whatsapp" ? window.open("", "_blank") : null;
-  const { subject, body } = await render(tpl, r, villa, msgLang);
-  if (channel === "copy") await navigator.clipboard.writeText(body);
-  else {
+  const rendered = render(tpl, r, villa, msgLang);
+  if (channel === "copy") {
+    try {
+      if (typeof ClipboardItem !== "undefined" && navigator.clipboard.write)
+        await navigator.clipboard.write([new ClipboardItem({ "text/plain": rendered.then((m) => new Blob([m.body], { type: "text/plain" })) })]);
+      else await navigator.clipboard.writeText((await rendered).body);
+    } catch {
+      return false;
+    }
+  } else {
+    const { subject, body } = await rendered;
     const phone = (r.guest?.phone ?? "").replace(/[^\d]/g, "");
     const url =
       channel === "whatsapp"
@@ -109,5 +118,6 @@ export async function send(channel: Channel, tpl: Template, r: MsgBooking, villa
     if (w) w.location.href = url;
     else location.href = url;
   }
-  return supabase.from("messages_sent").insert({ reservation_id: r.id, template_id: tpl.id, channel });
+  const { error } = await supabase.from("messages_sent").insert({ reservation_id: r.id, template_id: tpl.id, channel });
+  return !error;
 }

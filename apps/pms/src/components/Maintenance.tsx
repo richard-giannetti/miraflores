@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import { supabase } from "../lib/supabase";
 import { format, today } from "../lib/dates";
 import { locale, t, type Lang } from "../lib/i18n";
-import { photoUrls, uploadPhoto } from "../lib/photos";
+import { photoUrls, removePhotos, uploadPhoto } from "../lib/photos";
 import { issuePriorities, issueStatuses, type Issue, type IssueStatus, type Profile, type RecurringJob } from "../lib/types";
 import type { Villas } from "../lib/villas";
 import { Icon } from "./Icon";
@@ -51,7 +51,7 @@ export function IssueRow({ issue, lang, villas, onOpen }: { issue: Issue; lang: 
         <span>
           <strong>{issue.title}</strong>
           <small>
-            {[villa?.name, issue.location, who, issue.due_date && `${t(lang, "dueOn")} ${format(issue.due_date, loc, { day: "numeric", month: "short" })}`, issue.photos.length > 0 && `${issue.photos.length} ${t(lang, "photosShort")}`]
+            {[villa?.name, issue.location, who, issue.due_date && `${t(lang, "dueOn")} ${format(issue.due_date, loc, { day: "numeric", month: "short" })}`, issue.photos.length > 0 && `${issue.photos.length} ${t(lang, issue.photos.length === 1 ? "photoShort" : "photosShort")}`]
               .filter(Boolean)
               .join(" · ")}
           </small>
@@ -207,6 +207,7 @@ export function IssueDialog({
     const { error } = issue ? await supabase.from("issues").update(row).eq("id", issue.id) : await supabase.from("issues").insert({ id, ...row });
     setBusy(false);
     if (error) return setError(`${t(lang, "saveFailed")} ${error.message}`);
+    await removePhotos((issue?.photos ?? []).filter((p) => !f.photos.includes(p)));
     onSaved();
   }
 
@@ -224,6 +225,7 @@ export function IssueDialog({
           </p>
         )}
         <fieldset disabled={!canEdit}>
+          <label>{t(lang, "whatsWrong")}<input value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} autoFocus={!issue} /></label>
           <div className="two">
             <label>
               {t(lang, "villa")}
@@ -233,7 +235,6 @@ export function IssueDialog({
             </label>
             <label>{t(lang, "whereInVilla")}<input value={f.location} placeholder={t(lang, "wherePlaceholder")} onChange={(e) => setF({ ...f, location: e.target.value })} /></label>
           </div>
-          <label>{t(lang, "whatsWrong")}<input value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} autoFocus={!issue} /></label>
           <label>{t(lang, "details")}<textarea rows={3} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></label>
           <div className="segmented" role="radiogroup" aria-label={t(lang, "priority")}>
             {issuePriorities.map((p) => (

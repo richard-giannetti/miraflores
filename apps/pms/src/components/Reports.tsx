@@ -122,7 +122,12 @@ export function Reports({ lang, villas }: { lang: Lang; villas: Villas }) {
     return { months, total, channels, lead: leads.length ? Math.round(leads.reduce((a, b) => a + b, 0) / leads.length) : null, nat, travellers: nat.reduce((n, [, c]) => n + c, 0) };
   }, [stays, money, nations, villa, villas.units, year]);
 
-  const pct = (a: number, b: number) => (b ? `${Math.round((100 * a) / b)} %` : "—");
+  // One decimal under 10 %, so a few nights don't read as zero.
+  const pct = (a: number, b: number) => {
+    if (!b) return "—";
+    const p = (100 * a) / b;
+    return `${p > 0 && p < 10 ? p.toLocaleString(loc, { maximumFractionDigits: 1 }) : Math.round(p)} %`;
+  };
   const money0 = (n: number) => eur(Math.round(n), loc).replace(/[.,]00(?=\s|$)/, "");
   const tiles: { icon: IconName; label: Key; value: string; neg?: boolean }[] = [
     { icon: "bed", label: "occupancy", value: pct(r.total.booked, r.total.available) },
@@ -130,7 +135,7 @@ export function Reports({ lang, villas }: { lang: Lang; villas: Villas }) {
     { icon: "money", label: "revpar", value: r.total.available ? money0(r.total.revenue / r.total.available) : "—" },
     { icon: "invoices", label: "bookingRevenue", value: money0(r.total.revenue) },
     { icon: "money", label: "result", value: money0(r.total.income - r.total.expenses), neg: r.total.income < r.total.expenses },
-    { icon: "calendar", label: "leadTime", value: r.lead == null ? "—" : `${r.lead} ${t(lang, "daysWorked")}` },
+    { icon: "calendar", label: "leadTime", value: r.lead == null ? "—" : `${r.lead} ${t(lang, r.lead === 1 ? "dayWorked" : "daysWorked")}` },
   ];
 
   function exportCsv() {

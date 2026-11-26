@@ -365,6 +365,7 @@ const dict = {
   issue_waiting: { es: "Esperando", fr: "En attente", en: "Waiting" },
   issue_done: { es: "Resuelta", fr: "Résolu", en: "Resolved" },
   addPhoto: { es: "Foto", fr: "Photo", en: "Photo" },
+  photoShort: { es: "foto", fr: "photo", en: "photo" },
   photosShort: { es: "fotos", fr: "photos", en: "photos" },
   photoFailed: { es: "No se pudo subir la foto.", fr: "Impossible d'envoyer la photo.", en: "The photo couldn't be uploaded." },
   titleRequired: { es: "Escribe qué pasa.", fr: "Décrivez le problème.", en: "Say what's wrong." },
@@ -378,9 +379,9 @@ const dict = {
   newJob: { es: "Nueva tarea periódica", fr: "Nouvelle tâche récurrente", en: "New recurring job" },
   noJobs: { es: "Aún no hay tareas periódicas (piscina, jardín, aire acondicionado, extintores…).", fr: "Pas encore de tâches récurrentes (piscine, jardin, climatisation, extincteurs…).", en: "No recurring jobs yet (pool, garden, AC service, extinguishers…)." },
   jobsHint: {
-    es: "Una semana antes de la fecha se abre una incidencia; al resolverla, se programa la siguiente.",
-    fr: "Une semaine avant la date, un problème est ouvert ; une fois résolu, le suivant est programmé.",
-    en: "An issue opens a week before the date; resolving it schedules the next one.",
+    es: "Unos días antes de la fecha (hasta una semana) se abre una incidencia; al resolverla, se programa la siguiente.",
+    fr: "Quelques jours avant la date (jusqu'à une semaine), un problème est ouvert ; une fois résolu, le suivant est programmé.",
+    en: "An issue opens a few days before the date (up to a week); resolving it schedules the next one.",
   },
   jobTitle: { es: "Tarea", fr: "Tâche", en: "Job" },
   jobPlaceholder: { es: "Revisión del aire acondicionado", fr: "Entretien de la climatisation", en: "AC service" },
@@ -471,6 +472,7 @@ const dict = {
   channel_email: { es: "email", fr: "e-mail", en: "email" },
   channel_copy: { es: "copiado", fr: "copié", en: "copied" },
   channel_other: { es: "otro", fr: "autre", en: "other" },
+  sendFailed: { es: "No se pudo copiar. En la reserva, «Ver» muestra el texto para copiarlo a mano.", fr: "Copie impossible. Dans la réservation, « Voir » affiche le texte à copier à la main.", en: "Couldn't copy. In the booking, Preview shows the text to copy by hand." },
   messagesToSend: { es: "Mensajes por enviar", fr: "Messages à envoyer", en: "Messages to send" },
   messageTemplates: { es: "Mensajes a huéspedes", fr: "Messages aux voyageurs", en: "Guest messages" },
   templatesSub: {

@@ -227,21 +227,21 @@ function TxDialog({ lang, villas, tx, kind, onClose, onSaved }: { lang: Lang; vi
       <form onSubmit={submit}>
         <h2>{t(lang, kind === "income" ? (tx ? "income" : "newIncome") : tx ? "expense" : "newExpense")}</h2>
         <div className="two">
-          <label>{t(lang, "date")}<input type="date" value={f.day} onChange={(e) => e.target.value && setF({ ...f, day: e.target.value })} required /></label>
-          <label>
-            {t(lang, "category")}
-            <select value={f.category} onChange={(e) => setF({ ...f, category: e.target.value })}>
-              {cats.map((c) => <option key={c} value={c}>{t(lang, `cat_${c}`)}</option>)}
-            </select>
-          </label>
-        </div>
-        <div className="two">
           <label>{t(lang, "amountInclVat")}<input inputMode="decimal" value={f.amount} onChange={(e) => setF({ ...f, amount: e.target.value })} autoFocus={!tx} required /></label>
           <label>
             {t(lang, "vat")}
             <select value={f.vat_rate} onChange={(e) => setF({ ...f, vat_rate: e.target.value })}>
               <option value="">{t(lang, "noVat")}</option>
               {["0", "4", "10", "21"].map((r) => <option key={r} value={r}>{r} %</option>)}
+            </select>
+          </label>
+        </div>
+        <div className="two">
+          <label>{t(lang, "date")}<input type="date" value={f.day} onChange={(e) => e.target.value && setF({ ...f, day: e.target.value })} required /></label>
+          <label>
+            {t(lang, "category")}
+            <select value={f.category} onChange={(e) => setF({ ...f, category: e.target.value })}>
+              {cats.map((c) => <option key={c} value={c}>{t(lang, `cat_${c}`)}</option>)}
             </select>
           </label>
         </div>
