@@ -13,6 +13,7 @@ export interface Profile {
   full_name: string;
   role: Role;
   language: string;
+  must_change_password?: boolean;
 }
 
 export interface Property {
@@ -87,4 +88,46 @@ export interface Reservation {
   notes: string;
   updated_at: string;
   guest?: Guest | null;
+}
+
+export type Department = "management" | "reception" | "housekeeping" | "maintenance" | "kitchen" | "restaurant" | "pool" | "spa";
+export const departments: Department[] = ["management", "reception", "housekeeping", "maintenance", "kitchen", "restaurant", "pool", "spa"];
+export type ContractKind = "employee" | "freelancer" | "company";
+export const contracts: ContractKind[] = ["employee", "freelancer", "company"];
+
+export interface StaffMember {
+  id: string;
+  user_id: string | null;
+  full_name: string;
+  department: Department;
+  contract: ContractKind;
+  phone: string | null;
+  email: string | null;
+  weekly_hours: number | null;
+  notes: string;
+  active: boolean;
+}
+
+export type ShiftKind = "work" | "off" | "holiday" | "sick";
+export const shiftKinds: ShiftKind[] = ["work", "off", "holiday", "sick"];
+
+export interface Shift {
+  id: string;
+  staff_id: string;
+  property_id: string | null;
+  day: string; // YYYY-MM-DD
+  kind: ShiftKind;
+  starts: string | null; // "HH:MM:SS", villas' local time
+  ends: string | null;
+  note: string;
+}
+
+export interface TimeEntry {
+  id: string;
+  staff_id: string;
+  property_id: string | null;
+  clock_in: string; // ISO instant
+  clock_out: string | null;
+  source: "app" | "manual";
+  voided_at: string | null;
 }

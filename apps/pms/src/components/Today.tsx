@@ -4,20 +4,22 @@ import { addDays, format, range, today, type Day } from "../lib/dates";
 import { locale, t, type Lang } from "../lib/i18n";
 import { load, save } from "../lib/cache";
 import { RESERVATION_FIELDS, type Villas } from "../lib/villas";
-import type { Profile, Reservation, ReservationStatus } from "../lib/types";
+import type { Profile, Reservation, ReservationStatus, StaffMember } from "../lib/types";
 import { ReservationDialog, type Draft } from "./ReservationDialog";
 import { toDraft } from "./Calendar";
 import { TaskCard, useTasks } from "./Tasks";
 import { Avatar, Icon, type IconName } from "./Icon";
+import { ClockCard, OnDuty } from "./MyTime";
 
 interface Props {
   lang: Lang;
   profile: Profile;
   villas: Villas;
+  me: StaffMember | null;
 }
 
 // The parents' home screen: who arrives, who leaves, who's in, and what needs cleaning.
-export function Today({ lang, profile, villas }: Props) {
+export function Today({ lang, profile, villas, me }: Props) {
   const isManager = profile.role === "owner" || profile.role === "manager";
   const [day, setDay] = useState<Day>(today);
   const [reservations, setReservations] = useState<Reservation[]>(() => load("today") ?? []);
@@ -167,6 +169,8 @@ export function Today({ lang, profile, villas }: Props) {
         </div>
       </div>
 
+      {me && day === today() && <ClockCard lang={lang} me={me} villas={villas} />}
+
       <div className="stats">
         {[
           { icon: "arrive" as const, label: t(lang, "arrivals"), n: arrivals.length },
@@ -201,6 +205,7 @@ export function Today({ lang, profile, villas }: Props) {
           )}
         </section>
         {section("bed", t(lang, "inHouse"), inHouse)}
+        {isManager && day === today() && <OnDuty lang={lang} villas={villas} />}
         {blocks.length > 0 && section("lock", t(lang, "blocksToday"), blocks)}
       </div>
 
