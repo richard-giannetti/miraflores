@@ -7,5 +7,7 @@
     "directory": "./apps/web/dist",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
-  }
+  },
+  // Lets Cloudflare build a preview for each branch/PR (`npx wrangler preview`).
+  "previews": {}
 }
