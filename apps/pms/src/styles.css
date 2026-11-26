@@ -654,3 +654,8 @@ table.data tr.is-today { background: var(--today-tint); }
 .msg-preview { flex-basis: 100%; background: var(--content-bg); border-radius: var(--radius-control); padding: var(--space-8) var(--space-12); box-shadow: inset 0 0 0 0.5px var(--control-stroke); }
 .settings-grid > .page-head { margin: var(--space-24) 0 0; }
 .settings-grid .title { font: var(--text-title-2); font-weight: 700; }
+
+/* ---------- Airbnb sync ---------- */
+.guide-edit label .inline { color: var(--label); }
+.guide-edit label .inline input { flex: 1; min-width: 0; }
+.sync-warning { text-decoration: none; color: var(--label); }

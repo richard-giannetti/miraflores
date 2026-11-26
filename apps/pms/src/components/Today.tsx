@@ -12,6 +12,7 @@ import { Avatar, Icon, type IconName } from "./Icon";
 import { ClockCard, OnDuty } from "./MyTime";
 import { IssueDialog, IssueRow, useIssues } from "./Maintenance";
 import { MessagesToSend } from "./Messages";
+import { SyncWarning } from "./AirbnbSync";
 import type { Issue } from "../lib/types";
 
 interface Props {
@@ -176,6 +177,7 @@ export function Today({ lang, profile, villas, me }: Props) {
         </div>
       </div>
 
+      {isManager && day === today() && <SyncWarning lang={lang} villas={villas} />}
       {me && day === today() && <ClockCard lang={lang} me={me} villas={villas} />}
 
       <div className="stats">
