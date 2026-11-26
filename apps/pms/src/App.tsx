@@ -16,12 +16,13 @@ import { Staff } from "./components/Staff";
 import { MyTime } from "./components/MyTime";
 import { ChangePassword } from "./components/ChangePassword";
 import { Maintenance } from "./components/Maintenance";
+import { Money } from "./components/Money";
 import { Avatar, Icon, type IconName } from "./components/Icon";
 import { useVillas } from "./lib/villas";
 
-type Tab = "today" | "calendar" | "cleaning" | "maintenance" | "guests" | "invoices" | "staff" | "me" | "settings" | "more";
-const tabs: Tab[] = ["today", "calendar", "cleaning", "maintenance", "guests", "invoices", "staff", "me", "settings", "more"];
-const managerTabs: Tab[] = ["guests", "invoices", "staff", "settings"];
+type Tab = "today" | "calendar" | "cleaning" | "maintenance" | "guests" | "invoices" | "money" | "staff" | "me" | "settings" | "more";
+const tabs: Tab[] = ["today", "calendar", "cleaning", "maintenance", "guests", "invoices", "money", "staff", "me", "settings", "more"];
+const managerTabs: Tab[] = ["guests", "invoices", "money", "staff", "settings"];
 // Reached from the gear in the header (settings) or the phone tab bar (more), not the main navigation.
 const hiddenTabs: Tab[] = ["settings", "more"];
 // Phones show this many tabs, then "More" for the rest.
@@ -102,6 +103,7 @@ const tabIcon: Record<Tab, IconName> = {
   maintenance: "wrench",
   guests: "guests",
   invoices: "invoices",
+  money: "money",
   staff: "team",
   me: "clock",
   settings: "settings",
@@ -182,6 +184,7 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
         {tab === "maintenance" && <Maintenance lang={lang} profile={profile} villas={villas} view={id} />}
         {tab === "guests" && isManager && <Guests lang={lang} />}
         {tab === "invoices" && isManager && <Invoices lang={lang} profile={profile} openId={id} />}
+        {tab === "money" && isManager && <Money lang={lang} villas={villas} view={id} />}
         {tab === "staff" && isManager && <Staff lang={lang} profile={profile} villas={villas} view={id} />}
         {tab === "me" && <MyTime lang={lang} me={me} villas={villas} />}
         {tab === "settings" && isManager && <Settings lang={lang} villas={villas} />}

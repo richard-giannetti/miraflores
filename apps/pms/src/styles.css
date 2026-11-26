@@ -625,3 +625,25 @@ span.chip { width: auto; display: inline-flex; }
 .photo-add:focus-within { outline: 3px solid var(--focus-ring); }
 .more-list .item-main { text-decoration: none; color: var(--label); }
 .more-list .item > .icon { color: var(--label-tertiary); }
+
+/* ---------- Money and reports ---------- */
+.amount { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.amount.expense, .negative { color: var(--danger-text); }
+.money-stats { grid-template-columns: repeat(3, 1fr); }
+.report-stats { grid-template-columns: repeat(3, 1fr); }
+.stat strong.negative { color: var(--danger-text); }
+.table-panel { margin-bottom: var(--space-16); }
+.table-scroll { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+table.data th, table.data td { padding: var(--space-6) var(--space-8); text-align: right; white-space: nowrap; border-bottom: 0.5px solid var(--separator); }
+table.data :is(th, td):first-child { text-align: left; padding-left: 0; }
+table.data thead th { font: var(--text-subheadline); color: var(--label-secondary); font-weight: 400; }
+table.data tbody th { font-weight: 500; }
+table.data tfoot :is(th, td) { font-weight: 700; border-bottom: 0; }
+table.data tr.is-today { background: var(--today-tint); }
+.report-columns { margin-bottom: var(--space-8); }
+.dialog.wide { width: min(760px, calc(100vw - 24px)); }
+@media (max-width: 600px) {
+  .money-stats, .report-stats { grid-template-columns: repeat(2, 1fr); }
+  .money-stats .stat:last-child { grid-column: 1 / -1; }
+}
