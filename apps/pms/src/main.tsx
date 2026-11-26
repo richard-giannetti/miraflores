@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { GuestCheckin } from "./components/GuestCheckin";
-import "@fontsource-variable/inter";
+import "./design/tokens.css";
 import "./styles.css";
 
 // Guests reach their check-in page through /c/<token>; everything else is the back-office.

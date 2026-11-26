@@ -117,26 +117,44 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
     </a>
   ));
 
+  const settingsLink = isManager && (
+    <a className={`icon-btn${tab === "settings" ? " on-icon" : ""}`} href="#settings" aria-label={t(lang, "settings")} title={t(lang, "settings")}>
+      <Icon name="settings" />
+    </a>
+  );
+  const signOut = (
+    <button className="icon-btn" onClick={() => supabase.auth.signOut()} aria-label={t(lang, "signOut")} title={t(lang, "signOut")}>
+      <Icon name="logout" />
+    </button>
+  );
+
   return (
     <div className="shell">
+      {/* Desktop: a floating glass sidebar (macOS 26 Window + Sidebar). */}
+      <aside className="sidebar">
+        <a className="brand" href="#today" aria-label="Miraflores">
+          <img src="/logo.png" alt="" />
+        </a>
+        <nav className="nav-side">{links}</nav>
+        <div className="sidebar-foot">
+          {langPicker}
+          <div className="sidebar-me">
+            <Avatar name={profile.full_name || "?"} />
+            <span className="sidebar-name">{profile.full_name}</span>
+            {settingsLink}
+            {signOut}
+          </div>
+        </div>
+      </aside>
+      {/* Phones and tablets: a compact top bar and tabs at the bottom. */}
       <header className="top">
         <a className="brand" href="#today" aria-label="Miraflores">
           <img src="/logo.png" alt="" />
         </a>
-        <nav className="nav-top">{links}</nav>
         <div className="top-right">
           {langPicker}
-          {isManager && (
-            <a className={`icon-btn${tab === "settings" ? " on-icon" : ""}`} href="#settings" aria-label={t(lang, "settings")} title={t(lang, "settings")}>
-              <Icon name="settings" />
-            </a>
-          )}
-          <span className="me" title={profile.full_name}>
-            <Avatar name={profile.full_name || "?"} />
-          </span>
-          <button className="icon-btn" onClick={() => supabase.auth.signOut()} aria-label={t(lang, "signOut")} title={t(lang, "signOut")}>
-            <Icon name="logout" />
-          </button>
+          {settingsLink}
+          {signOut}
         </div>
       </header>
       <div className="content">
