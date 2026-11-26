@@ -3,7 +3,8 @@ import type { Session } from "@supabase/supabase-js";
 import { supabase } from "./lib/supabase";
 import { initialLang, langs, t, type Lang } from "./lib/i18n";
 import { load, save } from "./lib/cache";
-import type { Profile } from "./lib/types";
+import type { Profile, StaffMember } from "./lib/types";
+import { STAFF_FIELDS, departmentTabs } from "./lib/staff";
 import { Login } from "./components/Login";
 import { Calendar } from "./components/Calendar";
 import { Today } from "./components/Today";
@@ -11,15 +12,18 @@ import { Tasks } from "./components/Tasks";
 import { Guests } from "./components/Guests";
 import { Invoices } from "./components/Invoices";
 import { Settings } from "./components/Settings";
+import { Staff } from "./components/Staff";
+import { MyTime } from "./components/MyTime";
+import { ChangePassword } from "./components/ChangePassword";
 import { Avatar, Icon, type IconName } from "./components/Icon";
 import { useVillas } from "./lib/villas";
 
-type Tab = "today" | "calendar" | "cleaning" | "guests" | "invoices" | "settings";
-const tabs: Tab[] = ["today", "calendar", "cleaning", "guests", "invoices", "settings"];
-const managerTabs: Tab[] = ["guests", "invoices", "settings"];
+type Tab = "today" | "calendar" | "cleaning" | "guests" | "invoices" | "staff" | "me" | "settings";
+const tabs: Tab[] = ["today", "calendar", "cleaning", "guests", "invoices", "staff", "me", "settings"];
+const managerTabs: Tab[] = ["guests", "invoices", "staff", "settings"];
 // Reached from the gear in the header, not the main navigation.
 const hiddenTabs: Tab[] = ["settings"];
-// "#invoices/<id>" opens one invoice.
+// "#invoices/<id>" opens one invoice; "#staff/schedule" a part of the team screen.
 const route = (): { tab: Tab; id: string | null } => {
   const [h, id] = location.hash.slice(1).split("/") as [Tab, string | undefined];
   return { tab: tabs.includes(h) ? h : "today", id: id ?? null };
@@ -29,6 +33,8 @@ export function App() {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [session, setSession] = useState<Session | null | undefined>(undefined);
   const [profile, setProfile] = useState<Profile | null | undefined>(undefined);
+  // The team record linked to this login, if any: its department picks the screens, and it can clock in.
+  const [me, setMe] = useState<StaffMember | null>(() => load("me"));
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -48,16 +54,18 @@ export function App() {
       setProfile(session === null ? null : undefined);
       return;
     }
-    supabase
-      .from("profiles")
-      .select("id, full_name, role, language")
-      .eq("id", session.user.id)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        if (error) return setProfile(load<Profile>("profile")); // offline: last known profile
-        save("profile", data);
-        setProfile(data as Profile | null);
-      });
+    Promise.all([
+      supabase.from("profiles").select("id, full_name, role, language, must_change_password").eq("id", session.user.id).maybeSingle(),
+      supabase.from("staff_members").select(STAFF_FIELDS).eq("user_id", session.user.id).is("deleted_at", null).maybeSingle(),
+    ]).then(([{ data, error }, s]) => {
+      if (error) return setProfile(load<Profile>("profile")); // offline: last known profile
+      save("profile", data);
+      setProfile(data as Profile | null);
+      if (!s.error) {
+        save("me", s.data);
+        setMe(s.data as StaffMember | null);
+      }
+    });
   }, [session]);
 
   const langPicker = (
@@ -80,16 +88,21 @@ export function App() {
         <button onClick={() => supabase.auth.signOut()}>{t(lang, "signOut")}</button>
       </div>
     );
-  return <Workspace lang={lang} profile={profile} langPicker={langPicker} />;
+  if (profile.must_change_password) return <ChangePassword lang={lang} onDone={() => setProfile({ ...profile, must_change_password: false })} />;
+  return <Workspace lang={lang} profile={profile} me={me} langPicker={langPicker} />;
 }
 
-const tabIcon: Record<Tab, IconName> = { today: "today", calendar: "calendar", cleaning: "cleaning", guests: "guests", invoices: "invoices", settings: "settings" };
+const tabIcon: Record<Tab, IconName> = { today: "today", calendar: "calendar", cleaning: "cleaning", guests: "guests", invoices: "invoices", staff: "team", me: "clock", settings: "settings" };
 
-function Workspace({ lang, profile, langPicker }: { lang: Lang; profile: Profile; langPicker: ReactNode }) {
+function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Profile; me: StaffMember | null; langPicker: ReactNode }) {
   const villas = useVillas();
-  const [{ tab, id }, setRoute] = useState(route);
+  const [{ tab: asked, id }, setRoute] = useState(route);
   const isManager = profile.role === "owner" || profile.role === "manager";
-  const visible = tabs.filter((x) => (isManager || !managerTabs.includes(x)) && !hiddenTabs.includes(x));
+  // Owners and managers see everything; a staff login sees its department's screens (cleaning without a team record).
+  const allowed = (x: Tab) =>
+    x === "me" ? !!me : isManager ? true : !managerTabs.includes(x) && (me ? departmentTabs[me.department] : ["today", "cleaning"]).includes(x);
+  const visible = tabs.filter((x) => allowed(x) && !hiddenTabs.includes(x));
+  const tab: Tab = allowed(asked) ? asked : "today";
 
   useEffect(() => {
     const onHash = () => setRoute(route());
@@ -98,7 +111,7 @@ function Workspace({ lang, profile, langPicker }: { lang: Lang; profile: Profile
   }, []);
 
   const links = visible.map((x) => (
-    <a key={x} href={`#${x}`} className={x === tab ? "on" : ""} aria-current={x === tab ? "page" : undefined}>
+    <a key={x} href={`#${x}`} className={x === tab ? "on" : ""} aria-current={x === tab ? "page" : undefined} title={t(lang, `tab_${x}`)}>
       <Icon name={tabIcon[x]} />
       <span>{t(lang, `tab_${x}`)}</span>
     </a>
@@ -127,11 +140,13 @@ function Workspace({ lang, profile, langPicker }: { lang: Lang; profile: Profile
         </div>
       </header>
       <div className="content">
-        {tab === "today" && <Today lang={lang} profile={profile} villas={villas} />}
+        {tab === "today" && <Today lang={lang} profile={profile} villas={villas} me={me} />}
         {tab === "calendar" && <Calendar lang={lang} role={profile.role} villas={villas} />}
         {tab === "cleaning" && <Tasks lang={lang} profile={profile} villas={villas} />}
         {tab === "guests" && isManager && <Guests lang={lang} />}
         {tab === "invoices" && isManager && <Invoices lang={lang} profile={profile} openId={id} />}
+        {tab === "staff" && isManager && <Staff lang={lang} profile={profile} villas={villas} view={id} />}
+        {tab === "me" && <MyTime lang={lang} me={me} villas={villas} />}
         {tab === "settings" && isManager && <Settings lang={lang} villas={villas} />}
       </div>
       <nav className="nav-bottom">{links}</nav>
