@@ -160,8 +160,18 @@ ${checkin.signature ? `<h2>Firma</h2><img src="${checkin.signature}">` : ""}
   }
 
   return (
-    <dialog ref={ref} className="dialog" onClose={onClose} onCancel={onClose}>
-      <form method="dialog">
+    // stopPropagation: React passes these events up through the portal to the reservation dialog.
+    <dialog
+      ref={ref}
+      className="dialog"
+      onClose={(e) => {
+        e.stopPropagation();
+        onClose();
+      }}
+      onCancel={(e) => e.stopPropagation()}
+    >
+      {/* Not a <form>: React passes events up through the portal, so a submit would reach the reservation form. */}
+      <div className="dialog-body">
         <h2>{t(lang, "registration")}</h2>
         <p className="muted">
           {villa}
@@ -227,9 +237,11 @@ ${checkin.signature ? `<h2>Firma</h2><img src="${checkin.signature}">` : ""}
           <button type="button" onClick={print}>
             <Icon name="printer" size={18} /> {t(lang, "printSheet")}
           </button>
-          <button type="submit">{t(lang, "close")}</button>
+          <button type="button" onClick={() => ref.current?.close()}>
+            {t(lang, "close")}
+          </button>
         </div>
-      </form>
+      </div>
     </dialog>
   );
 }
