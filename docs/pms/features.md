@@ -52,9 +52,10 @@ system is worth it over a spreadsheet.
    details with the gestor and the BOE.
 7. **VeriFactu (invoicing software rules, RD 1007/2023).** Every invoice issued with software must be
    recorded tamper-proof: chained records, a QR code, and optionally sent to the tax agency in real time.
-   The villas are owned by a company (Miraflores Costa Tropical SL). Under the law as published, companies
-   must comply from **1 January 2027**. A postponement to 2028 has been announced but wasn't in the BOE
-   as of October 2026. See [module 9](#9-invoicing-facturación--wave-2).
+   The villas are owned by a company (Miraflores Costa Tropical SL). **Postponed to October 2028** (6 October
+   2028 per most sources) by Real Decreto-ley 43/2026, BOE 25 November 2026, for companies and the
+   self-employed alike. Plan: integrate a certified VeriFactu provider in early 2028 (see
+   [module 9](#9-invoicing-facturación--wave-2)).
 
 ## Feature modules
 
@@ -181,8 +182,8 @@ model to follow: no app to download, one link per reservation, on the phone.
 
 ### 9. Invoicing (facturación) · Wave 2
 
-The father's top concern. 10% VAT applies from December 2026 and VeriFactu from 2027, so it comes
-right after the calendar, at the start of Wave 2.
+The father's top concern. 10% VAT applies from December 2026 (built in Wave 2); VeriFactu applies from
+October 2028.
 
 - **An invoice per stay**, generated from the reservation: nights, cleaning fee, extras, VAT at the
   correct rate, totals. This covers Airbnb stays as well as direct ones, if the gestor confirms the
@@ -269,9 +270,8 @@ Order agreed with the father (2026-11-25):
 | **3** | **Connect to the outside** | Airbnb sync (2), 10 rates and direct booking on the website with Stripe. Direct and Airbnb only: no Booking.com for now |
 | **4** | **Hotel extras and full offline** | 12 front desk, guest bill during the stay, groups; editing without internet |
 
-- **Invoicing has a deadline:** 10% VAT applies from 1 December 2026, and VeriFactu from 1 January 2027
-  unless the postponement is published. Until the PMS issues invoices, they come from a certified tool;
-  the gestor may already have one.
+- **Invoicing:** 10% VAT applies from 1 December 2026 (the PMS issues numbered, locked invoices). VeriFactu
+  applies from October 2028 (Real Decreto-ley 43/2026); revisit in early 2028 with a certified provider.
 - **Airbnb bookings until Wave 3:** they're typed into the PMS calendar by hand. That's a few minutes per
   booking at two villas, and the price of getting the internal side right first.
 
