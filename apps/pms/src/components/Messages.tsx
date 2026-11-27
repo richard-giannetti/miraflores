@@ -17,9 +17,11 @@ import {
   type MsgBooking,
   type Template,
   type Timing,
+  validEmail,
 } from "../lib/messages";
 import type { Villas } from "../lib/villas";
 import { Avatar, Icon } from "./Icon";
+import { EmailLog } from "./Emails";
 
 interface Sent {
   id: string;
@@ -125,6 +127,7 @@ export function MessagesPanel({ lang, reservationId, villa }: { lang: Lang; rese
                     : due
                       ? `${t(lang, "dueOn")} ${format(due, loc, { day: "numeric", month: "short" })}`
                       : t(lang, "timing_manual")}
+                  {tpl.auto_email && !done.length && ` · ✉ ${t(lang, "autoEmailShort")}`}
                 </small>
               </span>
               <span className="spacer" />
@@ -140,6 +143,7 @@ export function MessagesPanel({ lang, reservationId, villa }: { lang: Lang; rese
           );
         })}
       </ul>
+      <EmailLog lang={lang} reservationId={reservationId} />
     </section>
   );
 }
@@ -149,7 +153,11 @@ export function MessagesToSend({ lang, villas }: { lang: Lang; villas: Villas })
   const templates = useTemplates();
   const [bookings, setBookings] = useState<(MsgBooking & { unit_id: string })[]>([]);
   const [sent, setSent] = useState<Set<string>>(new Set());
+  const [emailsOn, setEmailsOn] = useState(false);
   const day = today();
+  useEffect(() => {
+    supabase.from("email_settings").select("enabled").maybeSingle().then(({ data }) => setEmailsOn(!!data?.enabled));
+  }, []);
 
   const refresh = useCallback(async () => {
     const { data } = await supabase
@@ -159,7 +167,8 @@ export function MessagesToSend({ lang, villas }: { lang: Lang; villas: Villas })
       .eq("kind", "booking")
       .neq("status", "cancelled")
       .gte("check_out", addDays(day, -16))
-      .lte("check_in", addDays(day, 61))
+      // Stay messages start at most 60 days ahead; a confirmation is due whenever the stay is.
+      .or(`check_in.lte.${addDays(day, 61)},created_at.gte.${addDays(day, -30)}`)
       .order("check_in");
     const list = (data ?? []) as unknown as (MsgBooking & { unit_id: string })[];
     setBookings(list);
@@ -172,7 +181,11 @@ export function MessagesToSend({ lang, villas }: { lang: Lang; villas: Villas })
   }, [refresh]);
 
   // Only bookings with a guest to write to.
-  const due = bookings.filter((b) => b.guest).flatMap((b) => templates.list.filter((tpl) => isDue(tpl, b, day) && !sent.has(`${b.id}|${tpl.id}`)).map((tpl) => ({ b, tpl })));
+  // Templates the PMS emails by itself are left out when it can (emails on, guest has an address).
+  const auto = (tpl: Template, b: MsgBooking) => emailsOn && tpl.auto_email && validEmail(b.guest?.email);
+  const due = bookings
+    .filter((b) => b.guest)
+    .flatMap((b) => templates.list.filter((tpl) => isDue(tpl, b, day) && !sent.has(`${b.id}|${tpl.id}`) && !auto(tpl, b)).map((tpl) => ({ b, tpl })));
   if (!due.length) return null;
 
   return (
@@ -218,7 +231,7 @@ export function TemplatesEditor({ lang }: { lang: Lang }) {
     const x = get(tpl);
     const { error } = await supabase
       .from("message_templates")
-      .update({ name: x.name, subject: x.subject, body: x.body, timing: x.timing, offset_days: x.offset_days, include_airbnb: x.include_airbnb, active: x.active })
+      .update({ name: x.name, subject: x.subject, body: x.body, timing: x.timing, offset_days: x.offset_days, include_airbnb: x.include_airbnb, auto_email: x.auto_email && x.timing !== "manual", active: x.active })
       .eq("id", tpl.id);
     if (error) return;
     setDrafts(({ [tpl.id]: _, ...rest }) => rest);
@@ -276,6 +289,9 @@ export function TemplatesEditor({ lang }: { lang: Lang }) {
               <span className="nav">
                 <label className="inline"><input type="checkbox" checked={x.active} onChange={(e) => set(tpl, { active: e.target.checked })} /> {t(lang, "active")}</label>
                 <label className="inline"><input type="checkbox" checked={x.include_airbnb} onChange={(e) => set(tpl, { include_airbnb: e.target.checked })} /> {t(lang, "includeAirbnb")}</label>
+                <label className="inline" title={t(lang, "autoEmailHint")}>
+                  <input type="checkbox" checked={x.auto_email && x.timing !== "manual"} disabled={x.timing === "manual"} onChange={(e) => set(tpl, { auto_email: e.target.checked })} /> {t(lang, "autoEmail")}
+                </label>
               </span>
               <span className="nav">
                 {saved === tpl.id && !dirty && <span className="ok-text">{t(lang, "saved")}</span>}

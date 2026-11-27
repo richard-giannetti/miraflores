@@ -742,3 +742,8 @@ table.data tr.is-today { background: var(--today-tint); }
 .segmented .dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--system-orange); margin-left: var(--space-4); vertical-align: middle; }
 .panel .row-btns { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-8); }
 .panel .row-btns .icon { width: 16px; height: 16px; }
+
+/* Automatic emails */
+.switch-row { color: var(--label); font: var(--text-headline); }
+.email-log { margin-top: var(--space-8); }
+.form-end { display: flex; justify-content: flex-end; gap: var(--space-8); padding-top: var(--space-8); }
