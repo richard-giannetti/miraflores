@@ -80,7 +80,8 @@ money) hangs off a reservation on it, so it's built first.
   Colours show status (option, confirmed, checked in, checked out, cancelled) and source.
 - Reservations from every source in one place. In Wave 1 all of them are entered in the PMS: phone,
   email, repeat guests, and **Airbnb bookings typed in by hand**. Wave 3 adds automatic Airbnb sync,
-  the website's direct bookings and, later, Booking.com.
+  and the website's direct bookings. **Only two channels: direct and Airbnb.** Booking.com is out for now
+  (decided 2026-11-27).
 - **Blocks:** owner stays, maintenance, "hold for friends".
 - **No double bookings**, enforced by the database itself rather than by careful clicking.
 - **Airbnb sync via iCal** (Wave 3), both directions. The PMS imports each listing's Airbnb calendar every few
@@ -155,7 +156,7 @@ model to follow: no app to download, one link per reservation, on the phone.
   because writing into Airbnb's inbox needs the partner API. The PMS gives the text and the check-in link
   to paste in.
 - **One inbox per guest** for email and (later) WhatsApp: every message about a reservation in one thread,
-  linked to the booking. Airbnb and Booking.com messages stay in their own apps (partner API, see above).
+  linked to the booking. Airbnb messages stay in Airbnb (partner API, see above).
 - **AI-drafted replies** in the guest's language, written from the villa's own data (house rules, Wi-Fi,
   check-in times, local tips) and the reservation. Three modes: off, draft for a person to approve, or send
   automatically. Default is draft-and-approve. Door codes and ID data are never put in a draft.
@@ -234,7 +235,8 @@ numbers and reports it. The PMS stores the resulting PDF and QR. The provider ge
 Not built now, but the data model leaves room for it:
 - Room types vs physical rooms, rate plans, room assignment.
 - Front-desk screen, guest folio (charges during the stay), group bookings.
-- More channels through a certified channel manager, if Airbnb/Booking volume justifies it.
+- More channels (Booking.com…) through a certified channel manager, only if the family decides to sell there
+  later. For now it's direct and Airbnb only.
 
 ### Across all modules
 
@@ -256,13 +258,13 @@ Not built now, but the data model leaves room for it:
 
 Order agreed with the father (2026-11-25):
 - **Start with internal management**, with the calendar at the centre.
-- **Connections to the platforms** (Airbnb sync, Booking, website bookings) come afterwards.
+- **Connections to the platforms** (Airbnb sync, website bookings) come afterwards.
 
 | Wave | Goal | Modules |
 | --- | --- | --- |
 | **1** | **The calendar and day-to-day running** | 1 properties and rooms, 2 calendar and reservations (entered in the PMS), 3 guests, cleaning part of 5, Today screen (11) |
 | **2** | **The rest of internal management** | 9 invoicing first, 4 online check-in and SES.Hospedajes, maintenance (5), 6 staff and time clock with per-user logins and department profiles, 7 messages (with inbox and AI-drafted replies), 8 money (with scheduled extras, quotes and payment links), reports (11) |
-| **3** | **Connect to the outside** | Airbnb sync (2), 10 rates and direct booking on the website with Stripe, Booking.com later |
+| **3** | **Connect to the outside** | Airbnb sync (2), 10 rates and direct booking on the website with Stripe. Direct and Airbnb only: no Booking.com for now |
 | **4** | **Hotel extras and full offline** | 12 front desk, guest bill during the stay, groups; editing without internet |
 
 - **Invoicing has a deadline:** 10% VAT applies from 1 December 2026, and VeriFactu from 1 January 2027

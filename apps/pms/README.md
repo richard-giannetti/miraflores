@@ -61,6 +61,17 @@ The back-office for both villas: [features](../../docs/pms/features.md),
     to import. Airbnb refreshes imported calendars every few hours, so a direct booking takes a while to close
     the dates there.
 
+- **Rates** (owners and managers, "Rates" tab): per villa, price per night and for Friday/Saturday, seasons
+  (the shorter one wins where they overlap), cleaning fee, guests included and extra-guest fee, minimum stay,
+  booking window, gap nights (shorter minimum and a discount for short gaps), rate types that switch on by
+  themselves (early bird, last minute, non-refundable), and promo codes. One calculation, `public.quote()`, is used
+  by the PMS price check and the website, so both always show the same price.
+- **Book direct on the website**: a villa opened to direct booking (a switch in Rates) shows a form on its pages:
+  dates, guests, promo code → price and rate options → a request (`public.request_booking()`, recalculated
+  server-side, rate-limited). Requests don't block dates; they show on Today, where an owner or manager accepts
+  them (as an option or confirmed: guest and booking are created) or declines. Card payment comes with Stripe.
+- Channels: direct and Airbnb only (Booking.com is out for now).
+
 ## Design system
 
 The interface follows the **macOS 26 UI** design system (a Design System artifact in Claude). Its tokens live in

@@ -25,7 +25,7 @@ The repo is shaped from day 0 so goal 3 is an addition, not a rewrite.
                  └──────────┬───────────┘
                             │ iCal sync (import + export)
                  ┌──────────▼───────────┐
-                 │ Airbnb / Booking.com │
+                 │ Airbnb               │
                  └──────────────────────┘
 ```
 
