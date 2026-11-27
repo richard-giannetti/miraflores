@@ -183,7 +183,7 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
         </div>
       </header>
       <div className="content">
-        {tab === "today" && <Today lang={lang} profile={profile} villas={villas} me={me} />}
+        {tab === "today" && <Today lang={lang} profile={profile} villas={villas} me={me} view={id} />}
         {tab === "calendar" && <Calendar lang={lang} role={profile.role} villas={villas} />}
         {tab === "cleaning" && <Tasks lang={lang} profile={profile} villas={villas} />}
         {tab === "maintenance" && <Maintenance lang={lang} profile={profile} villas={villas} view={id} />}

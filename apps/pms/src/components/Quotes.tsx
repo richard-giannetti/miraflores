@@ -86,10 +86,10 @@ function ShareLink({ lang, token, total, name, villa, phone, email }: { lang: La
   );
 }
 
-// Today: open quotes (waiting for the guest, or accepted and waiting for the transfer), and "New quote".
+// Today: open quotes (waiting for the guest, or accepted and waiting for the transfer). Hidden when there are none;
+// "New quote" is in Today's header.
 export function QuotesPanel({ lang, villas }: { lang: Lang; villas: Villas }) {
   const [list, setList] = useState<OpenQuote[]>([]);
-  const [creating, setCreating] = useState<QuotePrefill | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const loc = locale[lang];
 
@@ -127,16 +127,13 @@ export function QuotesPanel({ lang, villas }: { lang: Lang; villas: Villas }) {
     refresh();
   }
 
+  if (!list.length) return null;
   return (
     <section className="panel quotes-panel">
       <h2>
         <span className="h-icon"><Icon name="invoices" size={16} /></span>
-        {t(lang, "quotes")} {list.length > 0 && <span className="count">{list.length}</span>}
-        <button className="small-btn push" onClick={() => setCreating({})}>
-          <Icon name="plus" size={14} /> {t(lang, "newQuote")}
-        </button>
+        {t(lang, "quotes")} <span className="count">{list.length}</span>
       </h2>
-      {list.length === 0 && <p className="muted small">{t(lang, "quotesEmpty")}</p>}
       <ul className="list">
         {list.map((q) => {
           const r = q.reservation;
@@ -174,15 +171,6 @@ export function QuotesPanel({ lang, villas }: { lang: Lang; villas: Villas }) {
           );
         })}
       </ul>
-      {creating && (
-        <QuoteDialog
-          lang={lang}
-          villas={villas}
-          prefill={creating}
-          onClose={() => setCreating(null)}
-          onCreated={refresh}
-        />
-      )}
     </section>
   );
 }

@@ -774,3 +774,39 @@ table.data tr.is-today { background: var(--today-tint); }
 .guest-dates small { color: var(--label-secondary); font: var(--text-footnote); }
 .guest-foot { text-align: center; margin: var(--space-16) 0; font: var(--text-footnote); }
 .quotes-panel h2 .push { margin-left: auto; }
+
+/* Today: what needs action first, then the day at a glance, then the lists (empty ones hidden) */
+.today .attention { display: grid; gap: var(--space-12); margin-bottom: var(--space-16); }
+.today .attention:empty { display: none; }
+.summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-8); margin-bottom: var(--space-16); }
+.summary-item { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: var(--space-8); align-items: center; justify-items: start; text-align: left; min-height: 56px; padding: var(--space-8) var(--space-12); border-radius: var(--radius-panel); background: var(--content-bg); box-shadow: var(--shadow-control); color: var(--label); font-weight: 400; }
+.summary-item .icon { grid-row: span 2; color: var(--accent); }
+.summary-item strong { font: var(--text-title-2); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.summary-item span { color: var(--label-secondary); font: var(--text-footnote); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.summary-item.zero { opacity: .55; box-shadow: none; background: var(--fill-secondary); }
+.summary-item:disabled { cursor: default; }
+.summary-item:not(:disabled):hover { background: var(--fill); }
+.today .quiet { color: var(--label-secondary); text-align: center; padding: var(--space-20); }
+.today .columns.secondary { margin-top: var(--space-16); }
+.today .columns.secondary:empty { display: none; }
+.today .panel { scroll-margin-top: var(--space-16); }
+.checkin-state { font: var(--text-footnote); }
+.checkin-state.ok { color: var(--tone-ok); }
+.checkin-state.todo { color: var(--tone-info); }
+.checkin-state.none { color: var(--label-tertiary); }
+.ahead-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.ahead-list > .ahead-day { padding: var(--space-8) 0; }
+.ahead-list > .ahead-day + .ahead-day { border-top: 0.5px solid var(--separator); }
+.ahead-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-4) var(--space-12); }
+.ahead-head strong { font: var(--text-headline); text-transform: capitalize; }
+.ahead-day .list { margin-top: var(--space-4); }
+@media (max-width: 600px) {
+  /* One compact row on phones: icon and number side by side, the label underneath. */
+  .summary { gap: var(--space-6); }
+  .summary-item { grid-template-columns: auto auto; grid-template-rows: auto auto; justify-content: center; justify-items: center; column-gap: var(--space-4); padding: var(--space-6) var(--space-4); min-height: 52px; }
+  .summary-item .icon { grid-row: auto; width: 16px; height: 16px; }
+  .summary-item strong { font: var(--text-title-3); font-weight: 700; }
+  .summary-item span { grid-column: span 2; font: var(--text-caption-1); }
+}
+/* Today's lists side by side only when there's room for a comfortable row each */
+.today .columns { grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); }

@@ -825,11 +825,6 @@ const dict = {
   newQuote: { es: "Nuevo presupuesto", fr: "Nouveau devis", en: "New quote" },
   createQuote: { es: "Crear presupuesto", fr: "Créer le devis", en: "Create quote" },
   sendQuote: { es: "Enviar presupuesto", fr: "Envoyer un devis", en: "Send quote" },
-  quotesEmpty: {
-    es: "Para consultas por teléfono, email o la web: un presupuesto con enlace, que bloquea las fechas unos días.",
-    fr: "Pour les demandes par téléphone, e-mail ou le site : un devis avec lien, qui bloque les dates quelques jours.",
-    en: "For phone, email or website enquiries: a priced quote with a link, holding the dates for a few days.",
-  },
   quoteWaiting: { es: "Esperando respuesta hasta", fr: "En attente jusqu'au", en: "Waiting until" },
   quoteAcceptedPill: { es: "Aceptado · esperando depósito de {deposit}", fr: "Accepté · acompte de {deposit} attendu", en: "Accepted · awaiting {deposit} deposit" },
   depositReceived: { es: "Depósito recibido: confirmar", fr: "Acompte reçu : confirmer", en: "Deposit received: confirm" },
@@ -872,6 +867,7 @@ const dict = {
     en: "Account holder, IBAN and bank. Shown to guests once they accept a quote.",
   },
   quoteValidDays: { es: "Días que bloquea un presupuesto", fr: "Jours de blocage d'un devis", en: "Days a quote holds the dates" },
+  quietDay: { es: "Día tranquilo: ni llegadas, ni salidas, ni limpiezas.", fr: "Journée calme : ni arrivées, ni départs, ni ménage.", en: "A quiet day: no arrivals, departures or cleaning." },
 } satisfies Record<string, Record<Lang, string>>;
 
 export type Key = keyof typeof dict;
