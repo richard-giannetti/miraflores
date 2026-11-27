@@ -8,6 +8,8 @@ export function useVillas() {
   const [properties, setProperties] = useState<Property[]>(() => load("properties") ?? []);
   const [units, setUnits] = useState<Unit[]>(() => load("units") ?? []);
   const [team, setTeam] = useState<Profile[]>(() => load("team") ?? []);
+  // Bumped by Settings after a property or room changes, so every screen picks it up.
+  const [version, setVersion] = useState(0);
 
   useEffect(() => {
     Promise.all([
@@ -28,11 +30,11 @@ export function useVillas() {
         setTeam(t.data as Profile[]);
       }
     });
-  }, []);
+  }, [version]);
 
   const unitName = (id: string) => units.find((u) => u.id === id)?.name ?? "";
   const propertyOf = (unitId: string) => properties.find((p) => p.id === units.find((u) => u.id === unitId)?.property_id);
-  return { properties, units, team, unitName, propertyOf };
+  return { properties, units, team, unitName, propertyOf, reload: () => setVersion((v) => v + 1) };
 }
 
 export type Villas = ReturnType<typeof useVillas>;

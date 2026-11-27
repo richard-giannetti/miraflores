@@ -72,6 +72,17 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   them (as an option or confirmed: guest and booking are created) or declines. Card payment comes with Stripe.
 - Channels: direct and Airbnb only (Booking.com is out for now).
 
+## Settings (the admin's menu)
+
+The gear opens **Settings**, one menu of sections (requested by the father, 2026-11-27):
+- **Villas and rooms** (owners): create a property (villa or hotel; it gets its Rates row, closed to direct booking),
+  add its bookable units (the whole villa, or hotel rooms), switch a room off (refused while it has bookings to come),
+  remove a property that never had a booking. Each property's cleaning checklist is edited here (owners and managers).
+- **Restaurant menu** (owners and managers): categories and items with names in ES/EN/FR, price incl. VAT, VAT rate
+  (10 % food, 21 % alcohol), the 14 EU allergens and an "available" switch. A catalogue for now; the hotel's guest bill
+  and restaurant screens will use it.
+- **Team** (leads to the Team screen), **Guest information**, **Messages**, **Airbnb sync**.
+
 ## Design system
 
 The interface follows the **macOS 26 UI** design system (a Design System artifact in Claude). Its tokens live in

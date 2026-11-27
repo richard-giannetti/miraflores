@@ -193,7 +193,7 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
         {tab === "rates" && isManager && <Rates lang={lang} villas={villas} />}
         {tab === "staff" && isManager && <Staff lang={lang} profile={profile} villas={villas} view={id} />}
         {tab === "me" && <MyTime lang={lang} me={me} villas={villas} />}
-        {tab === "settings" && isManager && <Settings lang={lang} villas={villas} profile={profile} />}
+        {tab === "settings" && isManager && <Settings lang={lang} villas={villas} profile={profile} section={id} />}
         {tab === "more" && (
           <main className="page narrow">
             <h1 className="title">{t(lang, "tab_more")}</h1>
