@@ -40,4 +40,4 @@ export function useVillas() {
 export type Villas = ReturnType<typeof useVillas>;
 
 export const RESERVATION_FIELDS =
-  "id, unit_id, guest_id, kind, status, source, check_in, check_out, adults, children, total_amount, title, notes, updated_at, guest:guests(id, first_name, last_name, email, phone, notes)";
+  "id, unit_id, guest_id, kind, status, source, check_in, check_out, adults, children, total_amount, payment_method, title, notes, updated_at, guest:guests(id, first_name, last_name, email, phone, notes)";

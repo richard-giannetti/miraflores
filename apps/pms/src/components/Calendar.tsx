@@ -332,6 +332,7 @@ export function toDraft(r: Reservation): Draft {
     adults: r.adults,
     children: r.children,
     total_amount: r.total_amount,
+    payment_method: r.payment_method,
     title: r.title,
     notes: r.notes,
     first_name: r.guest?.first_name ?? "",

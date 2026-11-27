@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { supabase } from "../lib/supabase";
-import { ageOn, countries, emptyTraveller, pickLang, type Multi, type Traveller } from "../lib/checkin";
+import { ageOn, countries, emptyTraveller, loadMunicipalities, pickLang, relationships, searchMunicipalities, type Multi, type Municipality, type Traveller } from "../lib/checkin";
 import { SignaturePad } from "./SignaturePad";
+import type { Scanned } from "../lib/idscan";
 
 // The guest's own page, reached through the private link /c/<token>. No account: the page only calls
 // the checkin_get / checkin_submit database functions with the token.
@@ -64,8 +65,33 @@ const S = {
   country: { en: "Country of residence", es: "País de residencia", fr: "Pays de résidence" },
   phone: { en: "Phone", es: "Teléfono", fr: "Téléphone" },
   email: { en: "Email", es: "Email", fr: "E-mail" },
-  relationship: { en: "Relationship to an adult in the group", es: "Parentesco con un adulto del grupo", fr: "Lien de parenté avec un adulte du groupe" },
-  relPlaceholder: { en: "e.g. son, daughter, grandson", es: "p. ej. hijo, hija, nieto", fr: "ex. fils, fille, petit-fils" },
+  relationship: { en: "Relationship to traveller 1", es: "Parentesco con el viajero 1", fr: "Lien avec le voyageur 1" },
+  rel_child: { en: "Son or daughter", es: "Hijo o hija", fr: "Fils ou fille" },
+  rel_grandchild: { en: "Grandson or granddaughter", es: "Nieto o nieta", fr: "Petit-fils ou petite-fille" },
+  rel_sibling: { en: "Brother or sister", es: "Hermano o hermana", fr: "Frère ou sœur" },
+  rel_nephew_niece: { en: "Nephew or niece", es: "Sobrino o sobrina", fr: "Neveu ou nièce" },
+  rel_ward: { en: "In their care (legal guardian)", es: "A su cargo (tutor legal)", fr: "Sous sa tutelle" },
+  rel_other: { en: "Other", es: "Otro", fr: "Autre" },
+  scan: { en: "Scan passport or ID card", es: "Escanear pasaporte o DNI", fr: "Scanner passeport ou carte d'identité" },
+  scanHint: {
+    en: "Photo of the page with the lines of <<< (back of ID cards). It's read on your phone; the photo isn't sent or kept.",
+    es: "Foto de la página con las líneas de <<< (reverso del DNI). Se lee en tu móvil; la foto no se envía ni se guarda.",
+    fr: "Photo de la page avec les lignes de <<< (verso des cartes d'identité). Lue sur votre téléphone ; la photo n'est ni envoyée ni conservée.",
+  },
+  scanning: { en: "Reading the document…", es: "Leyendo el documento…", fr: "Lecture du document…" },
+  scanned: {
+    en: "Filled in from your document. Please check every field (these lines have no accents).",
+    es: "Rellenado con tu documento. Revisa cada campo (estas líneas no llevan tildes).",
+    fr: "Rempli depuis votre document. Vérifiez chaque champ (ces lignes n'ont pas d'accents).",
+  },
+  scanFailed: {
+    en: "Couldn't read it. Try again flat, in good light, with the <<< lines sharp, or type the details in.",
+    es: "No se pudo leer. Prueba otra vez en plano, con buena luz y las líneas <<< nítidas, o escribe los datos.",
+    fr: "Lecture impossible. Réessayez à plat, bien éclairé, lignes <<< nettes, ou saisissez les données.",
+  },
+  municipality: { en: "Town (municipality)", es: "Municipio", fr: "Commune" },
+  municipalityHint: { en: "Type and choose from the list", es: "Escribe y elige de la lista", fr: "Tapez et choisissez dans la liste" },
+  municipalityNone: { en: "No match: check the spelling", es: "Sin resultados: revisa cómo se escribe", fr: "Aucun résultat : vérifiez l'orthographe" },
   sameAddress: { en: "Same address as traveller 1", es: "Misma dirección que el viajero 1", fr: "Même adresse que le voyageur 1" },
   minorNote: { en: "Under 14: no ID document needed.", es: "Menor de 14 años: no necesita documento.", fr: "Moins de 14 ans : pas de pièce d'identité requise." },
   choose: { en: "Choose…", es: "Elegir…", fr: "Choisir…" },
@@ -195,10 +221,22 @@ function Form({ info, token, lang, tr, onDone }: { info: Info; token: string; la
   const list = useMemo(() => countries(loc[lang]), [lang]);
 
   const set = (i: number, patch: Partial<Traveller & { same?: boolean }>) => setPeople((ps) => ps.map((p, j) => (j === i ? { ...p, ...patch } : p)));
-  // With "same address", a traveller takes traveller 1's address when sent.
+  // With "same address", a traveller takes traveller 1's address when sent; so does every minor (SES needs an address
+  // for each traveller, and children live with the adult they travel with).
+  const isMinor = (p: Traveller) => {
+    const age = ageOn(p.birth_date, info.check_in);
+    return age !== null && age < 18;
+  };
   const resolved = people.map((p, i) =>
-    i > 0 && p.same
-      ? { ...p, residence_address: people[0].residence_address, residence_city: people[0].residence_city, residence_postal_code: people[0].residence_postal_code, residence_country: people[0].residence_country }
+    i > 0 && (p.same || isMinor(p))
+      ? {
+          ...p,
+          residence_address: people[0].residence_address,
+          residence_city: people[0].residence_city,
+          residence_postal_code: people[0].residence_postal_code,
+          residence_country: people[0].residence_country,
+          residence_municipality_code: people[0].residence_municipality_code,
+        }
       : p,
   );
 
@@ -214,6 +252,8 @@ function Form({ info, token, lang, tr, onDone }: { info: Info; token: string; la
     }
     if (!adult && !p.relationship.trim()) m.add("relationship");
     if (adult) for (const k of ["residence_address", "residence_city", "residence_country"] as const) if (!p[k].trim()) m.add(k);
+    // Residents of Spain: the town must come from the official list (SES needs its INE code).
+    if (adult && p.residence_country === "ESP" && !/^\d{5}$/.test(p.residence_municipality_code)) m.add("residence_city");
     if (i === 0 && !p.phone.trim() && !p.email.trim()) m.add("phone");
     return m;
   }
@@ -289,6 +329,7 @@ function Form({ info, token, lang, tr, onDone }: { info: Info; token: string; la
                 </button>
               )}
             </div>
+            <ScanButton tr={tr} onScanned={(fields) => set(i, fields)} />
             <div className="two">
               {field(i, "first_name", "firstName", "text", { autoComplete: i === 0 ? "given-name" : "off" })}
               {field(i, "last_name_1", "lastName1", "text", { autoComplete: i === 0 ? "family-name" : "off" })}
@@ -336,7 +377,14 @@ function Form({ info, token, lang, tr, onDone }: { info: Info; token: string; la
             {minor && (
               <label className={bad(i, "relationship")}>
                 {tr("relationship")}
-                <input value={p.relationship} placeholder={tr("relPlaceholder")} onChange={(e) => set(i, { relationship: e.target.value })} />
+                <select value={p.relationship} onChange={(e) => set(i, { relationship: e.target.value })}>
+                  <option value="">{tr("choose")}</option>
+                  {relationships.map((r) => (
+                    <option key={r} value={r}>
+                      {tr(`rel_${r}`)}
+                    </option>
+                  ))}
+                </select>
               </label>
             )}
             {!minor && (
@@ -349,12 +397,25 @@ function Form({ info, token, lang, tr, onDone }: { info: Info; token: string; la
                 )}
                 {(i === 0 || !p.same) && (
                   <>
+                    {countrySelect(i, "residence_country", "country")}
                     {field(i, "residence_address", "address", "text", { autoComplete: i === 0 ? "street-address" : "off" })}
                     <div className="two">
-                      {field(i, "residence_city", "city")}
+                      {p.residence_country === "ESP" ? (
+                        <MunicipalityField
+                          className={bad(i, "residence_city")}
+                          label={tr("municipality")}
+                          hint={tr("municipalityHint")}
+                          none={tr("municipalityNone")}
+                          value={p.residence_city}
+                          chosen={!!p.residence_municipality_code}
+                          onType={(v) => set(i, { residence_city: v, residence_municipality_code: "" })}
+                          onChoose={(m) => set(i, { residence_city: m.name, residence_municipality_code: m.code })}
+                        />
+                      ) : (
+                        field(i, "residence_city", "city")
+                      )}
                       {field(i, "residence_postal_code", "postal")}
                     </div>
-                    {countrySelect(i, "residence_country", "country")}
                   </>
                 )}
               </>
@@ -425,5 +486,90 @@ function Form({ info, token, lang, tr, onDone }: { info: Info; token: string; la
         {busy ? tr("sending") : tr("submit")}
       </button>
     </form>
+  );
+}
+
+// Town picker for residents of Spain: suggestions from INE's list as the guest types; only a chosen entry counts.
+function MunicipalityField(props: {
+  className?: string;
+  label: string;
+  hint: string;
+  none: string;
+  value: string;
+  chosen: boolean;
+  onType: (v: string) => void;
+  onChoose: (m: Municipality) => void;
+}) {
+  const [list, setList] = useState<Municipality[] | null>(null);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    loadMunicipalities().then(setList, () => setList([]));
+  }, []);
+  const hits = list && open && !props.chosen ? searchMunicipalities(list, props.value) : [];
+  return (
+    <label className={`town-field ${props.className ?? ""}`}>
+      {props.label}
+      <input
+        value={props.value}
+        autoComplete="off"
+        onChange={(e) => {
+          props.onType(e.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 150)}
+        aria-autocomplete="list"
+      />
+      {hits.length > 0 && (
+        <ul className="town-list" role="listbox">
+          {hits.map((m) => (
+            <li key={m.code} role="option" aria-selected={false}>
+              <button
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  props.onChoose(m);
+                  setOpen(false);
+                }}
+              >
+                {m.name} <small>{m.province}</small>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {!props.chosen && (
+        <small className="muted">{list && open && props.value.trim().length >= 2 && hits.length === 0 ? props.none : props.hint}</small>
+      )}
+    </label>
+  );
+}
+
+// "Scan passport or ID card": a photo (camera on phones), read in the browser by lib/idscan, then the form is filled in.
+function ScanButton({ tr, onScanned }: { tr: (k: keyof typeof S) => string; onScanned: (f: Scanned) => void }) {
+  const [state, setState] = useState<"idle" | "busy" | "done" | "failed">("idle");
+  async function read(file: File | undefined) {
+    if (!file) return;
+    setState("busy");
+    try {
+      const { scanDocument } = await import("../lib/idscan");
+      const found = await scanDocument(file);
+      if (!found) return setState("failed");
+      onScanned(found.fields);
+      setState("done");
+    } catch {
+      setState("failed");
+    }
+  }
+  return (
+    <div className="scan-box">
+      <label className={`scan-btn${state === "busy" ? " busy" : ""}`}>
+        <input type="file" accept="image/*" capture="environment" disabled={state === "busy"} onChange={(e) => { read(e.target.files?.[0]); e.target.value = ""; }} />
+        {state === "busy" ? tr("scanning") : tr("scan")}
+      </label>
+      <small className={state === "failed" ? "error" : "muted"}>
+        {state === "done" ? tr("scanned") : state === "failed" ? tr("scanFailed") : tr("scanHint")}
+      </small>
+    </div>
   );
 }

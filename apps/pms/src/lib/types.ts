@@ -73,6 +73,11 @@ export interface ChecklistItem {
   sort: number;
 }
 
+// SES.Hospedajes's payment codes: cash, card, payment platform (Airbnb…), bank transfer, mobile, gift card,
+// paid at the property, other.
+export const paymentMethods = ["TRANS", "TARJT", "PLATF", "EFECT", "MOVIL", "DESTI", "TREG", "OTRO"] as const;
+export type PaymentMethod = (typeof paymentMethods)[number];
+
 export interface Reservation {
   id: string;
   unit_id: string;
@@ -85,6 +90,8 @@ export interface Reservation {
   adults: number;
   children: number;
   total_amount: number | null;
+  // How the stay was paid, in SES.Hospedajes's codes; null = work it out (Airbnb → PLATF).
+  payment_method: PaymentMethod | null;
   title: string;
   notes: string;
   updated_at: string;

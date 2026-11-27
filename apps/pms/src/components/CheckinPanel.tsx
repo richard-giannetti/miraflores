@@ -4,6 +4,9 @@ import { supabase } from "../lib/supabase";
 import { format } from "../lib/dates";
 import { locale, t, type Lang } from "../lib/i18n";
 import { checkinUrl, countryName, type Checkin, type Traveller } from "../lib/checkin";
+
+// The traveller sheet is in Spanish, like SES.Hospedajes.
+const relLabel: Record<string, string> = { child: "Hijo/a", grandchild: "Nieto/a", sibling: "Hermano/a", nephew_niece: "Sobrino/a", ward: "Tutelado/a (tutor legal)", other: "Otro" };
 import { Icon } from "./Icon";
 
 interface Props {
@@ -137,11 +140,12 @@ function Registration({ lang, checkin, villa, onClose, onChanged }: { lang: Lang
       ["Número de soporte", p.doc_support_number],
       ["Fecha de expedición", p.doc_issue_date ? format(p.doc_issue_date, "es-ES", { day: "2-digit", month: "2-digit", year: "numeric" }) : ""],
       ["Dirección", p.residence_address],
-      ["Localidad", [p.residence_postal_code, p.residence_city].filter(Boolean).join(" ")],
+      ["Localidad", [p.residence_postal_code, p.residence_city, p.residence_municipality_code && `(INE ${p.residence_municipality_code})`].filter(Boolean).join(" ")],
       ["País de residencia", p.residence_country ? `${countryName(p.residence_country, "es-ES")} (${p.residence_country})` : ""],
       ["Teléfono", p.phone],
       ["Email", p.email],
-      ["Parentesco", p.relationship],
+      // Older check-ins hold free text; newer ones one of `relationships`.
+      ["Parentesco con el viajero 1", relLabel[p.relationship] ?? p.relationship],
     ].filter(([, v]) => v) as [string, string][];
 
   // A plain printable sheet, to copy into SES.Hospedajes or keep on file.
