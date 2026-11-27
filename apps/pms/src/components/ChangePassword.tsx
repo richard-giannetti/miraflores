@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { supabase } from "../lib/supabase";
+import { signOut, supabase } from "../lib/supabase";
 import { t, type Lang } from "../lib/i18n";
 
 // After signing in with a temporary password from an owner, the person picks their own.
@@ -37,7 +37,7 @@ export function ChangePassword({ lang, onDone }: { lang: Lang; onDone: () => voi
         </label>
         {error && <p className="error">{error}</p>}
         <button className="primary big" disabled={busy}>{t(lang, "continue")}</button>
-        <button type="button" className="link" onClick={() => supabase.auth.signOut()}>{t(lang, "signOut")}</button>
+        <button type="button" className="link" onClick={signOut}>{t(lang, "signOut")}</button>
       </form>
     </div>
   );

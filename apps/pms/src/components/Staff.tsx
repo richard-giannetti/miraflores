@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { supabase } from "../lib/supabase";
+import { sessionEnded, supabase } from "../lib/supabase";
 import { t, type Key, type Lang } from "../lib/i18n";
 import { load, save } from "../lib/cache";
 import { STAFF_FIELDS } from "../lib/staff";
@@ -125,6 +125,7 @@ function Team({ lang, profile, staff }: { lang: Lang; profile: Profile; staff: S
 async function invoke(lang: Lang, body: Record<string, unknown>): Promise<string | null> {
   const { error } = await supabase.functions.invoke("staff-admin", { body });
   if (!error) return null;
+  if (await sessionEnded()) return null;
   let code = error.message;
   try {
     code = (await (error as { context?: Response }).context?.json())?.error ?? code;

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { sessionEnded, supabase } from "../lib/supabase";
 import { format } from "../lib/dates";
 import { locale, t, type Lang } from "../lib/i18n";
 import type { Profile } from "../lib/types";
@@ -94,7 +94,7 @@ export function AirbnbSync({ lang, profile }: { lang: Lang; profile: Profile }) 
     setError(null);
     const { error } = await supabase.functions.invoke("ical-sync", { body: unitId ? { unit_id: unitId } : {} });
     setBusy(null);
-    if (error) setError(`${t(lang, "syncFailed")} ${error.message}`);
+    if (error && !(await sessionEnded())) setError(`${t(lang, "syncFailed")} ${error.message}`);
     refreshRuns();
   }
 
