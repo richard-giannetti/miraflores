@@ -1,0 +1,163 @@
+---
+// "Book direct": availability and price from the PMS (the same calculation the family uses), then a booking
+// request the family accepts in the PMS. Hidden unless the villa is open to direct booking there.
+// Nothing is charged here; payment comes later (Stripe).
+import type { Villa } from "../data/villas";
+import { t, type Lang } from "../i18n";
+
+interface Props { villa: Villa; lang: Lang }
+const { villa, lang } = Astro.props;
+const ui = t(lang).bookDirect;
+---
+<div class="book-direct" hidden data-villa={villa.slug} data-lang={lang} data-ui={JSON.stringify(ui)}>
+  <h3>{ui.title}</h3>
+  <p class="muted">{ui.lead}</p>
+  <form class="bd-search">
+    <label>{ui.arrival}<input type="date" name="check_in" required /></label>
+    <label>{ui.departure}<input type="date" name="check_out" required /></label>
+    <label>{ui.adults}<input type="number" name="adults" min="1" max="30" value="2" required /></label>
+    <label>{ui.children}<input type="number" name="children" min="0" max="30" value="0" /></label>
+    <label class="wide">{ui.promo}<input name="promo" autocomplete="off" /></label>
+    <button class="btn">{ui.check}</button>
+  </form>
+  <p class="bd-message" role="status" aria-live="polite"></p>
+  <div class="bd-result" hidden>
+    <table class="bd-lines"></table>
+    <fieldset class="bd-options"><legend>{ui.choose}</legend></fieldset>
+    <form class="bd-request">
+      <label>{ui.name}<input name="name" autocomplete="name" required minlength="2" /></label>
+      <label>{ui.email}<input type="email" name="email" autocomplete="email" required /></label>
+      <label>{ui.phone}<input type="tel" name="phone" autocomplete="tel" /></label>
+      <label class="wide">{ui.message}<textarea name="message" rows="3" maxlength="2000"></textarea></label>
+      <p class="muted wide">{ui.noCharge}</p>
+      <button class="btn">{ui.send}</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const API = "https://lkbrydeqxnspsnpvimil.supabase.co/rest/v1/rpc/";
+  // Public by design: the database only lets this key read prices and send requests.
+  const KEY = "sb_publishable_oAAH6Hy8Xg2AGtNJfJfXiA_cW_SeP2y";
+  const rpc = async (fn: string, body: object) => {
+    const res = await fetch(API + fn, { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error(String(res.status));
+    return res.json();
+  };
+  const iso = (d: Date) => d.toISOString().slice(0, 10);
+  const addDays = (s: string, n: number) => { const d = new Date(`${s}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return iso(d); };
+
+  for (const box of document.querySelectorAll<HTMLElement>(".book-direct")) {
+    const villa = box.dataset.villa!;
+    const lang = box.dataset.lang as "en" | "es";
+    const ui = JSON.parse(box.dataset.ui!);
+    const money = (n: number) => n.toLocaleString(lang === "es" ? "es-ES" : "en-GB", { style: "currency", currency: "EUR" });
+    const search = box.querySelector<HTMLFormElement>(".bd-search")!;
+    const request = box.querySelector<HTMLFormElement>(".bd-request")!;
+    const msg = box.querySelector<HTMLElement>(".bd-message")!;
+    const result = box.querySelector<HTMLElement>(".bd-result")!;
+    const lines = box.querySelector<HTMLTableElement>(".bd-lines")!;
+    const options = box.querySelector<HTMLFieldSetElement>(".bd-options")!;
+    const tomorrow = addDays(iso(new Date()), 1);
+    const ci = search.elements.namedItem("check_in") as HTMLInputElement;
+    const co = search.elements.namedItem("check_out") as HTMLInputElement;
+    ci.min = tomorrow;
+    ci.addEventListener("change", () => { co.min = addDays(ci.value, 1); if (!co.value || co.value <= ci.value) co.value = addDays(ci.value, 3); });
+    let asked: Record<string, unknown> | null = null;
+
+    // Show the form only for villas the family has opened to direct booking.
+    rpc("quote", { p_villa: villa, p_check_in: addDays(tomorrow, 60), p_check_out: addDays(tomorrow, 63), p_guests: 2 })
+      .then((q) => { if (q.reason !== "not_bookable" && q.reason !== "unknown_villa") box.hidden = false; })
+      .catch(() => {});
+
+    const reason = (q: { reason: string; min_nights?: number; max_guests?: number; min_advance_days?: number }) =>
+      (ui.reasons[q.reason] ?? ui.error).replace("{n}", String(q.min_nights ?? (q.reason === "too_soon" ? q.min_advance_days : q.max_guests) ?? ""));
+
+    search.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = new FormData(search);
+      const adults = Number(f.get("adults")) || 1;
+      const children = Number(f.get("children")) || 0;
+      asked = { p_villa: villa, p_check_in: f.get("check_in"), p_check_out: f.get("check_out"), p_adults: adults, p_children: children, p_promo: String(f.get("promo") ?? "").trim() || null };
+      result.hidden = true;
+      msg.textContent = ui.checking;
+      try {
+        const q = await rpc("quote", { p_villa: villa, p_check_in: asked.p_check_in, p_check_out: asked.p_check_out, p_guests: adults + children, p_promo: asked.p_promo });
+        if (!q.available) { msg.textContent = reason(q); return; }
+        msg.textContent = q.promo ? `${ui.promoOk}: ${q.promo.code} (−${Number(q.promo.discount_pct)} %)` : q.promo_invalid ? ui.promoBad : "";
+        const row = (label: string, value: string) => `<tr><th>${label}</th><td>${value}</td></tr>`;
+        lines.innerHTML =
+          row(`${q.nights} ${ui.nights}`, money(q.accommodation)) +
+          (q.gap ? row(ui.gap, `−${Number(q.gap_discount_pct)} %`) : "") +
+          (q.extra_guests > 0 ? row(ui.extraGuests, money(q.extra_guests)) : "") +
+          (q.cleaning > 0 ? row(ui.cleaning, money(q.cleaning)) : "");
+        options.querySelectorAll("label").forEach((l) => l.remove());
+        q.options.forEach((o: { plan: string; kind: string; name: Record<string, string>; discount_pct: number; refundable: boolean; total: number }, i: number) => {
+          const label = document.createElement("label");
+          label.className = "bd-option";
+          const name = o.kind === "standard" ? ui.standard : (o.name[lang] || o.name.en);
+          label.innerHTML = `<input type="radio" name="plan" value="${o.plan}" ${i === 0 ? "checked" : ""}><span><strong></strong><small></small></span><b>${money(o.total)}</b>`;
+          label.querySelector("strong")!.textContent = name + (o.discount_pct > 0 ? ` (−${Number(o.discount_pct)} %)` : "");
+          label.querySelector("small")!.textContent = `${o.refundable ? ui.flexible : ui.noRefund} · ${ui.total}`;
+          options.append(label);
+        });
+        result.hidden = false;
+      } catch {
+        msg.textContent = ui.error;
+      }
+    });
+
+    request.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!asked) return;
+      const f = new FormData(request);
+      const plan = (options.querySelector("input:checked") as HTMLInputElement | null)?.value ?? "standard";
+      const button = request.querySelector("button")!;
+      button.disabled = true;
+      button.textContent = ui.sending;
+      try {
+        const r = await rpc("request_booking", {
+          ...asked, p_plan: plan, p_name: f.get("name"), p_email: f.get("email"), p_phone: f.get("phone") ?? "", p_message: f.get("message") ?? "", p_language: lang,
+        });
+        if (r.ok) { result.hidden = true; search.hidden = true; msg.textContent = ui.sent; msg.classList.add("ok"); }
+        else msg.textContent = ui.reasons[r.reason] ? reason(r) : ui.error;
+      } catch {
+        msg.textContent = ui.error;
+      }
+      button.disabled = false;
+      button.textContent = ui.send;
+    });
+  }
+</script>
+
+<!-- Global: the price lines and rate options are created by the script, so scoped styles wouldn't reach them. -->
+<style is:global>
+  .book-direct { text-align: left; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; margin: 32px auto 0; max-width: 720px; }
+  .book-direct h3 { font-family: var(--serif); font-size: 1.8rem; margin: 0 0 4px; }
+  .book-direct .muted { color: var(--muted); margin: 0 0 18px; }
+  .book-direct :is(.bd-search, .bd-request) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: end; }
+  .book-direct .bd-request { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 18px; }
+  .book-direct label { display: grid; gap: 4px; font-size: .85rem; font-weight: 600; color: var(--ink); }
+  .book-direct .wide { grid-column: 1 / -1; }
+  .book-direct input, .book-direct textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--cream); width: 100%; box-sizing: border-box; }
+  .book-direct .bd-search .btn { grid-column: 1 / -1; justify-self: start; }
+  .book-direct .bd-request .btn { grid-column: 1 / -1; justify-self: start; }
+  .book-direct .bd-message { min-height: 1.4em; margin: 14px 0 0; color: var(--olive-dark); font-weight: 600; }
+  .book-direct .bd-message.ok { color: var(--sea); }
+  .book-direct .bd-lines { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  .book-direct .bd-lines th { text-align: left; font-weight: 500; padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .book-direct .bd-lines td { text-align: right; padding: 6px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  .book-direct .bd-options { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .book-direct .bd-options legend { font-weight: 600; margin-bottom: 8px; }
+  .book-direct .bd-option { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; font-weight: 400; }
+  .book-direct .bd-option:has(input:checked) { border-color: var(--olive); background: var(--cream); }
+  .book-direct .bd-option input { width: auto; }
+  .book-direct .bd-option span { display: grid; gap: 2px; }
+  .book-direct .bd-option small { color: var(--muted); }
+  .book-direct .bd-option b { font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+  @media (max-width: 640px) {
+    .book-direct { padding: 20px; }
+    .book-direct :is(.bd-search, .bd-request) { grid-template-columns: 1fr 1fr; }
+    .book-direct .bd-request label:not(.wide) { grid-column: 1 / -1; }
+  }
+</style>

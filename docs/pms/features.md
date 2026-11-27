@@ -80,7 +80,8 @@ money) hangs off a reservation on it, so it's built first.
   Colours show status (option, confirmed, checked in, checked out, cancelled) and source.
 - Reservations from every source in one place. In Wave 1 all of them are entered in the PMS: phone,
   email, repeat guests, and **Airbnb bookings typed in by hand**. Wave 3 adds automatic Airbnb sync,
-  the website's direct bookings and, later, Booking.com.
+  and the website's direct bookings. **Only two channels: direct and Airbnb.** Booking.com is out for now
+  (decided 2026-11-27).
 - **Blocks:** owner stays, maintenance, "hold for friends".
 - **No double bookings**, enforced by the database itself rather than by careful clicking.
 - **Airbnb sync via iCal** (Wave 3), both directions. The PMS imports each listing's Airbnb calendar every few
@@ -154,12 +155,27 @@ model to follow: no app to download, one link per reservation, on the phone.
 - Airbnb guests: Airbnb's own scheduled messages stay in use (the user already set them up),
   because writing into Airbnb's inbox needs the partner API. The PMS gives the text and the check-in link
   to paste in.
+- **One inbox per guest** for email and (later) WhatsApp: every message about a reservation in one thread,
+  linked to the booking. Airbnb messages stay in Airbnb (partner API, see above).
+- **AI-drafted replies** in the guest's language, written from the villa's own data (house rules, Wi-Fi,
+  check-in times, local tips) and the reservation. Three modes: off, draft for a person to approve, or send
+  automatically. Default is draft-and-approve. Door codes and ID data are never put in a draft.
 
 ### 8. Money · Wave 2
 
 - Income per reservation: Airbnb payout (imported from Airbnb's earnings CSV), direct payments,
   extras (late checkout, private chef, airport transfer).
 - Expenses per villa: cleaning, laundry, utilities, repairs, supplies, commissions.
+- **Extras as scheduled services:** an extra has a date and time on the reservation (private chef Tuesday
+  20:00, airport transfer Thursday 10:30). It appears on the Today screen, creates a task for whoever
+  delivers it, and goes on the invoice, so what's sold is also what gets done and billed. Extras can be
+  edited in bulk across several reservations (groups, Wave 4).
+- **Quotes and payment links:** for phone, email and repeat-guest enquiries, the PMS builds a priced quote
+  (dates, guests, nights, cleaning, extras, VAT) and emails it with a Stripe payment link. Paying the deposit
+  turns the quote into a confirmed reservation and issues the proforma or deposit invoice (module 9).
+  A quote expires after a set number of days and holds the dates only as an *option* until then.
+  Payment links also cover balances and extras on existing bookings. This brings card payments forward
+  from Wave 3 without waiting for the website's booking flow.
 - Monthly and yearly results per villa; export for the accountant (gestor).
 - Airbnb's commission invoices recorded as expenses, with their VAT treatment (see legal point 6).
 
@@ -193,6 +209,12 @@ numbers and reports it. The PMS stores the resulting PDF and QR. The provider ge
 ### 10. Rates and direct booking · Wave 3
 
 - Seasonal rates, weekend rates, minimum stay, extra-guest fee, cleaning fee, discounts and promo codes.
+- **Rate types with booking windows** that switch on and off by themselves: early-bird (booked N+ days
+  ahead), last-minute (within N days), non-refundable (cheaper, no refund).
+- **Gap-night rules:** when a short gap is left between two bookings (say 2 nights), lower the minimum stay
+  for those dates and optionally the price, so the gap can still be sold.
+- Competitor price tracking isn't worth building for two villas. If dynamic pricing is wanted later,
+  connect a pricing tool such as PriceLabs instead.
 - Availability and price API for the website (`apps/web`), with a "Book direct" flow.
 - Payments with Stripe: deposit at booking, balance before arrival, refundable damage-deposit hold.
 - Cancellation policies and automatic refunds.
@@ -202,6 +224,9 @@ numbers and reports it. The PMS stores the resulting PDF and QR. The provider ge
 
 - **Today:** arrivals and departures, who has checked in online, cleaning status, open issues,
   messages to send. This is the parents' home screen.
+- **Next 3 days** on the same screen (requested by the father, 2026-11-26): upcoming arrivals,
+  departures and cleanings, so they can prepare ahead.
+- Scheduled extras (chef, transfers, pool heating) for today and the next 3 days, with who's delivering them.
 - Occupancy, average nightly rate, revenue per available night, revenue by channel (Airbnb vs direct),
   booking lead time, nationality mix (from registrations).
 
@@ -210,11 +235,15 @@ numbers and reports it. The PMS stores the resulting PDF and QR. The provider ge
 Not built now, but the data model leaves room for it:
 - Room types vs physical rooms, rate plans, room assignment.
 - Front-desk screen, guest folio (charges during the stay), group bookings.
-- More channels through a certified channel manager, if Airbnb/Booking volume justifies it.
+- More channels (Booking.com…) through a certified channel manager, only if the family decides to sell there
+  later. For now it's direct and Airbnb only.
 
 ### Across all modules
 
 - Roles and permissions (owner / manager / staff), and a record of who changed what.
+- **One login per person, with a profile by department** (requested by the father, 2026-11-26):
+  reception, kitchen, restaurant, pool, spa. Each profile opens on the screens that department needs
+  and hides the rest; owner and manager still see everything. Planned with the staff module (6).
 - Works on a phone; installed on the home screen; Spanish and English.
 - Nightly backups kept outside the main provider (see ADR 0002).
 - **Works when the internet is down** (requested by the father). Built in two steps:
@@ -229,13 +258,13 @@ Not built now, but the data model leaves room for it:
 
 Order agreed with the father (2026-11-25):
 - **Start with internal management**, with the calendar at the centre.
-- **Connections to the platforms** (Airbnb sync, Booking, website bookings) come afterwards.
+- **Connections to the platforms** (Airbnb sync, website bookings) come afterwards.
 
 | Wave | Goal | Modules |
 | --- | --- | --- |
 | **1** | **The calendar and day-to-day running** | 1 properties and rooms, 2 calendar and reservations (entered in the PMS), 3 guests, cleaning part of 5, Today screen (11) |
-| **2** | **The rest of internal management** | 9 invoicing first, 4 online check-in and SES.Hospedajes, maintenance (5), 6 staff and time clock, 7 messages, 8 money, reports (11) |
-| **3** | **Connect to the outside** | Airbnb sync (2), 10 rates and direct booking on the website with Stripe, Booking.com later |
+| **2** | **The rest of internal management** | 9 invoicing first, 4 online check-in and SES.Hospedajes, maintenance (5), 6 staff and time clock with per-user logins and department profiles, 7 messages (with inbox and AI-drafted replies), 8 money (with scheduled extras, quotes and payment links), reports (11) |
+| **3** | **Connect to the outside** | Airbnb sync (2), 10 rates and direct booking on the website with Stripe. Direct and Airbnb only: no Booking.com for now |
 | **4** | **Hotel extras and full offline** | 12 front desk, guest bill during the stay, groups; editing without internet |
 
 - **Invoicing has a deadline:** 10% VAT applies from 1 December 2026, and VeriFactu from 1 January 2027
@@ -264,6 +293,18 @@ that the father likes. Ideas taken from it so far:
 - The guest-facing online check-in: link, ID scan, signature, invoice details, door code.
 - VeriFactu invoicing with exports for the accountant.
 - Housekeeping checklists and the "Today" planning view.
+
+**Amenitiz** (a Barcelona all-in-one platform for independent hotels) was reviewed on 2026-11-26.
+Gaps taken from it:
+- Quotes with payment links, so enquiries become paid reservations (module 8).
+- AI-drafted guest replies, and one inbox per guest (module 7).
+- Rate types with automatic booking windows; gap-night rules added on top (module 10).
+- Extras as dated services that show up for staff (modules 8 and 11).
+
+Not taken: its multi-site channel manager, ad campaigns and Google Hotel Ads, website-builder service and
+restaurant POS. Those suit hotels selling on many channels, not two villas with their own site.
+Amenitiz relies on Chekin for check-in and doesn't do SES.Hospedajes itself, staff time clocks or offline
+use, which are the areas this PMS covers that it doesn't.
 
 ## Questions for the parents
 
@@ -299,6 +340,9 @@ that the father likes. Ideas taken from it so far:
 - Hotelgest: [home](https://www.hotelgest.com/), [online check-in](https://www.hotelgest.com/recepcion-autonoma),
   [accounting and invoicing](https://www.hotelgest.com/contabilidad), [SES.Hospedajes](https://www.hotelgest.com/ses-hospedajes),
   [plans](https://www.hotelgest.com/planes)
+- Amenitiz: [pricing and plans](https://www.amenitiz.com/en/pricing/), [product overview (llms.txt)](https://amenitiz.com/llms.txt),
+  [CEO product update (2026)](https://amenitiz.com/en/blog/product-updates-with-the-ceo-where-independent-hospitality-is-heading-and-whats-new-at-amenitiz),
+  [Capterra reviews](https://www.capterra.com/p/183836/Amenitiz/)
 - VeriFactu dates: [Infoautónomos](https://www.infoautonomos.com/blog/verifactu-cuando-es-obligatorio-a-quien-afecta/),
   [Webpsilon (postponement)](https://www.webpsilon.com/blog/verifactu-que-es-cuando-entra-en-vigor-y-a-quien-afecta/),
   [B2Brouter](https://www.b2brouter.net/es/sistema-verifactu/)

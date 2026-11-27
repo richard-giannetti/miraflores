@@ -1,6 +1,7 @@
 ---
 import type { Villa } from "../data/villas";
 import { t, paths, type Lang } from "../i18n";
+import BookDirect from "./BookDirect.astro";
 
 interface Props { villa: Villa; lang: Lang }
 const { villa, lang } = Astro.props;
@@ -15,6 +16,7 @@ const ui = t(lang);
       <a class="btn" href={villa.booking.airbnb} target="_blank" rel="noopener">{ui.bookAirbnb}</a>
       <a class="btn ghost" href={paths.contact[lang]}>{ui.contactUs}</a>
     </div>
+    <BookDirect villa={villa} lang={lang} />
   </div>
 </section>
 

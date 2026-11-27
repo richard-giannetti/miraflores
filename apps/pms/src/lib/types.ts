@@ -6,7 +6,8 @@ export type ReservationStatus = "option" | "confirmed" | "checked_in" | "checked
 export type ReservationSource = "direct" | "airbnb" | "booking" | "phone" | "email" | "other";
 
 export const statuses: ReservationStatus[] = ["option", "confirmed", "checked_in", "checked_out", "cancelled"];
-export const sources: ReservationSource[] = ["airbnb", "direct", "phone", "email", "booking", "other"];
+// Channels offered when entering a booking: direct and Airbnb only (Booking.com is out for now).
+export const sources: ReservationSource[] = ["airbnb", "direct", "phone", "email", "other"];
 
 export interface Profile {
   id: string;
