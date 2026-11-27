@@ -17,10 +17,12 @@ export interface Template {
   subject: Multi;
   body: Multi;
   include_airbnb: boolean;
+  // Sent by the PMS itself by email on its day (Settings → Automatic emails), instead of by hand.
+  auto_email: boolean;
   active: boolean;
   sort: number;
 }
-export const TEMPLATE_FIELDS = "id, name, timing, offset_days, subject, body, include_airbnb, active, sort";
+export const TEMPLATE_FIELDS = "id, name, timing, offset_days, subject, body, include_airbnb, auto_email, active, sort";
 
 // What a message needs to know about a booking.
 export interface MsgBooking {
@@ -59,6 +61,9 @@ export function isDue(tpl: Template, r: MsgBooking, today: string) {
 }
 
 // The guest's language when known (es/en/fr), else English.
+// A guest email address the PMS can write to.
+export const validEmail = (e: string | null | undefined) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test((e ?? "").trim());
+
 export function guestLang(r: MsgBooking): "es" | "en" | "fr" {
   const l = (r.guest?.language ?? "").trim().toLowerCase();
   if (/^(es|spa|espa)/.test(l)) return "es";

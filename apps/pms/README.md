@@ -45,8 +45,8 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   rate, revenue per available night, channels, lead time, nationalities, monthly result.
 - **Guest messages**: templates in EN/ES/FR with placeholders and a moment (days before arrival…), edited in
   Settings. Today lists the ones due; a tap opens WhatsApp or email with the text ready, or copies it, and
-  records the send. Airbnb guests are skipped unless a template says otherwise. No email provider yet: sending
-  goes through the family's own WhatsApp and mail app.
+  records the send. Airbnb guests are skipped unless a template says otherwise. A template can also be sent
+  automatically by email (see Automatic emails below).
 - On phones, the tab bar shows four tabs and "More" for the rest.
 
 ## Wave 3: connecting to the outside
@@ -82,6 +82,13 @@ The gear opens **Settings**, one menu of sections (requested by the father, 2026
   (10 % food, 21 % alcohol), the 14 EU allergens and an "available" switch. A catalogue for now; the hotel's guest bill
   and restaurant screens will use it.
 - **Team** (leads to the Team screen), **Guest information**, **Messages**, **Airbnb sync**.
+- **Automatic emails** (owners and managers), through Resend (`RESEND_API_KEY` secret, domain verified in Resend):
+  a master switch (off by default); guest templates ticked "Send by email automatically" go out on their day between
+  9:00 and 21:00 Madrid time; website requests get an acknowledgement; the family gets an email for each new request,
+  Airbnb booking and Airbnb conflict. Everything goes through one queue, `public.emails` (also the log shown in
+  Settings and in each booking): rows come from database triggers and a 5-minute pg_cron job, the `email-send`
+  Edge Function renders and sends them (Vault secret `email_send_secret`), retries up to 5 times, never twice.
+  Replies go to the company email unless another address is set.
 
 ## Design system
 

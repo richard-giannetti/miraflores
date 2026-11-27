@@ -6,6 +6,7 @@ import type { Multi } from "../lib/checkin";
 import { Icon, type IconName } from "./Icon";
 import { PropertiesSettings } from "./Properties";
 import { MenuSettings } from "./Menu";
+import { EmailSettingsPanel } from "./Emails";
 import { TemplatesEditor } from "./Messages";
 import { AirbnbSync } from "./AirbnbSync";
 import type { Profile } from "../lib/types";
@@ -22,9 +23,9 @@ interface Item {
 const textLangs = ["en", "es", "fr"] as const;
 const kinds: Kind[] = ["wifi", "directions", "info", "rules"];
 
-const sections = ["properties", "menu", "team", "guide", "messages", "airbnb"] as const;
+const sections = ["properties", "menu", "team", "guide", "messages", "emails", "airbnb"] as const;
 type Section = (typeof sections)[number];
-const sectionIcon: Record<Section, IconName> = { properties: "bed", menu: "tag", team: "team", guide: "message", messages: "phone", airbnb: "repeat" };
+const sectionIcon: Record<Section, IconName> = { properties: "bed", menu: "tag", team: "team", guide: "message", messages: "phone", emails: "mail", airbnb: "repeat" };
 
 // The admin's settings: one menu of sections (System Settings style). Desktop shows the list and the open
 // section side by side; phones show the list, then the section with a way back.
@@ -62,6 +63,7 @@ export function Settings({ lang, villas, profile, section }: { lang: Lang; villa
           {current === "menu" && <MenuSettings lang={lang} villas={villas} />}
           {current === "guide" && <GuideSettings lang={lang} villas={villas} />}
           {current === "messages" && <TemplatesEditor lang={lang} />}
+          {current === "emails" && <EmailSettingsPanel lang={lang} />}
           {current === "airbnb" && <AirbnbSync lang={lang} profile={profile} />}
         </div>
       </div>
