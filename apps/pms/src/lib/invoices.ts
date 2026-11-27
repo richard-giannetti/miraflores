@@ -24,6 +24,9 @@ export interface Company {
   phone: string;
   default_vat_rate: number;
   invoice_footer: string;
+  // Quotes: shown to guests once they accept; and how long a quote holds the dates.
+  bank_details: string;
+  quote_valid_days: number;
 }
 
 export interface Invoice {

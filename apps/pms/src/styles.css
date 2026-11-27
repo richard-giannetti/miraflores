@@ -761,3 +761,16 @@ table.data tr.is-today { background: var(--today-tint); }
 .scan-btn input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .scan-btn.busy { opacity: .6; cursor: progress; }
 .scan-box small.error { color: var(--danger-text); font-weight: 400; }
+
+/* Quotes: the guest's quote page */
+.quote-table { width: 100%; border-collapse: collapse; margin: var(--space-8) 0; font: var(--text-body); }
+.quote-table th { text-align: left; font-weight: 400; color: var(--label-secondary); padding: var(--space-6) var(--space-8) var(--space-6) 0; }
+.quote-table td { text-align: right; font-variant-numeric: tabular-nums; padding: var(--space-6) 0; white-space: nowrap; }
+.quote-table tr + tr { border-top: 0.5px solid var(--separator); }
+.quote-table tr.total th, .quote-table tr.total td { color: var(--label); font: var(--text-headline); }
+.guest-card .bank { background: var(--fill-secondary); border-radius: var(--radius-control); padding: var(--space-12); font-family: var(--font-mono); font-size: 14px; user-select: all; }
+.guest-card .decline { display: block; margin: var(--space-12) auto 0; }
+.guest-card .decline.danger { color: var(--danger-text); }
+.guest-dates small { color: var(--label-secondary); font: var(--text-footnote); }
+.guest-foot { text-align: center; margin: var(--space-16) 0; font: var(--text-footnote); }
+.quotes-panel h2 .push { margin-left: auto; }

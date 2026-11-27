@@ -51,6 +51,32 @@ const T = {
     en: "Airbnb has a booking on dates already taken in the PMS. It couldn't be added: please check it as soon as possible.\n\n{list}\n\nAirbnb sync: {link}",
     fr: "Airbnb a une réservation sur des dates déjà occupées dans le PMS. Elle n'a pas pu être ajoutée : vérifiez au plus vite.\n\n{list}\n\nSynchronisation Airbnb : {link}",
   },
+  quoteSubject: { es: "Tu presupuesto para {villa}", en: "Your quote for {villa}", fr: "Votre devis pour {villa}" },
+  quoteBody: {
+    es: "Hola {name}:\n\n{message}\n\nAquí tienes nuestro presupuesto para {villa}, del {arrival} al {departure} ({nights} noches, {guests} personas): {total}.\n\nVe el detalle y acéptalo aquí (válido hasta el {valid}; mientras tanto te reservamos las fechas):\n{link}\n\nUn saludo,\nMiraflores Costa Tropical",
+    en: "Hi {name},\n\n{message}\n\nHere is our quote for {villa}, from {arrival} to {departure} ({nights} nights, {guests} guests): {total}.\n\nSee the details and accept it here (valid until {valid}; we're holding the dates for you until then):\n{link}\n\nKind regards,\nMiraflores Costa Tropical",
+    fr: "Bonjour {name},\n\n{message}\n\nVoici notre devis pour {villa}, du {arrival} au {departure} ({nights} nuits, {guests} personnes) : {total}.\n\nConsultez le détail et acceptez-le ici (valable jusqu'au {valid} ; nous vous gardons les dates d'ici là) :\n{link}\n\nBien cordialement,\nMiraflores Costa Tropical",
+  },
+  acceptedSubject: { es: "Cómo confirmar tu reserva en {villa}", en: "How to confirm your booking at {villa}", fr: "Comment confirmer votre réservation à {villa}" },
+  acceptedBody: {
+    es: "¡Gracias, {name}!\n\nPara confirmar tu estancia en {villa} ({arrival} → {departure}), haz una transferencia del depósito de {deposit}:\n\n{bank}\nConcepto: {ref}\n\nEl resto ({balance}) se paga antes del {balance_due}. Te confirmaremos la reserva en cuanto llegue la transferencia.\n\nTu presupuesto: {link}",
+    en: "Thank you, {name}!\n\nTo confirm your stay at {villa} ({arrival} → {departure}), please make a bank transfer for the deposit of {deposit}:\n\n{bank}\nReference: {ref}\n\nThe rest ({balance}) is due by {balance_due}. We'll confirm the booking as soon as the transfer arrives.\n\nYour quote: {link}",
+    fr: "Merci, {name} !\n\nPour confirmer votre séjour à {villa} ({arrival} → {departure}), merci de faire un virement de l'acompte de {deposit} :\n\n{bank}\nRéférence : {ref}\n\nLe solde ({balance}) est à régler avant le {balance_due}. Nous confirmerons la réservation dès réception du virement.\n\nVotre devis : {link}",
+  },
+  quoteAnswerSubject: { es: "Presupuesto {answer} · {villa} · {arrival}", en: "Quote {answer} · {villa} · {arrival}", fr: "Devis {answer} · {villa} · {arrival}" },
+  quoteAnswerBody: {
+    es: "{name} ha {answer2} el presupuesto.\n\n{villa}: {arrival} → {departure} ({nights} noches), {guests} personas\nTotal: {total} · depósito: {deposit}\n\n{next}\n\nCalendario: {cal}",
+    en: "{name} has {answer2} the quote.\n\n{villa}: {arrival} → {departure} ({nights} nights), {guests} guests\nTotal: {total} · deposit: {deposit}\n\n{next}\n\nCalendar: {cal}",
+    fr: "{name} a {answer2} le devis.\n\n{villa} : {arrival} → {departure} ({nights} nuits), {guests} personnes\nTotal : {total} · acompte : {deposit}\n\n{next}\n\nCalendrier : {cal}",
+  },
+  answerAccepted: { es: "aceptado", en: "accepted", fr: "accepté" },
+  answerDeclined: { es: "rechazado", en: "declined", fr: "refusé" },
+  nextAccepted: {
+    es: "Se le han enviado los datos para la transferencia del depósito. Cuando llegue, confirma la reserva en el PMS (de opción a confirmada).",
+    en: "They've been sent the bank details for the deposit. When it arrives, confirm the booking in the PMS (option → confirmed).",
+    fr: "Les coordonnées bancaires pour l'acompte lui ont été envoyées. À réception, confirmez la réservation dans le PMS (option → confirmée).",
+  },
+  nextDeclined: { es: "Las fechas vuelven a estar libres.", en: "The dates are free again.", fr: "Les dates sont de nouveau libres." },
   testSubject: { es: "Email de prueba · Miraflores PMS", en: "Test email · Miraflores PMS", fr: "E-mail de test · Miraflores PMS" },
   testBody: {
     es: "Si lees esto, los emails automáticos del PMS funcionan.\n\nRemitente: {from}\nLas respuestas van a: {reply}",
@@ -79,13 +105,14 @@ ${paras}
 
 interface Email {
   id: string;
-  kind: "template" | "request_ack" | "notify_request" | "notify_airbnb" | "notify_conflict" | "test";
+  kind: "template" | "request_ack" | "notify_request" | "notify_airbnb" | "notify_conflict" | "test" | "quote" | "quote_accepted" | "notify_quote";
   to_address: string;
   language: L;
   reservation_id: string | null;
   template_id: string | null;
   request_id: string | null;
   unit_id: string | null;
+  quote_id: string | null;
   data: Record<string, unknown>;
 }
 interface Settings {
@@ -171,6 +198,56 @@ async function build(admin: SupabaseClient, e: Email, s: Settings & { replyDefau
       .join("\n");
     const v = { villa: u?.name ?? "", list, link: `${PMS}/#settings/airbnb` };
     return { subject: fill(T.conflictSubject[l], v), text: fill(T.conflictBody[l], v) };
+  }
+  if (e.kind === "quote" || e.kind === "quote_accepted" || e.kind === "notify_quote") {
+    const [{ data: q }, { data: co }] = await Promise.all([
+      admin
+        .from("quotes")
+        .select("token, status, total, deposit, message, valid_until, reservation:reservations(id, check_in, check_out, adults, children, guest:guests(first_name, last_name, email), unit:units(name, property:properties(pricing(balance_days_before))))")
+        .eq("id", e.quote_id)
+        .maybeSingle(),
+      admin.from("company_settings").select("bank_details").single(),
+    ]);
+    if (!q) return { skip: "quote not found" };
+    if (e.kind === "quote" && q.status !== "sent") return { skip: "quote no longer open" };
+    const r = q.reservation as unknown as {
+      id: string; check_in: string; check_out: string; adults: number; children: number;
+      guest: { first_name: string; last_name: string; email: string | null } | null;
+      unit: { name: string; property: { pricing: { balance_days_before: number } | { balance_days_before: number }[] | null } };
+    };
+    const pricing = r.unit.property.pricing;
+    const balanceDays = (Array.isArray(pricing) ? pricing[0] : pricing)?.balance_days_before ?? 30;
+    const due = new Date(Date.parse(`${r.check_in}T00:00:00Z`) - balanceDays * 86_400_000).toISOString().slice(0, 10);
+    const accepted = q.status === "accepted";
+    const v = {
+      name: e.kind === "notify_quote" ? [r.guest?.first_name, r.guest?.last_name].filter(Boolean).join(" ") : r.guest?.first_name ?? "",
+      villa: r.unit.name,
+      arrival: e.kind === "notify_quote" ? short(r.check_in, l) : day(r.check_in, l),
+      departure: e.kind === "notify_quote" ? short(r.check_out, l) : day(r.check_out, l),
+      nights: nights(r.check_in, r.check_out),
+      guests: String(r.adults + r.children),
+      total: money(q.total, l),
+      deposit: money(q.deposit, l),
+      balance: money(Number(q.total) - Number(q.deposit), l),
+      balance_due: day(due, l),
+      valid: new Intl.DateTimeFormat(locales[l], { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Madrid" }).format(new Date(q.valid_until)),
+      message: (q.message ?? "").trim(),
+      bank: (co?.bank_details ?? "").trim(),
+      ref: `MCT-${r.id.slice(0, 8).toUpperCase()}`,
+      link: `${PMS}/q/${q.token}`,
+      cal: `${PMS}/#calendar`,
+      answer: accepted ? T.answerAccepted[l] : T.answerDeclined[l],
+      answer2: accepted ? T.answerAccepted[l] : T.answerDeclined[l],
+      next: accepted ? T.nextAccepted[l] : T.nextDeclined[l],
+    };
+    // An empty personal message leaves no blank paragraph behind.
+    const tidy = (t: string) => t.replace(/\n{3,}/g, "\n\n");
+    if (e.kind === "quote") return { subject: fill(T.quoteSubject[l], v), text: tidy(fill(T.quoteBody[l], v)) };
+    if (e.kind === "quote_accepted") {
+      if (!v.bank) return { skip: "no bank details in Company details" };
+      return { subject: fill(T.acceptedSubject[l], v), text: tidy(fill(T.acceptedBody[l], v)) };
+    }
+    return { subject: fill(T.quoteAnswerSubject[l], v), text: tidy(fill(T.quoteAnswerBody[l], v)), replyTo: r.guest?.email ?? undefined };
   }
   return { skip: "unknown kind" };
 }

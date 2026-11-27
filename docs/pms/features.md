@@ -177,6 +177,8 @@ model to follow: no app to download, one link per reservation, on the phone.
   A quote expires after a set number of days and holds the dates only as an *option* until then.
   Payment links also cover balances and extras on existing bookings. This brings card payments forward
   from Wave 3 without waiting for the website's booking flow.
+  *Built 2026-11-28 with bank transfer for the deposit (the guest accepts on the quote page, then sees the bank
+  details); the card payment link is added when Stripe goes live.*
 - Monthly and yearly results per villa; export for the accountant (gestor).
 - Airbnb's commission invoices recorded as expenses, with their VAT treatment (see legal point 6).
 

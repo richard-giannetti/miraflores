@@ -6,6 +6,7 @@ import { eur } from "../lib/money";
 import type { Villas } from "../lib/villas";
 import { Avatar, Icon } from "./Icon";
 import { QuoteBreakdown, planName, type Quote } from "./Rates";
+import { QuoteDialog } from "./Quotes";
 
 interface Request {
   id: string;
@@ -33,6 +34,7 @@ export function BookingRequests({ lang, villas }: { lang: Lang; villas: Villas }
   const [open, setOpen] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<{ id: string; text: string } | null>(null);
+  const [quoting, setQuoting] = useState<Request | null>(null);
   const loc = locale[lang];
 
   const refresh = useCallback(async () => {
@@ -104,6 +106,7 @@ export function BookingRequests({ lang, villas }: { lang: Lang; villas: Villas }
               {error?.id === r.id && <p className="error small">{error.text}</p>}
               <span className="task-actions">
                 <button className="small-btn" disabled={busy === r.id} onClick={() => decline(r)}>{t(lang, "decline")}</button>
+                <button className="small-btn" disabled={busy === r.id} onClick={() => setQuoting(r)}>{t(lang, "sendQuote")}</button>
                 <button className="small-btn" disabled={busy === r.id} onClick={() => accept(r, "option")}>{t(lang, "acceptOption")}</button>
                 <button className="small-btn primary" disabled={busy === r.id} onClick={() => accept(r, "confirmed")}>{t(lang, "acceptConfirm")}</button>
               </span>
@@ -111,6 +114,29 @@ export function BookingRequests({ lang, villas }: { lang: Lang; villas: Villas }
           );
         })}
       </ul>
+      {quoting && (
+        <QuoteDialog
+          lang={lang}
+          villas={villas}
+          prefill={{
+            request_id: quoting.id,
+            unit_id: villas.units.find((u) => u.property_id === quoting.property_id)?.id,
+            check_in: quoting.check_in,
+            check_out: quoting.check_out,
+            adults: quoting.adults,
+            children: quoting.children,
+            first_name: quoting.name.split(" ")[0],
+            last_name: quoting.name.split(" ").slice(1).join(" "),
+            email: quoting.email,
+            phone: quoting.phone,
+            language: quoting.language,
+            plan: quoting.plan,
+            total: Number(quoting.total),
+          }}
+          onClose={() => setQuoting(null)}
+          onCreated={refresh}
+        />
+      )}
     </section>
   );
 }

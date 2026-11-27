@@ -542,6 +542,12 @@ function CompanyDialog({ lang, company, onClose, onSaved }: { lang: Lang; compan
           {t(lang, "footer")}
           <textarea rows={2} value={f.invoice_footer} onChange={(e) => setF((x) => ({ ...x, invoice_footer: e.target.value }))} />
         </label>
+        <label>
+          {t(lang, "bankDetails")}
+          <textarea rows={3} value={f.bank_details} onChange={(e) => setF((x) => ({ ...x, bank_details: e.target.value }))} />
+          <small className="muted">{t(lang, "bankDetailsHint")}</small>
+        </label>
+        {field("quote_valid_days", "quoteValidDays", "number")}
         {error && <p className="error">{error}</p>}
         <div className="actions">
           <span className="spacer" />
