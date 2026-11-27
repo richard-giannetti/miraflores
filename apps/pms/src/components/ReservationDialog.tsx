@@ -5,6 +5,7 @@ import { t, type Lang } from "../lib/i18n";
 import { newInvoice } from "./Invoices";
 import { CheckinPanel } from "./CheckinPanel";
 import { MessagesPanel } from "./Messages";
+import { PaymentsPanel } from "./PaymentsPanel";
 import { sources, statuses, type Guest, type Property, type ReservationKind, type ReservationSource, type ReservationStatus, type Unit } from "../lib/types";
 
 // What the form edits: a reservation plus its guest's main details.
@@ -291,6 +292,19 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
               guestPhone={f.phone}
               villa={units.find((u) => u.id === f.unit_id)?.name ?? ""}
               checkIn={f.check_in}
+            />
+          )}
+          {canEdit && draft.id && !isBlock && (
+            <PaymentsPanel
+              lang={lang}
+              reservationId={draft.id}
+              propertyId={units.find((u) => u.id === f.unit_id)?.property_id}
+              total={f.total_amount == null ? null : Number(f.total_amount)}
+              checkIn={f.check_in}
+              guestName={[f.first_name, f.last_name].filter(Boolean).join(" ")}
+              guestPhone={f.phone}
+              guestEmail={f.email}
+              villa={units.find((u) => u.id === f.unit_id)?.name ?? ""}
             />
           )}
           {canEdit && draft.id && !isBlock && <MessagesPanel lang={lang} reservationId={draft.id} villa={units.find((u) => u.id === f.unit_id)?.name ?? ""} />}

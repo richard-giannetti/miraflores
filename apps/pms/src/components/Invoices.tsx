@@ -539,6 +539,14 @@ function CompanyDialog({ lang, company, onClose, onSaved }: { lang: Lang; compan
         </div>
         {field("default_vat_rate", "defaultVat", "number")}
         <label>
+          {t(lang, "paymentInvoices")}
+          <select value={f.payment_invoices} onChange={(e) => setF((x) => ({ ...x, payment_invoices: e.target.value as Company["payment_invoices"] }))}>
+            <option value="separate">{t(lang, "paymentInvoices_separate")}</option>
+            <option value="single">{t(lang, "paymentInvoices_single")}</option>
+          </select>
+          <small className="muted">{t(lang, "paymentInvoicesHint")}</small>
+        </label>
+        <label>
           {t(lang, "footer")}
           <textarea rows={2} value={f.invoice_footer} onChange={(e) => setF((x) => ({ ...x, invoice_footer: e.target.value }))} />
         </label>

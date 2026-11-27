@@ -24,6 +24,8 @@ export interface Company {
   phone: string;
   default_vat_rate: number;
   invoice_footer: string;
+  // Card payments: a draft invoice per payment, or one for the whole stay (ask the gestor).
+  payment_invoices: "separate" | "single";
 }
 
 export interface Invoice {
