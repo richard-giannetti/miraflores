@@ -34,6 +34,8 @@ interface Props {
 // form, so every button is type="button".
 export function PaymentsPanel({ lang, reservationId, propertyId, total, checkIn, guestName, guestPhone, guestEmail, villa }: Props) {
   const [list, setList] = useState<Payment[]>([]);
+  // Invoices drafted from these payments (see draft_invoice_for_payment).
+  const [invoices, setInvoices] = useState<{ id: string; payment_id: string; status: "draft" | "issued"; full_number: string | null }[]>([]);
   const [rules, setRules] = useState<{ deposit_pct: number; balance_days_before: number } | null>(null);
   const [custom, setCustom] = useState<string | null>(null);
   const [refunding, setRefunding] = useState<{ id: string; amount: string } | null>(null);
@@ -45,6 +47,8 @@ export function PaymentsPanel({ lang, reservationId, propertyId, total, checkIn,
   const refresh = useCallback(async () => {
     const { data } = await supabase.from("payments").select("id, token, kind, description, amount, status, paid_at, refunded_amount, created_at").eq("reservation_id", reservationId).order("created_at");
     setList((data ?? []) as Payment[]);
+    const inv = await supabase.from("invoices").select("id, payment_id, status, full_number").eq("reservation_id", reservationId).not("payment_id", "is", null).is("deleted_at", null);
+    setInvoices((inv.data ?? []) as typeof invoices);
   }, [reservationId]);
   useEffect(() => {
     refresh();
@@ -118,6 +122,7 @@ export function PaymentsPanel({ lang, reservationId, propertyId, total, checkIn,
   }
 
   const phone = guestPhone.replace(/[^\d]/g, "");
+  const invoiceOf = (p: Payment) => invoices.find((i) => i.payment_id === p.id);
 
   return (
     <section className="checkin-box payments-box">
@@ -159,6 +164,14 @@ export function PaymentsPanel({ lang, reservationId, propertyId, total, checkIn,
                   )}
                   <button type="button" className="small-btn" onClick={() => cancel(p)}>{t(lang, "cancelLink")}</button>
                 </span>
+              )}
+              {invoiceOf(p) && (
+                <a className="small-btn link-btn" href={`#invoices/${invoiceOf(p)!.id}`}>
+                  {invoiceOf(p)!.full_number ?? t(lang, "invoiceDraft")}
+                </a>
+              )}
+              {Number(p.refunded_amount) > 0 && invoiceOf(p)?.status === "issued" && (
+                <p className="hint refund-note">{t(lang, "refundNeedsCorrective")}</p>
               )}
               {(p.status === "paid" || p.status === "partially_refunded") && refunding?.id !== p.id && (
                 <button type="button" className="small-btn" onClick={() => setRefunding({ id: p.id, amount: String(Number(p.amount) - Number(p.refunded_amount)) })}>{t(lang, "refund")}</button>

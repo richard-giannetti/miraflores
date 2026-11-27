@@ -703,3 +703,4 @@ a.link-btn { display: inline-flex; align-items: center; min-height: var(--contro
 .pay-card { gap: var(--space-16); }
 .pay-amount { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-12); }
 .pay-amount strong { font: var(--text-large-title); font-weight: 700; font-variant-numeric: tabular-nums; }
+.refund-note { flex-basis: 100%; margin: 0; color: var(--danger-text); }

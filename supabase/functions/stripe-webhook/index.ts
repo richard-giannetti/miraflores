@@ -1,7 +1,7 @@
 // Stripe → PMS. Stripe calls this when a checkout completes or a charge is refunded; the signature is checked
 // with the STRIPE_WEBHOOK_SECRET secret before anything is believed.
-// - checkout.session.completed (paid): the payment is marked paid, an option booking becomes confirmed, and the
-//   income goes into Money (once: keyed by the payment intent).
+// - checkout.session.completed (paid): the payment is marked paid, an option booking becomes confirmed, the
+//   income goes into Money (once: keyed by the payment intent), and a draft invoice is prepared.
 // - charge.refunded: the payment's refunded amount and status follow Stripe, and each refund goes into Money as
 //   a "refunds" expense.
 // Stripe retries until it gets a 2xx, so everything here is safe to run twice.
@@ -61,6 +61,8 @@ Deno.serve(async (req) => {
       description: `${kindName[p.kind] ?? "Pago"} · Stripe`,
       external_ref: `stripe:${s.payment_intent}`,
     });
+    // A draft invoice for the family to check and issue (never issued automatically).
+    await admin.rpc("draft_invoice_for_payment", { p_payment_id: p.id });
     return new Response("ok");
   }
 

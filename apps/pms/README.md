@@ -75,7 +75,9 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   Rates), a link for the balance or any amount. The guest's lasting link `/pay/<token>` opens Stripe Checkout
   (the `payments` Edge Function makes a fresh session each time). Stripe's webhook (`stripe-webhook`, signature
   checked) marks it paid, confirms an option booking and records the income in Money; refunds start from the
-  booking and come back as "Refunds" expenses. Secrets: `STRIPE_SECRET_KEY` (restricted key) and
+  booking and come back as "Refunds" expenses. Each payment also prepares a **draft invoice** (`draft_invoice_for_payment`):
+  per payment (deposit as an advance, balance = the rest of the stay) or one per stay, as set in Company details;
+  the family checks and issues it. A refund on an issued invoice shows a reminder to issue a corrective one. Secrets: `STRIPE_SECRET_KEY` (restricted key) and
   `STRIPE_WEBHOOK_SECRET`, set in Supabase → Edge Functions → Secrets, never in the code.
 
 ## Design system
