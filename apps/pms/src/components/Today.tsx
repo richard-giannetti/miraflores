@@ -14,7 +14,7 @@ import { IssueDialog, IssueRow, useIssues } from "./Maintenance";
 import { MessagesToSend } from "./Messages";
 import { SyncWarning } from "./AirbnbSync";
 import { BookingRequests } from "./BookingRequests";
-import { QuotesPanel } from "./Quotes";
+import { QuoteDialog, QuotesPanel } from "./Quotes";
 import type { Issue } from "../lib/types";
 
 interface Props {
@@ -22,12 +22,15 @@ interface Props {
   profile: Profile;
   villas: Villas;
   me: StaffMember | null;
+  // A day from the address (#today/2028-03-10); today otherwise.
+  view?: string | null;
 }
 
 // The parents' home screen: who arrives, who leaves, who's in, and what needs cleaning.
-export function Today({ lang, profile, villas, me }: Props) {
+export function Today({ lang, profile, villas, me, view }: Props) {
   const isManager = profile.role === "owner" || profile.role === "manager";
-  const [day, setDay] = useState<Day>(today);
+  const [day, setDay] = useState<Day>(() => (view && /^\d{4}-\d{2}-\d{2}$/.test(view) ? view : today()));
+  const [quoting, setQuoting] = useState(false);
   const [reservations, setReservations] = useState<Reservation[]>(() => load("today") ?? []);
   // Bookings arriving or leaving in the next 3 days, so the parents can prepare ahead.
   const [upcoming, setUpcoming] = useState<Reservation[]>(() => load("upcoming") ?? []);
@@ -124,11 +127,12 @@ export function Today({ lang, profile, villas, me }: Props) {
               {villas.unitName(r.unit_id)}
               {r.kind === "booking" && ` · ${r.adults + r.children} ${t(lang, "guests")} · ${t(lang, `source_${r.source}`)}`}
               {r.check_out > addDays(day, 1) && ` · ${t(lang, "untilDate")} ${format(r.check_out, loc, { day: "numeric", month: "short" })}`}
+              {r.status === "option" && ` · ${t(lang, "status_option")}`}
             </small>
             {isManager && r.kind === "booking" && r.check_in >= day && (
-              <span className={`pill ${checkins[r.id] === "complete" ? "ok" : checkins[r.id] ? "todo" : ""}`} style={{ justifySelf: "start" }}>
+              <small className={`checkin-state ${checkins[r.id] === "complete" ? "ok" : checkins[r.id] ? "todo" : "none"}`}>
                 {t(lang, "checkinOnline")}: {t(lang, checkins[r.id] === "complete" ? "checkinDone" : checkins[r.id] ? "checkinPending" : "noCheckin")}
-              </span>
+              </small>
             )}
           </span>
         </button>
@@ -151,116 +155,147 @@ export function Today({ lang, profile, villas, me }: Props) {
     );
   }
 
-  const section = (icon: IconName, title: string, list: Reservation[], action?: { label: string; status: ReservationStatus }) => (
-    <section className="panel">
+  const section = (id: string, icon: IconName, title: string, list: Reservation[], action?: { label: string; status: ReservationStatus }) => (
+    <section className="panel" id={id}>
       <h2>
-        <span className="h-icon"><Icon name={icon} size={18} /></span>
+        <span className="h-icon"><Icon name={icon} size={16} /></span>
         {title} <span className="count">{list.length}</span>
       </h2>
-      {list.length ? <ul className="list">{list.map((r) => row(r, action))}</ul> : <p className="muted">{t(lang, "nothing")}</p>}
+      <ul className="list">{list.map((r) => row(r, action))}</ul>
     </section>
   );
 
+  const anchor = (id: string) => () => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const summary = [
+    { id: "t-arrivals", icon: "arrive" as const, label: t(lang, "arrivals"), n: arrivals.length },
+    { id: "t-departures", icon: "leave" as const, label: t(lang, "departures"), n: departures.length },
+    { id: "t-inhouse", icon: "bed" as const, label: t(lang, "inHouse"), n: inHouse.length },
+    { id: "t-cleaning", icon: "cleaning" as const, label: t(lang, "cleaningToday"), n: dueTasks.filter((x) => x.status !== "done").length },
+  ];
+  const quiet = arrivals.length + departures.length + inHouse.length + dueTasks.length + blocks.length === 0;
+  const isToday = day === today();
+
   return (
-    <main className="page">
+    <main className="page today">
       <div className="page-head">
         <div>
-          <p className="eyebrow">{day === today() ? t(lang, "today") : format(day, loc, { weekday: "long" })}</p>
-          <h1 className="title">{format(day, loc, { weekday: day === today() ? "long" : undefined, day: "numeric", month: "long" })}</h1>
+          <p className="eyebrow">{isToday ? t(lang, "today") : format(day, loc, { weekday: "long" })}</p>
+          <h1 className="title">
+            {format(day, loc, { weekday: isToday ? "long" : undefined, day: "numeric", month: "long", year: day.slice(0, 4) === today().slice(0, 4) ? undefined : "numeric" })}
+          </h1>
         </div>
         <div className="nav">
+          {isManager && (
+            <button onClick={() => setQuoting(true)}>
+              <Icon name="plus" size={16} /> {t(lang, "newQuote")}
+            </button>
+          )}
           <button className="icon-btn" onClick={() => setDay(addDays(day, -1))} aria-label={t(lang, "previous")}>
             <Icon name="left" />
           </button>
-          {day !== today() && <button onClick={() => setDay(today())}>{t(lang, "today")}</button>}
+          {!isToday && <button onClick={() => setDay(today())}>{t(lang, "today")}</button>}
           <button className="icon-btn" onClick={() => setDay(addDays(day, 1))} aria-label={t(lang, "next")}>
             <Icon name="right" />
           </button>
         </div>
       </div>
 
-      {isManager && day === today() && <SyncWarning lang={lang} villas={villas} />}
-      {isManager && day === today() && <BookingRequests lang={lang} villas={villas} />}
-      {isManager && day === today() && <QuotesPanel lang={lang} villas={villas} />}
-      {me && day === today() && <ClockCard lang={lang} me={me} villas={villas} />}
+      {/* What someone has to act on: shown only when there's something. */}
+      {isToday && (
+        <div className="attention">
+          {isManager && <SyncWarning lang={lang} villas={villas} />}
+          {isManager && <BookingRequests lang={lang} villas={villas} />}
+          {isManager && <QuotesPanel lang={lang} villas={villas} />}
+          {isManager && <MessagesToSend lang={lang} villas={villas} />}
+          {me && <ClockCard lang={lang} me={me} villas={villas} />}
+        </div>
+      )}
 
-      <div className="stats">
-        {[
-          { icon: "arrive" as const, label: t(lang, "arrivals"), n: arrivals.length },
-          { icon: "leave" as const, label: t(lang, "departures"), n: departures.length },
-          { icon: "bed" as const, label: t(lang, "inHouse"), n: inHouse.length },
-          { icon: "cleaning" as const, label: t(lang, "cleaningToday"), n: dueTasks.filter((x) => x.status !== "done").length },
-        ].map((x) => (
-          <div key={x.label} className="stat">
-            <span className="h-icon"><Icon name={x.icon} size={18} /></span>
+      {/* The day at a glance; each figure jumps to its list. */}
+      <div className="summary" role="list">
+        {summary.map((x) => (
+          <button key={x.id} role="listitem" className={`summary-item${x.n ? "" : " zero"}`} onClick={anchor(x.id)} disabled={!x.n}>
+            <Icon name={x.icon} size={18} />
             <strong>{x.n}</strong>
             <span>{x.label}</span>
-          </div>
+          </button>
         ))}
       </div>
 
-      <div className="columns">
-        {section("arrive", t(lang, "arrivals"), arrivals, { label: t(lang, "markCheckedIn"), status: "checked_in" })}
-        {section("leave", t(lang, "departures"), departures, { label: t(lang, "markCheckedOut"), status: "checked_out" })}
-        <section className="panel">
-          <h2>
-            <span className="h-icon"><Icon name="cleaning" size={18} /></span>
-            {t(lang, "cleaningToday")} <span className="count">{dueTasks.length}</span>
-          </h2>
-          {dueTasks.length ? (
-            <div className="cards">
-              {dueTasks.map((x) => (
-                <TaskCard key={x.id} task={x} lang={lang} profile={profile} villas={villas} ctx={tasks} today={day} compact />
-              ))}
-            </div>
-          ) : (
-            <p className="muted">{t(lang, "nothing")}</p>
+      {quiet ? (
+        <p className="panel quiet">{t(lang, "quietDay")}</p>
+      ) : (
+        <div className="columns">
+          {arrivals.length > 0 && section("t-arrivals", "arrive", t(lang, "arrivals"), arrivals, { label: t(lang, "markCheckedIn"), status: "checked_in" })}
+          {departures.length > 0 && section("t-departures", "leave", t(lang, "departures"), departures, { label: t(lang, "markCheckedOut"), status: "checked_out" })}
+          {dueTasks.length > 0 && (
+            <section className="panel" id="t-cleaning">
+              <h2>
+                <span className="h-icon"><Icon name="cleaning" size={16} /></span>
+                {t(lang, "cleaningToday")} <span className="count">{dueTasks.length}</span>
+              </h2>
+              <div className="cards">
+                {dueTasks.map((x) => (
+                  <TaskCard key={x.id} task={x} lang={lang} profile={profile} villas={villas} ctx={tasks} today={day} compact />
+                ))}
+              </div>
+            </section>
           )}
-        </section>
-        {section("bed", t(lang, "inHouse"), inHouse)}
+          {inHouse.length > 0 && section("t-inhouse", "bed", t(lang, "inHouse"), inHouse)}
+          {blocks.length > 0 && section("t-blocks", "lock", t(lang, "blocksToday"), blocks)}
+        </div>
+      )}
+
+      <div className="columns secondary">
         {myIssues.length > 0 && (
           <section className="panel">
             <h2>
-              <span className="h-icon"><Icon name="wrench" size={18} /></span>
+              <span className="h-icon"><Icon name="wrench" size={16} /></span>
               {t(lang, "openIssues")} <span className="count">{myIssues.length}</span>
             </h2>
             <ul className="list">
-              {myIssues.slice(0, 6).map((i) => (
+              {myIssues.slice(0, 5).map((i) => (
                 <IssueRow key={i.id} issue={i} lang={lang} villas={villas} onOpen={() => setIssue(i)} />
               ))}
             </ul>
-            {myIssues.length > 6 && <a className="hint" href="#maintenance">{t(lang, "tab_maintenance")} →</a>}
+            {myIssues.length > 5 && <a className="hint" href="#maintenance">{t(lang, "tab_maintenance")} →</a>}
           </section>
         )}
-        {isManager && day === today() && <OnDuty lang={lang} villas={villas} />}
-        {isManager && day === today() && <MessagesToSend lang={lang} villas={villas} />}
-        {blocks.length > 0 && section("lock", t(lang, "blocksToday"), blocks)}
+        {isManager && isToday && <OnDuty lang={lang} villas={villas} />}
       </div>
 
       <section className="panel ahead">
         <h2>
-          <span className="h-icon"><Icon name="calendar" size={18} /></span>
+          <span className="h-icon"><Icon name="calendar" size={16} /></span>
           {t(lang, "nextDays")}
         </h2>
-        <div className="ahead-days">
+        <ul className="ahead-list">
           {nextDays.map((d) => (
-            <div key={d.day} className="ahead-day">
-              <h3>{format(d.day, loc, { weekday: "long", day: "numeric", month: "short" })}</h3>
-              <p className="ahead-counts">
-                <span><Icon name="arrive" size={14} /> {d.arrivals.length} {t(lang, "arrivals").toLowerCase()}</span>
-                <span><Icon name="leave" size={14} /> {d.departures.length} {t(lang, "departures").toLowerCase()}</span>
-                <span><Icon name="cleaning" size={14} /> {d.cleanings} {t(lang, "cleaningToday").toLowerCase()}</span>
-              </p>
-              {d.arrivals.length > 0 && <p className="ahead-label">{t(lang, "arrivals")}</p>}
-              {d.arrivals.length > 0 && <ul className="list">{d.arrivals.map((r) => row(r))}</ul>}
-              {d.departures.length > 0 && <p className="ahead-label">{t(lang, "departures")}</p>}
-              {d.departures.length > 0 && <ul className="list">{d.departures.map((r) => row(r))}</ul>}
-              {d.arrivals.length + d.departures.length === 0 && <p className="muted">{t(lang, "nothing")}</p>}
-            </div>
+            <li key={d.day} className="ahead-day">
+              <div className="ahead-head">
+                <strong>{format(d.day, loc, { weekday: "long", day: "numeric", month: "short" })}</strong>
+                <span className="muted small">
+                  {[
+                    d.arrivals.length > 0 && `${t(lang, "arrivals")} ${d.arrivals.length}`,
+                    d.departures.length > 0 && `${t(lang, "departures")} ${d.departures.length}`,
+                    d.cleanings > 0 && `${t(lang, "cleaningToday")} ${d.cleanings}`,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ") || t(lang, "nothing")}
+                </span>
+              </div>
+              {d.arrivals.length + d.departures.length > 0 && (
+                <ul className="list">
+                  {d.arrivals.map((r) => row(r))}
+                  {d.departures.map((r) => row(r))}
+                </ul>
+              )}
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
+      {quoting && <QuoteDialog lang={lang} villas={villas} prefill={{}} onClose={() => setQuoting(false)} onCreated={() => {}} />}
       {issue && (
         <IssueDialog
           lang={lang}
