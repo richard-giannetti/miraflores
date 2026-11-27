@@ -57,7 +57,7 @@ The back-office for both villas: [features](../../docs/pms/features.md),
     (source airbnb, keyed by the HM… code), hand-typed ones with the same dates are linked, moved ones follow,
     vanished ones are cancelled. An Airbnb booking that overlaps one already here is refused by the database and
     reported as a conflict (Settings and a warning on Today). Airbnb's "Not available" events are ignored.
-  - *PMS link*: `ical-export?t=<units.ical_token>`, the villa's own bookings and blocks (not Airbnb's) for Airbnb
+  - *PMS link*: `ical-export/<units.ical_token>.ics` (Airbnb only accepts links ending in .ics), the villa's own bookings and blocks (not Airbnb's) for Airbnb
     to import. Airbnb refreshes imported calendars every few hours, so a direct booking takes a while to close
     the dates there.
 

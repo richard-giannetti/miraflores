@@ -1,6 +1,7 @@
 // PMS → Airbnb: one unit's bookings and blocks as an iCal calendar, at a secret link
-// (…/ical-export?t=<units.ical_token>). Airbnb imports it, so nights booked directly or blocked here close on
-// Airbnb too. Bookings that came from Airbnb are left out: Airbnb already knows them.
+// (…/ical-export/<units.ical_token>.ics: Airbnb only accepts links ending in .ics; the older ?t=<token> form
+// still works). Airbnb imports it, so nights booked directly or blocked here close on Airbnb too. Bookings that
+// came from Airbnb are left out: Airbnb already knows them.
 // Public (no sign-in): the unguessable token is the key, and the feed shows only dates, no names.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -8,7 +9,8 @@ const ymd = (d: string) => d.replaceAll("-", "");
 const stamp = () => new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
 
 Deno.serve(async (req) => {
-  const token = new URL(req.url).searchParams.get("t") ?? "";
+  const url = new URL(req.url);
+  const token = url.searchParams.get("t") ?? url.pathname.match(/\/([0-9a-f-]{36})\.ics$/i)?.[1] ?? "";
   if (!/^[0-9a-f-]{36}$/i.test(token)) return new Response("Not found", { status: 404 });
 
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });

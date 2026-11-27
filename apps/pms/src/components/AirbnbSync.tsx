@@ -24,7 +24,7 @@ interface Run {
   error: string | null;
 }
 
-export const exportUrl = (token: string) => `https://lkbrydeqxnspsnpvimil.supabase.co/functions/v1/ical-export?t=${token}`;
+export const exportUrl = (token: string) => `https://lkbrydeqxnspsnpvimil.supabase.co/functions/v1/ical-export/${token}.ics`;
 
 // The latest sync per unit (managers only), shared by Settings and the warning on Today.
 export function useSyncRuns() {
