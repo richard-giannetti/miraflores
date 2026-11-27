@@ -70,6 +70,13 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   dates, guests, promo code → price and rate options → a request (`public.request_booking()`, recalculated
   server-side, rate-limited). Requests don't block dates; they show on Today, where an owner or manager accepts
   them (as an option or confirmed: guest and booking are created) or declines. Card payment comes with Stripe.
+- **Quotes** (owners and managers, panel on Today; "Send quote" on website requests): villa, dates, guests, the price
+  from the rate calculation (editable; typed by hand when no automatic price), deposit (the villa's %), how long it
+  holds the dates (Company details, 3 days by default) and a personal note. Creating it makes an **option booking**
+  that blocks the dates (on Airbnb too) and a private link `/q/<token>` (copy, WhatsApp, or emailed automatically).
+  The guest accepts or declines there; accepting shows the **bank details** (Company details, typed by an owner) and
+  a transfer reference, and emails them; "Deposit received: confirm" turns the option into a confirmed booking.
+  Declined or expired quotes (hourly `expire-quotes` job) free the dates. Card payment links come with Stripe.
 - Channels: direct and Airbnb only (Booking.com is out for now).
 
 - **SES.Hospedajes data** (see [docs/pms/ses-hospedajes.md](../../docs/pms/ses-hospedajes.md)): online check-in asks
