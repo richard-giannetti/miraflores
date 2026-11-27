@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { supabase } from "./lib/supabase";
+import { signOut, supabase } from "./lib/supabase";
 import { initialLang, langs, t, type Lang } from "./lib/i18n";
 import { load, save } from "./lib/cache";
 import type { Profile, StaffMember } from "./lib/types";
@@ -91,7 +91,7 @@ export function App() {
       <div className="splash">
         <img src="/logo.png" alt="Miraflores" />
         <p>{t(lang, "noAccess")}</p>
-        <button onClick={() => supabase.auth.signOut()}>{t(lang, "signOut")}</button>
+        <button onClick={signOut}>{t(lang, "signOut")}</button>
       </div>
     );
   if (profile.must_change_password) return <ChangePassword lang={lang} onDone={() => setProfile({ ...profile, must_change_password: false })} />;
@@ -145,8 +145,8 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
       <Icon name="settings" />
     </a>
   );
-  const signOut = (
-    <button className="icon-btn" onClick={() => supabase.auth.signOut()} aria-label={t(lang, "signOut")} title={t(lang, "signOut")}>
+  const signOutBtn = (
+    <button className="icon-btn" onClick={signOut} aria-label={t(lang, "signOut")} title={t(lang, "signOut")}>
       <Icon name="logout" />
     </button>
   );
@@ -166,7 +166,7 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
             <span className="sidebar-name">{profile.full_name}</span>
             <ThemeButton lang={lang} />
             {settingsLink}
-            {signOut}
+            {signOutBtn}
           </div>
         </div>
       </aside>
@@ -179,7 +179,7 @@ function Workspace({ lang, profile, me, langPicker }: { lang: Lang; profile: Pro
           {langPicker}
           <ThemeButton lang={lang} />
           {settingsLink}
-          {signOut}
+          {signOutBtn}
         </div>
       </header>
       <div className="content">
