@@ -3,7 +3,9 @@ import { supabase } from "../lib/supabase";
 import { t, type Lang } from "../lib/i18n";
 import type { Villas } from "../lib/villas";
 import type { Multi } from "../lib/checkin";
-import { Icon } from "./Icon";
+import { Icon, type IconName } from "./Icon";
+import { PropertiesSettings } from "./Properties";
+import { MenuSettings } from "./Menu";
 import { TemplatesEditor } from "./Messages";
 import { AirbnbSync } from "./AirbnbSync";
 import type { Profile } from "../lib/types";
@@ -20,8 +22,55 @@ interface Item {
 const textLangs = ["en", "es", "fr"] as const;
 const kinds: Kind[] = ["wifi", "directions", "info", "rules"];
 
+const sections = ["properties", "menu", "team", "guide", "messages", "airbnb"] as const;
+type Section = (typeof sections)[number];
+const sectionIcon: Record<Section, IconName> = { properties: "bed", menu: "tag", team: "team", guide: "message", messages: "phone", airbnb: "repeat" };
+
+// The admin's settings: one menu of sections (System Settings style). Desktop shows the list and the open
+// section side by side; phones show the list, then the section with a way back.
+export function Settings({ lang, villas, profile, section }: { lang: Lang; villas: Villas; profile: Profile; section: string | null }) {
+  const asked = (sections as readonly string[]).includes(section ?? "") ? (section as Section) : null;
+  const current: Section = asked && asked !== "team" ? asked : "properties";
+  return (
+    <main className="page settings-page">
+      <div className={`settings-layout${asked ? " has-section" : ""}`}>
+        <nav className="settings-nav" aria-label={t(lang, "settings")}>
+          <h1 className="title">{t(lang, "settings")}</h1>
+          <ul className="list panel more-list">
+            {sections.map((x) => (
+              <li key={x} className={`item${x === current ? " on" : ""}`}>
+                {/* The team already has its own screen; the menu just leads there. */}
+                <a className="item-main" href={x === "team" ? "#staff" : `#settings/${x}`} aria-current={x === current ? "page" : undefined}>
+                  <span className="h-icon">
+                    <Icon name={sectionIcon[x]} />
+                  </span>
+                  <span>
+                    <strong>{t(lang, `set_${x}`)}</strong>
+                    <small>{t(lang, `set_${x}_sub`)}</small>
+                  </span>
+                </a>
+                <Icon name="right" size={16} />
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="settings-body">
+          <a className="back-link" href="#settings">
+            <Icon name="left" size={16} /> {t(lang, "settings")}
+          </a>
+          {current === "properties" && <PropertiesSettings lang={lang} profile={profile} villas={villas} />}
+          {current === "menu" && <MenuSettings lang={lang} villas={villas} />}
+          {current === "guide" && <GuideSettings lang={lang} villas={villas} />}
+          {current === "messages" && <TemplatesEditor lang={lang} />}
+          {current === "airbnb" && <AirbnbSync lang={lang} profile={profile} />}
+        </div>
+      </div>
+    </main>
+  );
+}
+
 // What guests see after checking in, per villa, defined by the family.
-export function Settings({ lang, villas, profile }: { lang: Lang; villas: Villas; profile: Profile }) {
+function GuideSettings({ lang, villas }: { lang: Lang; villas: Villas }) {
   const [items, setItems] = useState<Item[]>([]);
   const [propertyId, setPropertyId] = useState<string | null>(null);
   const property = propertyId ?? villas.properties[0]?.id ?? null;
@@ -44,16 +93,13 @@ export function Settings({ lang, villas, profile }: { lang: Lang; villas: Villas
   const mine = items.filter((i) => i.property_id === property);
 
   return (
-    <main className="page">
+    <section className="settings-grid">
       <div className="page-head">
         <div>
-          <p className="eyebrow">{t(lang, "settings")}</p>
-          <h1 className="title">{t(lang, "guestInfo")}</h1>
+          <h2 className="title">{t(lang, "guestInfo")}</h2>
+          <p className="muted">{t(lang, "guestInfoSub")}</p>
         </div>
       </div>
-      <p className="muted" style={{ marginBottom: 14 }}>
-        {t(lang, "guestInfoSub")}
-      </p>
       <div className="toolbar">
         <div className="segmented">
           {villas.properties.map((p) => (
@@ -66,14 +112,10 @@ export function Settings({ lang, villas, profile }: { lang: Lang; villas: Villas
           <Icon name="plus" size={18} /> {t(lang, "addSection").replace("+ ", "")}
         </button>
       </div>
-      <div className="settings-grid">
-        {mine.map((it) => (
-          <GuideItem key={it.id} lang={lang} item={it} onChanged={load} />
-        ))}
-      </div>
-      <AirbnbSync lang={lang} profile={profile} />
-      <TemplatesEditor lang={lang} />
-    </main>
+      {mine.map((it) => (
+        <GuideItem key={it.id} lang={lang} item={it} onChanged={load} />
+      ))}
+    </section>
   );
 }
 

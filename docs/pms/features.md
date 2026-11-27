@@ -233,6 +233,8 @@ numbers and reports it. The PMS stores the resulting PDF and QR. The provider ge
 ### 12. Hotel extras · Wave 4
 
 Not built now, but the data model leaves room for it:
+- Built early (2026-11-27, father's request): Settings → Villas and rooms (create properties and rooms) and
+  Settings → Restaurant menu (categories, dishes and drinks with VAT and allergens), ready for the hotel.
 - Room types vs physical rooms, rate plans, room assignment.
 - Front-desk screen, guest folio (charges during the stay), group bookings.
 - More channels (Booking.com…) through a certified channel manager, only if the family decides to sell there
