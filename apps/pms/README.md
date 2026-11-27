@@ -72,6 +72,13 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   them (as an option or confirmed: guest and booking are created) or declines. Card payment comes with Stripe.
 - Channels: direct and Airbnb only (Booking.com is out for now).
 
+- **SES.Hospedajes data** (see [docs/pms/ses-hospedajes.md](../../docs/pms/ses-hospedajes.md)): online check-in asks
+  residents of Spain for their town from INE's official list (`public/municipios.json`, code stored for SES),
+  gives minors the main traveller's address and a fixed relationship list, and has a **Scan passport or ID card**
+  button (the machine-readable lines are read in the guest's browser with Tesseract and decoded with `mrz`; the photo
+  is never uploaded). The country list covers every ISO country. Bookings record **Paid by** (SES's payment codes).
+  Automatic sending to SES waits for the villas' registration and web-service access.
+
 ## Settings (the admin's menu)
 
 The gear opens **Settings**, one menu of sections (requested by the father, 2026-11-27):

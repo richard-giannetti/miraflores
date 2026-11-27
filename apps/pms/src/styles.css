@@ -747,3 +747,17 @@ table.data tr.is-today { background: var(--today-tint); }
 .switch-row { color: var(--label); font: var(--text-headline); }
 .email-log { margin-top: var(--space-8); }
 .form-end { display: flex; justify-content: flex-end; gap: var(--space-8); padding-top: var(--space-8); }
+
+/* Online check-in: town picker for residents of Spain */
+.town-field { position: relative; }
+.town-list { position: absolute; z-index: 5; left: 0; right: 0; top: calc(100% - 18px); margin: 0; padding: var(--space-4); list-style: none; background: var(--window-bg); border-radius: var(--radius-menu); box-shadow: var(--shadow-menu); max-height: 280px; overflow: auto; }
+.town-list button { width: 100%; justify-content: flex-start; text-align: left; background: none; box-shadow: none; min-height: 40px; padding: 0 var(--space-8); border-radius: var(--radius-xs); font-weight: 400; color: var(--label); }
+.town-list button:hover, .town-list button:focus-visible { background: var(--selection); color: var(--on-accent); }
+.town-list button small { color: inherit; opacity: .7; margin-left: var(--space-4); }
+
+/* Online check-in: scan a passport or ID card */
+.scan-box { display: grid; gap: var(--space-4); margin-bottom: var(--space-8); }
+.scan-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; justify-self: start; min-height: 44px; padding: 0 var(--space-16); border-radius: var(--radius-control); background: var(--fill); color: var(--label); font: var(--text-body); font-weight: 600; cursor: pointer; }
+.scan-btn input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.scan-btn.busy { opacity: .6; cursor: progress; }
+.scan-box small.error { color: var(--danger-text); font-weight: 400; }

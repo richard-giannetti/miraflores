@@ -21,8 +21,11 @@ export interface Traveller {
   residence_city: string;
   residence_postal_code: string;
   residence_country: string;
+  // INE municipality code (5 digits) for residents of Spain; residence_city then holds its name.
+  residence_municipality_code: string;
   phone: string;
   email: string;
+  // Minors only: how they relate to the main traveller (one of `relationships`).
   relationship: string;
 }
 
@@ -41,6 +44,7 @@ export const emptyTraveller = (): Traveller => ({
   residence_city: "",
   residence_postal_code: "",
   residence_country: "",
+  residence_municipality_code: "",
   phone: "",
   email: "",
   relationship: "",
@@ -62,6 +66,37 @@ export interface Checkin {
   travellers?: Traveller[];
 }
 
+// A minor's relationship to the main traveller. Stored in these words; turned into SES.Hospedajes codes when sending.
+export const relationships = ["child", "grandchild", "sibling", "nephew_niece", "ward", "other"] as const;
+
+// Spain's municipalities (INE, public/municipios.json), loaded only when a guest lives in Spain.
+export interface Municipality {
+  code: string;
+  name: string;
+  province: string;
+}
+let municipalities: Promise<Municipality[]> | null = null;
+export function loadMunicipalities() {
+  municipalities ??= fetch("/municipios.json?v=2026")
+    .then((r) => r.json())
+    .then((d: { provinces: Record<string, string>; municipalities: [string, string][] }) =>
+      d.municipalities.map(([code, name]) => ({ code, name, province: d.provinces[code.slice(0, 2)] ?? "" })),
+    )
+    .catch((e) => {
+      municipalities = null;
+      throw e;
+    });
+  return municipalities;
+}
+const fold = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+// Up to 8 matches: names starting with the text first, then names containing it.
+export function searchMunicipalities(list: Municipality[], q: string) {
+  const t = fold(q);
+  if (t.length < 2) return [];
+  const hits = list.filter((m) => fold(m.name).includes(t));
+  return hits.sort((a, b) => Number(!fold(a.name).startsWith(t)) - Number(!fold(b.name).startsWith(t)) || a.name.length - b.name.length).slice(0, 8);
+}
+
 export const checkinUrl = (token: string) => `${location.origin}/c/${token}`;
 
 // Age on a given day, to know who's a minor (under 14: no ID document needed in Spain; under 18: relationship).
@@ -72,12 +107,23 @@ export function ageOn(birth: string, day: string) {
   return y - by - (m < bm || (m === bm && d < bd) ? 1 : 0);
 }
 
-const iso = `ESP:ES FRA:FR GBR:GB DEU:DE ITA:IT PRT:PT NLD:NL BEL:BE CHE:CH AUT:AT IRL:IE LUX:LU DNK:DK SWE:SE NOR:NO FIN:FI
-ISL:IS POL:PL CZE:CZ SVK:SK HUN:HU ROU:RO BGR:BG GRC:GR HRV:HR SVN:SI SRB:RS BIH:BA MNE:ME MKD:MK ALB:AL EST:EE LVA:LV
-LTU:LT UKR:UA MDA:MD BLR:BY RUS:RU GEO:GE ARM:AM AZE:AZ KAZ:KZ TUR:TR CYP:CY MLT:MT AND:AD MCO:MC MAR:MA DZA:DZ TUN:TN
-EGY:EG SEN:SN NGA:NG GHA:GH KEN:KE ZAF:ZA ISR:IL LBN:LB JOR:JO IRQ:IQ IRN:IR SAU:SA ARE:AE QAT:QA PAK:PK IND:IN BGD:BD
-CHN:CN JPN:JP KOR:KR PHL:PH THA:TH VNM:VN IDN:ID MYS:MY SGP:SG AUS:AU NZL:NZ USA:US CAN:CA MEX:MX CUB:CU DOM:DO COL:CO
-VEN:VE ECU:EC PER:PE BOL:BO BRA:BR PRY:PY URY:UY ARG:AR CHL:CL`
+// Every ISO 3166-1 country (alpha-3:alpha-2), so no guest's nationality is missing.
+const iso = `ABW:AW AFG:AF AGO:AO AIA:AI ALA:AX ALB:AL AND:AD ARE:AE ARG:AR ARM:AM ASM:AS ATA:AQ ATF:TF ATG:AG AUS:AU AUT:AT
+AZE:AZ BDI:BI BEL:BE BEN:BJ BES:BQ BFA:BF BGD:BD BGR:BG BHR:BH BHS:BS BIH:BA BLM:BL BLR:BY BLZ:BZ BMU:BM BOL:BO
+BRA:BR BRB:BB BRN:BN BTN:BT BVT:BV BWA:BW CAF:CF CAN:CA CCK:CC CHE:CH CHL:CL CHN:CN CIV:CI CMR:CM COD:CD COG:CG
+COK:CK COL:CO COM:KM CPV:CV CRI:CR CUB:CU CUW:CW CXR:CX CYM:KY CYP:CY CZE:CZ DEU:DE DJI:DJ DMA:DM DNK:DK DOM:DO
+DZA:DZ ECU:EC EGY:EG ERI:ER ESH:EH ESP:ES EST:EE ETH:ET FIN:FI FJI:FJ FLK:FK FRA:FR FRO:FO FSM:FM GAB:GA GBR:GB
+GEO:GE GGY:GG GHA:GH GIB:GI GIN:GN GLP:GP GMB:GM GNB:GW GNQ:GQ GRC:GR GRD:GD GRL:GL GTM:GT GUF:GF GUM:GU GUY:GY
+HKG:HK HMD:HM HND:HN HRV:HR HTI:HT HUN:HU IDN:ID IMN:IM IND:IN IOT:IO IRL:IE IRN:IR IRQ:IQ ISL:IS ISR:IL ITA:IT
+JAM:JM JEY:JE JOR:JO JPN:JP KAZ:KZ KEN:KE KGZ:KG KHM:KH KIR:KI KNA:KN KOR:KR KWT:KW LAO:LA LBN:LB LBR:LR LBY:LY
+LCA:LC LIE:LI LKA:LK LSO:LS LTU:LT LUX:LU LVA:LV MAC:MO MAF:MF MAR:MA MCO:MC MDA:MD MDG:MG MDV:MV MEX:MX MHL:MH
+MKD:MK MLI:ML MLT:MT MMR:MM MNE:ME MNG:MN MNP:MP MOZ:MZ MRT:MR MSR:MS MTQ:MQ MUS:MU MWI:MW MYS:MY MYT:YT NAM:NA
+NCL:NC NER:NE NFK:NF NGA:NG NIC:NI NIU:NU NLD:NL NOR:NO NPL:NP NRU:NR NZL:NZ OMN:OM PAK:PK PAN:PA PCN:PN PER:PE
+PHL:PH PLW:PW PNG:PG POL:PL PRI:PR PRK:KP PRT:PT PRY:PY PSE:PS PYF:PF QAT:QA REU:RE ROU:RO RUS:RU RWA:RW SAU:SA
+SDN:SD SEN:SN SGP:SG SGS:GS SHN:SH SJM:SJ SLB:SB SLE:SL SLV:SV SMR:SM SOM:SO SPM:PM SRB:RS SSD:SS STP:ST SUR:SR
+SVK:SK SVN:SI SWE:SE SWZ:SZ SXM:SX SYC:SC SYR:SY TCA:TC TCD:TD TGO:TG THA:TH TJK:TJ TKL:TK TKM:TM TLS:TL TON:TO
+TTO:TT TUN:TN TUR:TR TUV:TV TWN:TW TZA:TZ UGA:UG UKR:UA UMI:UM URY:UY USA:US UZB:UZ VAT:VA VCT:VC VEN:VE VGB:VG
+VIR:VI VNM:VN VUT:VU WLF:WF WSM:WS XKK:XK YEM:YE ZAF:ZA ZMB:ZM ZWE:ZW`
   .split(/\s+/)
   .map((p) => p.split(":") as [string, string]);
 

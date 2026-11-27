@@ -5,7 +5,7 @@ import { t, type Lang } from "../lib/i18n";
 import { newInvoice } from "./Invoices";
 import { CheckinPanel } from "./CheckinPanel";
 import { MessagesPanel } from "./Messages";
-import { sources, statuses, type Guest, type Property, type ReservationKind, type ReservationSource, type ReservationStatus, type Unit } from "../lib/types";
+import { paymentMethods, sources, statuses, type Guest, type PaymentMethod, type Property, type ReservationKind, type ReservationSource, type ReservationStatus, type Unit } from "../lib/types";
 
 // What the form edits: a reservation plus its guest's main details.
 export interface Draft {
@@ -20,6 +20,7 @@ export interface Draft {
   adults?: number;
   children?: number;
   total_amount?: number | null;
+  payment_method?: PaymentMethod | null;
   title?: string;
   notes?: string;
   first_name?: string;
@@ -49,6 +50,7 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
     adults: draft.adults ?? 2,
     children: draft.children ?? 0,
     total_amount: draft.total_amount ?? null,
+    payment_method: draft.payment_method ?? null,
     title: draft.title ?? "",
     notes: draft.notes ?? "",
     first_name: draft.first_name ?? "",
@@ -107,6 +109,7 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
       adults: isBlock ? 0 : f.adults,
       children: isBlock ? 0 : f.children,
       total_amount: isBlock ? null : f.total_amount,
+      payment_method: isBlock ? null : f.payment_method,
       title: f.title.trim(),
       notes: f.notes,
     } as const;
@@ -278,6 +281,18 @@ export function ReservationDialog({ lang, draft, units, properties, canEdit, onC
                   value={f.total_amount ?? ""}
                   onChange={(e) => set("total_amount", e.target.value === "" ? null : Number(e.target.value))}
                 />
+              </label>
+              <label>
+                {t(lang, "paidBy")}
+                <select value={f.payment_method ?? ""} onChange={(e) => set("payment_method", (e.target.value || null) as PaymentMethod | null)}>
+                  <option value="">{f.source === "airbnb" ? t(lang, "payAutoAirbnb") : t(lang, "payNotSet")}</option>
+                  {paymentMethods.map((m) => (
+                    <option key={m} value={m}>
+                      {t(lang, `pay_${m}`)}
+                    </option>
+                  ))}
+                </select>
+                <small className="muted">{t(lang, "paidByHint")}</small>
               </label>
             </>
           )}

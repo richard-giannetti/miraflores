@@ -806,6 +806,19 @@ const dict = {
     en: "The PMS sends it by itself on its day, if the guest has an email and automatic emails are on.",
   },
   autoEmailShort: { es: "automático", fr: "automatique", en: "automatic" },
+  // SES.Hospedajes: how a stay was paid
+  paidBy: { es: "Forma de pago", fr: "Mode de paiement", en: "Paid by" },
+  paidByHint: { es: "Lo pide SES.Hospedajes en el parte de viajeros.", fr: "Demandé par SES.Hospedajes dans la fiche des voyageurs.", en: "Required by SES.Hospedajes in the guest report." },
+  payAutoAirbnb: { es: "Automático: plataforma de pago (Airbnb)", fr: "Automatique : plateforme de paiement (Airbnb)", en: "Automatic: payment platform (Airbnb)" },
+  payNotSet: { es: "Sin indicar", fr: "Non indiqué", en: "Not set" },
+  pay_TRANS: { es: "Transferencia", fr: "Virement", en: "Bank transfer" },
+  pay_TARJT: { es: "Tarjeta", fr: "Carte", en: "Card" },
+  pay_PLATF: { es: "Plataforma de pago (Airbnb…)", fr: "Plateforme de paiement (Airbnb…)", en: "Payment platform (Airbnb…)" },
+  pay_EFECT: { es: "Efectivo", fr: "Espèces", en: "Cash" },
+  pay_MOVIL: { es: "Pago por móvil (Bizum…)", fr: "Paiement mobile", en: "Mobile payment (Bizum…)" },
+  pay_DESTI: { es: "Pago en destino", fr: "Paiement sur place", en: "Paid at the property" },
+  pay_TREG: { es: "Tarjeta regalo", fr: "Carte cadeau", en: "Gift card" },
+  pay_OTRO: { es: "Otro", fr: "Autre", en: "Other" },
 } satisfies Record<string, Record<Lang, string>>;
 
 export type Key = keyof typeof dict;
