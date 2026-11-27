@@ -21,6 +21,8 @@ interface Pricing {
   gap_min_nights: number;
   gap_discount_pct: number;
   direct_booking_enabled: boolean;
+  deposit_pct: number;
+  balance_days_before: number;
 }
 interface Season {
   id: string;
@@ -264,6 +266,8 @@ function PricingForm({ lang, pricing, onSaved }: { lang: Lang; pricing: Pricing;
     gap_min_nights: str(pricing.gap_min_nights),
     gap_discount_pct: str(pricing.gap_discount_pct),
     direct_booking_enabled: pricing.direct_booking_enabled,
+    deposit_pct: str(pricing.deposit_pct),
+    balance_days_before: str(pricing.balance_days_before),
   });
   const [f, setF] = useState(init);
   const [state, setState] = useState<"idle" | "saved">("idle");
@@ -295,6 +299,8 @@ function PricingForm({ lang, pricing, onSaved }: { lang: Lang; pricing: Pricing;
       gap_min_nights: num(f.gap_min_nights) ?? 1,
       gap_discount_pct: num(f.gap_discount_pct) ?? 0,
       direct_booking_enabled: f.direct_booking_enabled,
+      deposit_pct: num(f.deposit_pct) ?? 30,
+      balance_days_before: num(f.balance_days_before) ?? 30,
     };
     if (row.direct_booking_enabled && !(row.base_price > 0)) return setError(t(lang, "needBasePrice"));
     const { error } = await supabase.from("pricing").update(row).eq("property_id", pricing.property_id);
@@ -324,6 +330,11 @@ function PricingForm({ lang, pricing, onSaved }: { lang: Lang; pricing: Pricing;
       <div className="two">
         {field("min_advance_days", "minAdvance", t(lang, "daysWorked"))}
         {field("max_advance_days", "maxAdvance", t(lang, "daysWorked"))}
+      </div>
+      <h3>{t(lang, "cardPayments")}</h3>
+      <div className="two">
+        {field("deposit_pct", "depositPct", "%")}
+        {field("balance_days_before", "balanceDays", t(lang, "daysBeforeArrival"))}
       </div>
       <h3>{t(lang, "gapNights")}</h3>
       <p className="muted small">{t(lang, "gapNightsHint")}</p>

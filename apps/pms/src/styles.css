@@ -696,3 +696,10 @@ table.data tr.is-today { background: var(--today-tint); }
 /* Button groups inside list rows stay in a row (.item > span is a grid by default). */
 .item > span.task-actions { display: flex; flex-wrap: wrap; gap: var(--space-6); }
 .requests .request > span.task-actions { margin-left: auto; }
+
+/* ---------- Card payments ---------- */
+.payments-box header .small { font-weight: 400; }
+a.link-btn { display: inline-flex; align-items: center; min-height: var(--control-small); padding: 0 var(--space-8); border-radius: var(--radius-control); background: var(--control); box-shadow: var(--shadow-control); color: var(--label); text-decoration: none; font: var(--text-callout); }
+.pay-card { gap: var(--space-16); }
+.pay-amount { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-12); }
+.pay-amount strong { font: var(--text-large-title); font-weight: 700; font-variant-numeric: tabular-nums; }

@@ -2,7 +2,7 @@
 
 export type MoneyKind = "income" | "expense";
 export const incomeCategories = ["stay", "airbnb", "extra", "other_income"] as const;
-export const expenseCategories = ["cleaning", "laundry", "utilities", "repairs", "supplies", "commissions", "taxes", "insurance", "other"] as const;
+export const expenseCategories = ["cleaning", "laundry", "utilities", "repairs", "supplies", "commissions", "taxes", "insurance", "refunds", "other"] as const;
 export const methods = ["transfer", "card", "cash", "airbnb", "other"] as const;
 
 export interface Transaction {

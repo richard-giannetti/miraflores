@@ -71,6 +71,12 @@ The back-office for both villas: [features](../../docs/pms/features.md),
   server-side, rate-limited). Requests don't block dates; they show on Today, where an owner or manager accepts
   them (as an option or confirmed: guest and booking are created) or declines. Card payment comes with Stripe.
 - Channels: direct and Airbnb only (Booking.com is out for now).
+- **Card payments (Stripe)**: in a booking, "Card payments" creates a deposit link (the villa's deposit % from
+  Rates), a link for the balance or any amount. The guest's lasting link `/pay/<token>` opens Stripe Checkout
+  (the `payments` Edge Function makes a fresh session each time). Stripe's webhook (`stripe-webhook`, signature
+  checked) marks it paid, confirms an option booking and records the income in Money; refunds start from the
+  booking and come back as "Refunds" expenses. Secrets: `STRIPE_SECRET_KEY` (restricted key) and
+  `STRIPE_WEBHOOK_SECRET`, set in Supabase → Edge Functions → Secrets, never in the code.
 
 ## Design system
 
